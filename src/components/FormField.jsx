@@ -2,8 +2,20 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { cn } from '@/utils/cn';
 
-const FormField = ({ name, label, type = 'text', placeholder, description, icon: Icon, options, ...props }) => {
-  const { register, formState: { errors } } = useFormContext();
+const FormField = ({
+  name,
+  label,
+  type = 'text',
+  placeholder,
+  description,
+  icon: Icon,
+  options,
+  ...props
+}) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
   const error = errors[name];
 
   return (
@@ -13,29 +25,31 @@ const FormField = ({ name, label, type = 'text', placeholder, description, icon:
           {label}
         </label>
       )}
-      
+
       <div className="relative group">
         {Icon && (
           <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors">
             <Icon size={18} />
           </div>
         )}
-        
+
         {type === 'select' ? (
           <select
             id={name}
             {...register(name)}
             className={cn(
-              "input-field",
-              Icon && "pl-10",
-              error && "border-rose-500 focus:border-rose-500 focus:ring-rose-500",
+              'input-field',
+              Icon && 'pl-10',
+              error && 'border-rose-500 focus:border-rose-500 focus:ring-rose-500',
               props.className
             )}
             {...props}
           >
             <option value="">Select {label}</option>
-            {options?.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            {options?.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
             ))}
           </select>
         ) : type === 'textarea' ? (
@@ -44,8 +58,8 @@ const FormField = ({ name, label, type = 'text', placeholder, description, icon:
             placeholder={placeholder}
             {...register(name)}
             className={cn(
-              "input-field min-h-[100px] py-3",
-              error && "border-rose-500 focus:border-rose-500 focus:ring-rose-500",
+              'input-field min-h-[100px] py-3',
+              error && 'border-rose-500 focus:border-rose-500 focus:ring-rose-500',
               props.className
             )}
             {...props}
@@ -57,9 +71,9 @@ const FormField = ({ name, label, type = 'text', placeholder, description, icon:
             placeholder={placeholder}
             {...register(name)}
             className={cn(
-              "input-field",
-              Icon && "pl-10",
-              error && "border-rose-500 focus:border-rose-500 focus:ring-rose-500",
+              'input-field',
+              Icon && 'pl-10',
+              error && 'border-rose-500 focus:border-rose-500 focus:ring-rose-500',
               props.className
             )}
             {...props}
@@ -67,14 +81,10 @@ const FormField = ({ name, label, type = 'text', placeholder, description, icon:
         )}
       </div>
 
-      {description && !error && (
-        <p className="text-xs text-slate-500">{description}</p>
-      )}
-      
+      {description && !error && <p className="text-xs text-slate-500">{description}</p>}
+
       {error && (
-        <p className="text-xs font-medium text-rose-500 animate-slide-up">
-          {error.message}
-        </p>
+        <p className="text-xs font-medium text-rose-500 animate-slide-up">{error.message}</p>
       )}
     </div>
   );

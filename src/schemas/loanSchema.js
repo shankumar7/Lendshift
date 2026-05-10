@@ -20,9 +20,15 @@ export const employmentInfoSchema = z.object({
 });
 
 export const loanDetailsSchema = z.object({
-  loanAmount: z.coerce.number().min(1000, 'Minimum loan amount is $1,000').max(500000, 'Maximum loan amount is $500,000'),
+  loanAmount: z.coerce
+    .number()
+    .min(1000, 'Minimum loan amount is $1,000')
+    .max(500000, 'Maximum loan amount is $500,000'),
   loanPurpose: z.string().min(1, 'Loan purpose is required'),
-  termMonths: z.coerce.number().min(6, 'Minimum term is 6 months').max(120, 'Maximum term is 120 months'),
+  termMonths: z.coerce
+    .number()
+    .min(6, 'Minimum term is 6 months')
+    .max(120, 'Maximum term is 120 months'),
 });
 
 export const loanSchema = z.object({

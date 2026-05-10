@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  LayoutDashboard, 
-  FileText, 
-  User, 
-  Settings, 
-  Bell, 
-  Menu, 
+import {
+  LayoutDashboard,
+  FileText,
+  User,
+  Settings,
+  Bell,
+  Menu,
   X,
   Sun,
   Moon,
-  ChevronRight
+  ChevronRight,
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 
@@ -38,10 +38,10 @@ const MainLayout = () => {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors duration-300">
       {/* Sidebar */}
-      <aside 
+      <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transition-transform duration-300 transform lg:translate-x-0 lg:static lg:inset-0",
-          !isSidebarOpen && "-translate-x-full"
+          'fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transition-transform duration-300 transform lg:translate-x-0 lg:static lg:inset-0',
+          !isSidebarOpen && '-translate-x-full'
         )}
       >
         <div className="flex flex-col h-full">
@@ -49,7 +49,9 @@ const MainLayout = () => {
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-xl">L</span>
             </div>
-            <span className="text-xl font-bold font-display tracking-tight dark:text-white">LendSwift</span>
+            <span className="text-xl font-bold font-display tracking-tight dark:text-white">
+              LendSwift
+            </span>
           </div>
 
           <nav className="flex-1 px-4 space-y-1">
@@ -58,10 +60,10 @@ const MainLayout = () => {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
+                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all',
                   location.pathname === item.path
-                    ? "bg-primary-50 text-primary-600 dark:bg-primary-900/20 dark:text-primary-400"
-                    : "text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800"
+                    ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/20 dark:text-primary-400'
+                    : 'text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800'
                 )}
               >
                 <item.icon className="w-5 h-5" />
@@ -71,7 +73,7 @@ const MainLayout = () => {
           </nav>
 
           <div className="p-4 border-t border-slate-200 dark:border-slate-800">
-            <button 
+            <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800"
             >
@@ -86,7 +88,7 @@ const MainLayout = () => {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header */}
         <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 flex items-center justify-between px-4 lg:px-8 shrink-0">
-          <button 
+          <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className="lg:hidden p-2 text-slate-600 dark:text-slate-400"
           >

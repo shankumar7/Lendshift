@@ -14,24 +14,24 @@ const useLoanStore = create(
         signature: null,
       },
       isCompleted: false,
-      
+
       setStep: (step) => set({ currentStep: step }),
-      
+
       nextStep: () => {
         const { currentStep, totalSteps } = get();
         if (currentStep < totalSteps) {
           set({ currentStep: currentStep + 1 });
         }
       },
-      
+
       prevStep: () => {
         const { currentStep } = get();
         if (currentStep > 1) {
           set({ currentStep: currentStep - 1 });
         }
       },
-      
-      updateFormData: (section, data) => 
+
+      updateFormData: (section, data) =>
         set((state) => ({
           formData: {
             ...state.formData,
@@ -41,19 +41,20 @@ const useLoanStore = create(
             },
           },
         })),
-        
-      resetForm: () => set({
-        currentStep: 1,
-        formData: {
-          personalInfo: {},
-          employmentInfo: {},
-          loanDetails: {},
-          documents: [],
-          signature: null,
-        },
-        isCompleted: false,
-      }),
-      
+
+      resetForm: () =>
+        set({
+          currentStep: 1,
+          formData: {
+            personalInfo: {},
+            employmentInfo: {},
+            loanDetails: {},
+            documents: [],
+            signature: null,
+          },
+          isCompleted: false,
+        }),
+
       setCompleted: (status) => set({ isCompleted: status }),
     }),
     {

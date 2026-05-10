@@ -8,7 +8,7 @@ function App() {
   return (
     <BrowserRouter>
       <AppRoutes />
-      <Toaster 
+      <Toaster
         position="top-right"
         toastOptions={{
           className: 'dark:bg-slate-900 dark:text-white dark:border dark:border-slate-800',
