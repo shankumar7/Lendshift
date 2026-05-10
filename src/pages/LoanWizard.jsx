@@ -9,7 +9,8 @@ import {
   ChevronRight, 
   ShieldCheck, 
   Clock,
-  ArrowLeft
+  ArrowLeft,
+  Lock
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import Skeleton from '@/components/Skeleton';
@@ -47,13 +48,13 @@ const WizardInner = () => {
   const handleBackToLanding = () => navigate('/');
 
   return (
-    <div className="min-h-screen bg-[#06060E] text-white flex flex-col">
-      {/* Ultra-Premium Header */}
-      <header className="h-20 bg-black/20 backdrop-blur-xl border-b border-white/5 px-6 flex items-center justify-between sticky top-0 z-40">
+    <div className="min-h-screen bg-[#F4F5F7] text-[#172B4D] flex flex-col font-sans">
+      {/* Professional Header */}
+      <header className="h-20 bg-white border-b border-[#DFE1E6] px-6 flex items-center justify-between sticky top-0 z-40">
         <div className="flex items-center gap-6">
           <button 
             onClick={handleBackToLanding}
-            className="p-2 hover:bg-white/5 rounded-full transition-colors text-slate-400 hover:text-white"
+            className="p-2 hover:bg-[#F4F5F7] rounded-full transition-colors text-[#42526E]"
           >
             <ArrowLeft size={20} />
           </button>
@@ -61,27 +62,27 @@ const WizardInner = () => {
         </div>
 
         <div className="flex items-center gap-6">
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 text-indigo-400 rounded-full border border-indigo-500/20">
-            <ShieldCheck size={14} />
-            <span className="text-[10px] font-bold uppercase tracking-widest">Bank-Grade Security</span>
+          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-[#36B37E] rounded-full border border-emerald-100 font-bold text-[10px] uppercase tracking-widest">
+            <Lock size={12} />
+            Secure Session
           </div>
-          <div className="flex items-center gap-2 text-slate-500">
+          <div className="flex items-center gap-2 text-[#8993A4]">
             <Clock size={16} />
-            <span className="text-xs font-bold">~3 mins left</span>
+            <span className="text-xs font-bold uppercase tracking-widest">~4 mins</span>
           </div>
         </div>
       </header>
 
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        {/* Modern Sidebar */}
-        <aside className="lg:w-80 bg-black/10 border-r border-white/5 p-8 overflow-y-auto hidden lg:block">
+        {/* Sidebar Navigation */}
+        <aside className="lg:w-80 bg-white border-r border-[#DFE1E6] p-8 overflow-y-auto hidden lg:block">
           <div className="space-y-10">
             <div className="space-y-1">
-              <p className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em]">Application Journey</p>
-              <h2 className="text-xl font-bold font-display">Step {currentStep + 1} of {totalSteps}</h2>
+              <p className="text-[10px] font-black text-[#0065FF] uppercase tracking-[0.2em]">Application Flow</p>
+              <h2 className="text-xl font-bold">Step {currentStep + 1} of {totalSteps}</h2>
             </div>
 
-            <nav className="space-y-3">
+            <nav className="space-y-1">
               {STEP_REGISTRY.map((step, index) => {
                 const isCompleted = index < currentStep;
                 const isActive = index === currentStep;
@@ -93,22 +94,27 @@ const WizardInner = () => {
                     onClick={() => handleStepNavigation(index)}
                     disabled={isLocked}
                     className={cn(
-                      "w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500 text-left relative group",
-                      isActive ? "bg-indigo-600/10 text-white" : 
-                      isCompleted ? "text-indigo-400 opacity-60" : "text-slate-600"
+                      "w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-300 text-left relative",
+                      isActive ? "bg-blue-50 text-[#0065FF]" : 
+                      isCompleted ? "text-[#36B37E]" : "text-[#42526E] opacity-60"
                     )}
                   >
                     <div className={cn(
-                      "w-8 h-8 rounded-xl flex items-center justify-center shrink-0 font-bold text-[10px] border transition-all",
-                      isActive ? "border-indigo-500 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30" : 
-                      isCompleted ? "border-indigo-500/50 bg-indigo-500/20 text-white" : "border-white/5 bg-white/5"
+                      "w-6 h-6 rounded-full flex items-center justify-center shrink-0 font-bold text-[10px] border-2 transition-all",
+                      isActive ? "border-[#0065FF] bg-[#0065FF] text-white" : 
+                      isCompleted ? "border-[#36B37E] bg-[#36B37E] text-white" : "border-[#DFE1E6]"
                     )}>
-                      {isCompleted ? <ShieldCheck size={14} /> : index + 1}
+                      {isCompleted ? <CheckCircle2 size={12} /> : index + 1}
                     </div>
                     <div className="min-w-0">
                       <p className="text-sm font-bold truncate">{step.title}</p>
-                      {isActive && <motion.p layoutId="step-desc" className="text-[10px] text-slate-500 mt-0.5">{step.description}</motion.p>}
                     </div>
+                    {isActive && (
+                      <motion.div 
+                        layoutId="active-nav-indicator"
+                        className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-[#0065FF] rounded-r-full"
+                      />
+                    )}
                   </button>
                 );
               })}
@@ -116,74 +122,72 @@ const WizardInner = () => {
           </div>
         </aside>
 
-        {/* Mobile Stepper */}
-        <div className="lg:hidden bg-black/20 backdrop-blur-md border-b border-white/5 p-4 sticky top-20 z-30">
-          <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+        {/* Mobile Top Stepper */}
+        <div className="lg:hidden bg-white border-b border-[#DFE1E6] p-4 sticky top-20 z-30">
+          <div className="h-1.5 w-full bg-[#F4F5F7] rounded-full overflow-hidden">
             <motion.div 
-              className="h-full bg-indigo-600"
+              className="h-full bg-[#0065FF]"
               initial={{ width: 0 }}
               animate={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }}
             />
           </div>
         </div>
 
-        {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-6 lg:p-12 xl:p-20 relative">
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-indigo-600/5 rounded-full blur-[100px] pointer-events-none" />
-          
-          <div className="max-w-2xl mx-auto relative z-10">
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-y-auto p-6 lg:p-12 xl:p-24">
+          <div className="max-w-2xl mx-auto">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep}
-                initial={{ opacity: 0, scale: 0.98, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 1.02, y: -10 }}
-                transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-                className="premium-glass rounded-[2.5rem] p-8 lg:p-14 shadow-2xl min-h-[550px] flex flex-col"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="bg-white rounded-3xl border border-[#DFE1E6] p-8 lg:p-14 shadow-sm min-h-[500px] flex flex-col"
               >
-                <div className="rim-highlight" />
                 <div className="flex-1">
                   <Suspense fallback={
                     <div className="space-y-8">
-                      <Skeleton className="h-10 w-2/3 bg-white/5" />
-                      <Skeleton className="h-48 w-full bg-white/5" />
+                      <Skeleton className="h-10 w-2/3 bg-[#F4F5F7]" />
+                      <Skeleton className="h-40 w-full bg-[#F4F5F7]" />
                     </div>
                   }>
                     <StepComponent />
                   </Suspense>
                 </div>
 
-                <footer className="mt-12 pt-8 border-t border-white/5 flex items-center justify-between">
+                <footer className="mt-12 pt-8 border-t border-[#F4F5F7] flex items-center justify-between">
                   <button
                     onClick={goToPrevStep}
                     disabled={isFirstStep}
-                    className="h-12 px-6 rounded-xl text-sm font-bold text-slate-500 hover:text-white disabled:opacity-0 transition-colors flex items-center gap-2"
+                    className="h-12 px-6 rounded-xl text-sm font-bold text-[#42526E] hover:bg-[#F4F5F7] disabled:opacity-0 transition-colors flex items-center gap-2"
                   >
                     <ChevronLeft size={18} />
-                    Back
+                    Previous
                   </button>
 
                   <button
                     type="submit"
                     form="wizard-step-form"
-                    className="btn-primary h-14 px-10 text-sm shadow-xl"
+                    className="btn-primary h-14 px-10 text-sm"
                   >
-                    {isLastStep ? 'Complete Journey' : 'Save & Continue'}
+                    {isLastStep ? 'Complete Application' : 'Save & Continue'}
                     {!isLastStep && <ChevronRight size={18} />}
                   </button>
                 </footer>
               </motion.div>
             </AnimatePresence>
             
-            <div className="mt-12 flex flex-col items-center gap-6 opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700">
-              <div className="flex items-center gap-10">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo.png/1200px-UPI-Logo.png" alt="UPI" className="h-4 invert" />
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/RBI_logo.svg/1200px-RBI_logo.svg.png" alt="RBI" className="h-8 invert" />
-                <div className="flex items-center gap-2 text-[10px] font-black text-white italic tracking-widest">
-                  <ShieldCheck size={14} className="text-indigo-500" />
-                  ISO 27001 SECURED
-                </div>
-              </div>
+            {/* Compliance Section */}
+            <div className="mt-12 flex flex-col items-center gap-8 opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500">
+               <div className="flex items-center gap-12">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo.png/1200px-UPI-Logo.png" alt="UPI" className="h-4" />
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/RBI_logo.svg/1200px-RBI_logo.svg.png" alt="RBI" className="h-8" />
+                  <div className="flex items-center gap-2 text-[10px] font-black text-[#172B4D] uppercase tracking-widest">
+                     <ShieldCheck size={14} className="text-[#0065FF]" />
+                     SECURED BY 256-BIT AES
+                  </div>
+               </div>
             </div>
           </div>
         </main>

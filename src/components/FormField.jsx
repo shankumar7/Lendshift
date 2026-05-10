@@ -25,11 +25,11 @@ const FormField = forwardRef(({
   const isFilled = value && value.length > 0;
 
   return (
-    <div className="space-y-2.5 w-full group">
+    <div className="space-y-2 w-full group">
       {label && (
         <label 
           htmlFor={name}
-          className="text-xs font-black uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400 ml-1 transition-colors group-focus-within:text-indigo-600"
+          className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8993A4] ml-1 transition-colors group-focus-within:text-[#0065FF]"
         >
           {label}
         </label>
@@ -37,14 +37,14 @@ const FormField = forwardRef(({
 
       <div className="relative">
         <div className={cn(
-          "relative flex items-center transition-all duration-300 rounded-2xl overflow-hidden bg-white dark:bg-[#0D0D15] border-2 shadow-sm",
-          error ? "border-rose-500 shadow-rose-100" : 
-          "border-slate-100 dark:border-white/5 focus-within:border-indigo-600 focus-within:shadow-indigo-100 dark:focus-within:shadow-none focus-within:scale-[1.01]",
-          isFilled && !error && "border-slate-200 dark:border-white/10"
+          "relative flex items-center transition-all duration-200 rounded-2xl overflow-hidden bg-[#F4F5F7] border-2",
+          error ? "border-rose-500 bg-white" : 
+          "border-transparent focus-within:bg-white focus-within:border-[#0065FF] focus-within:shadow-[0_0_0_4px_rgba(0,101,255,0.1)]",
+          isFilled && !error && "bg-white border-[#DFE1E6]"
         )}>
           {Icon && (
-            <div className="pl-5 text-slate-400 transition-colors group-focus-within:text-indigo-600">
-              <Icon size={20} />
+            <div className="pl-5 text-[#8993A4] transition-colors group-focus-within:text-[#0065FF]">
+              <Icon size={18} />
             </div>
           )}
 
@@ -52,7 +52,7 @@ const FormField = forwardRef(({
             <select
               id={name}
               {...register(name)}
-              className="w-full py-4 px-4 bg-transparent outline-none text-sm font-bold dark:text-white appearance-none cursor-pointer"
+              className="w-full py-4 px-4 bg-transparent outline-none text-sm font-bold text-[#172B4D] appearance-none cursor-pointer"
             >
               <option value="">Select option</option>
               {options.map((opt) => (
@@ -66,28 +66,27 @@ const FormField = forwardRef(({
               placeholder={placeholder}
               autoFocus={autoFocus}
               {...register(name)}
-              className="w-full py-4 px-4 bg-transparent outline-none text-sm font-bold dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700"
+              className="w-full py-4 px-4 bg-transparent outline-none text-sm font-bold text-[#172B4D] placeholder:text-[#A5ADBA]"
             />
           )}
 
           <div className="pr-5 flex items-center gap-2">
             {error && <AlertCircle className="text-rose-500" size={18} />}
-            {isFilled && !error && <CheckCircle2 className="text-emerald-500 animate-in fade-in zoom-in duration-300" size={18} />}
+            {isFilled && !error && <CheckCircle2 className="text-[#36B37E] animate-in zoom-in duration-300" size={18} />}
           </div>
         </div>
       </div>
 
       {description && !error && (
-        <p className="text-[10px] font-bold text-slate-400 ml-1 uppercase tracking-wider">{description}</p>
+        <p className="text-[10px] font-bold text-[#8993A4] ml-1 uppercase tracking-widest">{description}</p>
       )}
 
       {error && (
         <p 
           role="alert" 
           aria-live="polite"
-          className="text-xs font-black text-rose-500 ml-1 flex items-center gap-1.5 animate-in slide-in-from-top-2 duration-300"
+          className="text-xs font-bold text-rose-500 ml-1 flex items-center gap-1.5 animate-in slide-in-from-top-1 duration-200"
         >
-          <AlertCircle size={12} />
           {error.message}
         </p>
       )}
