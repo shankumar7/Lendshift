@@ -27,57 +27,77 @@ const Nav = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-[#EEEEEE]">
-        <motion.div
-          className="absolute bottom-0 left-0 right-0 h-[1px] bg-[#121212] origin-left"
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl transition-all duration-300 border-b border-[#EEEEEE]/40">
+        {/* Minimalist Progress Line */}
+        <motion.div 
+          className="absolute bottom-[-1px] left-0 right-0 h-[1px] bg-[#121212] origin-left z-50"
           style={{ scaleX }}
         />
-        <div className="max-w-[1600px] mx-auto px-6 sm:px-10 h-20 flex items-center justify-between">
-          <Logo />
-
-          {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-10">
-            {['Capital', 'Markets', 'Company', 'Inside'].map(item => (
-              <a key={item} href="#" className="text-[10px] font-black uppercase tracking-[0.2em] text-[#888888] hover:text-[#121212] transition-colors">{item}</a>
-            ))}
+        
+        <div className="max-w-[1600px] mx-auto px-6 sm:px-10 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-12">
+            <Link to="/" className="scale-90 origin-left">
+              <Logo />
+            </Link>
+            
+            {/* Ultra-Sharp Desktop Nav */}
+            <div className="hidden lg:flex items-center gap-8">
+              {['Markets', 'Enterprise', 'Institutional', 'Vision'].map(item => (
+                <a 
+                  key={item} 
+                  href="#" 
+                  className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#121212]/40 hover:text-[#121212] transition-all"
+                >
+                  {item}
+                </a>
+              ))}
+            </div>
           </div>
 
           <div className="flex items-center gap-6">
-            <Link to="/apply" className="hidden sm:block text-xs font-black border-b-2 border-[#121212] pb-0.5 hover:opacity-70 transition-opacity">
-              Start Application
-            </Link>
-            <button
+            <div className="hidden sm:flex items-center gap-5">
+               <Link to="/apply" className="group flex items-center gap-2">
+                 <span className="text-[10px] font-black uppercase tracking-widest text-[#121212]">Apply</span>
+                 <ArrowUpRight size={14} className="opacity-40 group-hover:opacity-100 transition-opacity" />
+               </Link>
+            </div>
+            
+            <button 
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-2 hover:bg-[#FAFAFA] rounded-full transition-colors"
+              className="lg:hidden w-8 h-8 flex items-center justify-center hover:bg-[#FAFAFA] rounded-lg transition-colors"
             >
-              {isOpen ? <X size={20} /> : <Menu size={20} />}
+              {isOpen ? <X size={16} /> : <Menu size={16} />}
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
-      <motion.div
+      {/* Sleek Mobile Overlay */}
+      <motion.div 
         initial={false}
-        animate={{ opacity: isOpen ? 1 : 0, pointerEvents: isOpen ? 'auto' : 'none' }}
-        className="fixed inset-0 z-40 bg-white pt-32 px-10"
+        animate={{ 
+          opacity: isOpen ? 1 : 0, 
+          y: isOpen ? 0 : -10,
+          pointerEvents: isOpen ? 'auto' : 'none' 
+        }}
+        className="fixed inset-0 z-40 bg-white pt-32 px-8"
       >
-        <div className="space-y-10">
-          {['Capital', 'Markets', 'Company', 'Inside'].map((item, i) => (
-            <motion.a
+        <div className="space-y-8">
+          {['Markets', 'Enterprise', 'Institutional', 'Vision'].map((item, i) => (
+            <motion.a 
               key={item}
-              initial={{ x: -20, opacity: 0 }}
-              animate={isOpen ? { x: 0, opacity: 1 } : { x: -20, opacity: 0 }}
-              transition={{ delay: i * 0.1 }}
-              href="#"
-              className="block text-5xl font-serif italic hover:text-[#0065FF] transition-colors"
+              initial={{ opacity: 0 }}
+              animate={isOpen ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ delay: i * 0.05 }}
+              href="#" 
+              className="block text-4xl font-serif italic tracking-tighter"
             >
               {item}
             </motion.a>
           ))}
-          <div className="pt-10 border-t border-[#EEEEEE]">
-            <Link to="/apply" className="btn-primary w-full h-16 rounded-2xl text-lg">
-              Apply Now
+          <div className="pt-8 border-t border-[#EEEEEE]">
+            <Link to="/apply" className="btn-primary w-full h-14 rounded-xl text-lg">
+              Get Started
             </Link>
           </div>
         </div>
@@ -131,11 +151,11 @@ const Hero = () => (
           transition={{ delay: 0.6 }}
           className="lg:col-span-5 flex flex-col sm:flex-row gap-6 lg:justify-end"
         >
-          <Link to="/apply" className="btn-primary group h-14 sm:h-16 px-10 sm:px-14">
+          <Link to="/apply" className="btn-primary group h-14 sm:h-15 px-10 sm:px-12 text-xs sm:text-sm">
             Apply Now
-            <ArrowUpRight size={18} className="ml-2 group-hover:rotate-45 transition-transform" />
+            <ArrowUpRight size={16} className="ml-2 group-hover:rotate-45 transition-transform" />
           </Link>
-          <button className="btn-secondary h-14 sm:h-16 px-10 sm:px-14">
+          <button className="btn-secondary h-14 sm:h-15 px-10 sm:px-12 text-xs sm:text-sm">
             Our Methods
           </button>
         </motion.div>
@@ -230,11 +250,11 @@ const FeaturesSection = () => (
 );
 
 const Footer = () => (
-  <footer className="bg-[#121212] text-white py-32 px-6 sm:px-10 overflow-hidden relative">
+  <footer className="bg-[#121212] text-white pt-32 pb-12 px-6 sm:px-10 overflow-hidden relative">
     {/* Abstract Background Element */}
     <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#0065FF]/5 rounded-full blur-[120px] pointer-events-none" />
 
-    <div className="max-w-[1600px] mx-auto space-y-32 relative z-10">
+    <div className="max-w-[1600px] mx-auto space-y-20 relative z-10">
       <div className="grid lg:grid-cols-12 gap-24 items-start">
         {/* Brand Column */}
         <div className="lg:col-span-5 space-y-12">
@@ -286,7 +306,7 @@ const Footer = () => (
       </div>
 
       {/* Compliance & Meta */}
-      <div className="pt-20 border-t border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
+      <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
         <div className="space-y-4 max-w-2xl">
           <p className="text-mono text-[9px] text-white/40 uppercase tracking-widest leading-relaxed">
             LendSwift Technologies Inc. © 2026 / An institutional digital financing platform. <br />
@@ -388,9 +408,9 @@ const LandingPage = () => {
                   <p className="text-xs font-mono text-[#888888] uppercase tracking-[0.2em]">Institutional Grade / Instant Approval</p>
                 </div>
                 
-                <Link to="/apply" className="btn-primary w-full h-20 rounded-2xl text-xl group">
+                <Link to="/apply" className="btn-primary w-full h-14 sm:h-16 rounded-xl text-sm sm:text-base group">
                   Apply for Capital
-                  <ArrowUpRight size={24} className="ml-3 group-hover:rotate-45 transition-transform" />
+                  <ArrowUpRight size={18} className="ml-3 group-hover:rotate-45 transition-transform" />
                 </Link>
               </motion.div>
 

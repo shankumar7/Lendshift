@@ -42,11 +42,11 @@
   }
 
   .btn-minimal {
-    @apply relative inline-flex items-center justify-center py-3 px-8 sm:py-4 sm:px-10 text-xs sm:text-sm font-bold tracking-tight rounded-full transition-all duration-500 overflow-hidden;
+    @apply relative inline-flex items-center justify-center px-8 sm:px-10 text-xs sm:text-sm font-bold tracking-tight rounded-full transition-all duration-500 overflow-hidden select-none;
   }
 
   .btn-primary {
-    @apply btn-minimal bg-[#121212] text-white hover:bg-[#000000] hover:pr-12;
+    @apply btn-minimal bg-[#121212] text-white hover:bg-[#000000];
   }
 
   .btn-secondary {
