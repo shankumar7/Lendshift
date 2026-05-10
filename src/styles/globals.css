@@ -10,8 +10,13 @@
     --border: #EEEEEE;
   }
 
+  /* Set a neutral background to prevent white flashes on overscroll */
+  html {
+    @apply bg-[#121212];
+  }
+
   body {
-    @apply bg-white text-[#121212] font-sans antialiased selection:bg-[#F0F0F0] overflow-x-hidden;
+    @apply bg-white text-[#121212] font-sans antialiased selection:bg-[#F0F0F0] overflow-x-hidden min-h-screen;
   }
 }
 
@@ -28,7 +33,6 @@
     font-family: 'Inter', sans-serif;
   }
 
-  /* Responsive Typography */
   .text-editorial {
     @apply font-serif italic text-5xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.9] tracking-[-0.04em];
   }
@@ -37,7 +41,6 @@
     @apply font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#888888];
   }
 
-  /* Enhanced Minimalist Buttons */
   .btn-minimal {
     @apply relative inline-flex items-center justify-center py-3 px-8 sm:py-4 sm:px-10 text-xs sm:text-sm font-bold tracking-tight rounded-full transition-all duration-500 overflow-hidden;
   }
@@ -50,12 +53,10 @@
     @apply btn-minimal border border-[#EEEEEE] text-[#121212] hover:border-[#121212];
   }
 
-  /* Mobile-first Responsive Cards */
   .minimal-card {
     @apply p-8 sm:p-12 border-b border-[#EEEEEE] lg:border-b-0 lg:border-r last:border-0 transition-all duration-700 hover:bg-[#FAFAFA];
   }
 
-  /* Immersive Background Texture */
   .grain-bg {
     @apply relative;
   }
@@ -66,28 +67,21 @@
     background-image: url("https://grainy-gradients.vercel.app/noise.svg");
   }
 
-  /* Pinning Utility */
   .pin-sticky {
     @apply sticky top-32 self-start;
   }
 }
 
-/* Smooth Transitions */
-.reveal-up {
-  @apply opacity-0 translate-y-8 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)];
+.selection-dark::selection {
+  background: #FFFFFF;
+  color: #121212;
 }
 
-.reveal-up.active {
-  @apply opacity-100 translate-y-0;
-}
-
-/* Selection */
 ::selection {
   background: #121212;
   color: #FFFFFF;
 }
 
-/* Hide scrollbar for immersive feel but keep functionality */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
