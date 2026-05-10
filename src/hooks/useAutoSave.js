@@ -1,33 +1,40 @@
 import { useEffect, useRef } from 'react';
 import useLoanStore from '@/store/useLoanStore';
-import { toast } from 'react-hot-toast';
 
 const AUTO_SAVE_INTERVAL = 30000; // 30 seconds
 
 export const useAutoSave = (currentData, stepId) => {
   const updateStepData = useLoanStore((state) => state.updateStepData);
   const lastSavedRef = useRef(null);
+  const currentDataRef = useRef(currentData);
 
+  // Keep ref in sync with latest data without triggering effects
+  useEffect(() => {
+    currentDataRef.current = currentData;
+  }, [currentData]);
+
+  // Interval-based auto-save
   useEffect(() => {
     const timer = setInterval(() => {
-      // Only save if data has changed
-      const dataString = JSON.stringify(currentData);
+      const dataString = JSON.stringify(currentDataRef.current);
       if (lastSavedRef.current !== dataString) {
-        updateStepData(stepId, currentData);
+        updateStepData(stepId, currentDataRef.current);
         lastSavedRef.current = dataString;
-
-        // Silent toast for feedback if needed, but usually silent is better for UX
-        console.log(`[LendSwift] Auto-saved step: ${stepId}`);
+        console.log(`[LendSwift] Periodic auto-save: ${stepId}`);
       }
     }, AUTO_SAVE_INTERVAL);
 
     return () => clearInterval(timer);
-  }, [currentData, stepId, updateStepData]);
+  }, [stepId, updateStepData]);
 
-  // Initial save on unmount or blur if needed
+  // Final save on unmount only
   useEffect(() => {
     return () => {
-      updateStepData(stepId, currentData);
+      if (currentDataRef.current) {
+        updateStepData(stepId, currentDataRef.current);
+        console.log(`[LendSwift] Final auto-save on unmount: ${stepId}`);
+      }
     };
-  }, [stepId, currentData, updateStepData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stepId]); // Only run on unmount or if stepId changes
 };
