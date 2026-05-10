@@ -1,64 +1,77 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
+
+// Session TTL: 24 hours
+const SESSION_TTL = 24 * 60 * 60 * 1000;
+
+const initialState = {
+  currentStep: 0,
+  isResuming: false,
+  formData: {},
+  dirtyFields: {},
+  lastSaved: null,
+  isSubmitted: false,
+};
 
 const useLoanStore = create(
   persist(
     (set, get) => ({
-      currentStep: 1,
-      totalSteps: 5,
-      formData: {
-        personalInfo: {},
-        employmentInfo: {},
-        loanDetails: {},
-        documents: [],
-        signature: null,
-      },
-      isCompleted: false,
+      ...initialState,
 
       setStep: (step) => set({ currentStep: step }),
 
-      nextStep: () => {
-        const { currentStep, totalSteps } = get();
-        if (currentStep < totalSteps) {
-          set({ currentStep: currentStep + 1 });
-        }
-      },
-
-      prevStep: () => {
-        const { currentStep } = get();
-        if (currentStep > 1) {
-          set({ currentStep: currentStep - 1 });
-        }
-      },
-
-      updateFormData: (section, data) =>
+      updateStepData: (stepId, data, dirtyFields = {}) => {
         set((state) => ({
           formData: {
             ...state.formData,
-            [section]: {
-              ...state.formData[section],
+            [stepId]: {
+              ...state.formData[stepId],
               ...data,
             },
           },
-        })),
-
-      resetForm: () =>
-        set({
-          currentStep: 1,
-          formData: {
-            personalInfo: {},
-            employmentInfo: {},
-            loanDetails: {},
-            documents: [],
-            signature: null,
+          dirtyFields: {
+            ...state.dirtyFields,
+            [stepId]: {
+              ...state.dirtyFields[stepId],
+              ...dirtyFields,
+            },
           },
-          isCompleted: false,
-        }),
+          lastSaved: Date.now(),
+        }));
+      },
 
-      setCompleted: (status) => set({ isCompleted: status }),
+      setResuming: (status) => set({ isResuming: status }),
+
+      resetStore: () => {
+        localStorage.removeItem('lendswift-application-storage');
+        set(initialState);
+      },
+
+      clearStepData: (stepId) => {
+        set((state) => {
+          const newFormData = { ...state.formData };
+          delete newFormData[stepId];
+          return { formData: newFormData };
+        });
+      },
+
+      checkSessionExpiry: () => {
+        const { lastSaved } = get();
+        if (lastSaved && Date.now() - lastSaved > SESSION_TTL) {
+          get().resetStore();
+          return true;
+        }
+        return false;
+      },
     }),
     {
       name: 'lendswift-application-storage',
+      storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.checkSessionExpiry();
+        }
+      },
     }
   )
 );
