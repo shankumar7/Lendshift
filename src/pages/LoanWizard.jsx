@@ -14,6 +14,7 @@ import {
 import { cn } from '@/utils/cn';
 import Skeleton from '@/components/Skeleton';
 import useLoanStore from '@/store/useLoanStore';
+import Logo from '@/components/Logo';
 
 const WizardInner = () => {
   const { 
@@ -24,13 +25,11 @@ const WizardInner = () => {
     isLastStep, 
     goToPrevStep, 
     handleStepNavigation,
-    isSubmitted 
   } = useWizard();
   
   const navigate = useNavigate();
   const { stepId } = useParams();
 
-  // Sync route with state
   useEffect(() => {
     if (stepId) {
       const index = getStepIndexById(stepId);
@@ -38,7 +37,6 @@ const WizardInner = () => {
         setStep(index);
       }
     } else {
-      // Default to first step if no ID in URL
       navigate(`/apply/step/${STEP_REGISTRY[0].id}`, { replace: true });
     }
   }, [stepId, navigate, setStep, currentStep]);
@@ -49,118 +47,117 @@ const WizardInner = () => {
   const handleBackToLanding = () => navigate('/');
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
-      {/* Premium Onboarding Header */}
-      <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between sticky top-0 z-40">
-        <div className="flex items-center gap-4">
+    <div className="min-h-screen bg-[#06060E] text-white flex flex-col">
+      {/* Ultra-Premium Header */}
+      <header className="h-20 bg-black/20 backdrop-blur-xl border-b border-white/5 px-6 flex items-center justify-between sticky top-0 z-40">
+        <div className="flex items-center gap-6">
           <button 
             onClick={handleBackToLanding}
-            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-500"
+            className="p-2 hover:bg-white/5 rounded-full transition-colors text-slate-400 hover:text-white"
           >
             <ArrowLeft size={20} />
           </button>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-black text-lg">L</span>
-            </div>
-            <span className="font-black dark:text-white hidden sm:block">LendSwift Onboarding</span>
-          </div>
+          <Logo className="scale-90" />
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-900/10 text-emerald-600 dark:text-emerald-400 rounded-full border border-emerald-100 dark:border-emerald-900/20">
+        <div className="flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 text-indigo-400 rounded-full border border-indigo-500/20">
             <ShieldCheck size={14} />
-            <span className="text-[10px] font-bold uppercase tracking-widest">Secure 256-bit AES</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest">Bank-Grade Security</span>
           </div>
-          <div className="flex items-center gap-2 text-slate-400">
+          <div className="flex items-center gap-2 text-slate-500">
             <Clock size={16} />
-            <span className="text-xs font-bold">~4 mins left</span>
+            <span className="text-xs font-bold">~3 mins left</span>
           </div>
         </div>
       </header>
 
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        {/* Desktop Sidebar / Mobile Top Bar */}
-        <aside className="lg:w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 p-6 lg:p-8 overflow-y-auto hidden lg:block">
-          <nav className="space-y-2">
-            {STEP_REGISTRY.map((step, index) => {
-              const isCompleted = index < currentStep;
-              const isActive = index === currentStep;
-              const isLocked = index > currentStep;
+        {/* Modern Sidebar */}
+        <aside className="lg:w-80 bg-black/10 border-r border-white/5 p-8 overflow-y-auto hidden lg:block">
+          <div className="space-y-10">
+            <div className="space-y-1">
+              <p className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em]">Application Journey</p>
+              <h2 className="text-xl font-bold font-display">Step {currentStep + 1} of {totalSteps}</h2>
+            </div>
 
-              return (
-                <button
-                  key={step.id}
-                  onClick={() => handleStepNavigation(index)}
-                  disabled={isLocked}
-                  className={cn(
-                    "w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 text-left relative group",
-                    isActive ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400" : 
-                    isCompleted ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400"
-                  )}
-                >
-                  <div className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-xs border-2 transition-all",
-                    isActive ? "border-primary-600 bg-primary-600 text-white" : 
-                    isCompleted ? "border-emerald-500 bg-emerald-500 text-white" : "border-slate-200 dark:border-slate-800"
-                  )}>
-                    {isCompleted ? <ShieldCheck size={16} /> : index + 1}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-bold truncate">{step.title}</p>
-                    {isActive && <p className="text-[10px] opacity-70 mt-0.5">{step.description}</p>}
-                  </div>
-                </button>
-              );
-            })}
-          </nav>
+            <nav className="space-y-3">
+              {STEP_REGISTRY.map((step, index) => {
+                const isCompleted = index < currentStep;
+                const isActive = index === currentStep;
+                const isLocked = index > currentStep;
+
+                return (
+                  <button
+                    key={step.id}
+                    onClick={() => handleStepNavigation(index)}
+                    disabled={isLocked}
+                    className={cn(
+                      "w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500 text-left relative group",
+                      isActive ? "bg-indigo-600/10 text-white" : 
+                      isCompleted ? "text-indigo-400 opacity-60" : "text-slate-600"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-8 h-8 rounded-xl flex items-center justify-center shrink-0 font-bold text-[10px] border transition-all",
+                      isActive ? "border-indigo-500 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30" : 
+                      isCompleted ? "border-indigo-500/50 bg-indigo-500/20 text-white" : "border-white/5 bg-white/5"
+                    )}>
+                      {isCompleted ? <ShieldCheck size={14} /> : index + 1}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold truncate">{step.title}</p>
+                      {isActive && <motion.p layoutId="step-desc" className="text-[10px] text-slate-500 mt-0.5">{step.description}</motion.p>}
+                    </div>
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
         </aside>
 
-        {/* Mobile Top Stepper */}
-        <div className="lg:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-4 sticky top-20 z-30">
-          <div className="flex justify-between items-center mb-2 px-2">
-            <span className="text-xs font-black uppercase text-primary-600 tracking-widest">
-              Step {currentStep + 1} of {totalSteps}
-            </span>
-            <span className="text-xs font-bold text-slate-500">{activeStep.title}</span>
-          </div>
-          <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+        {/* Mobile Stepper */}
+        <div className="lg:hidden bg-black/20 backdrop-blur-md border-b border-white/5 p-4 sticky top-20 z-30">
+          <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
             <motion.div 
-              className="h-full bg-primary-600"
+              className="h-full bg-indigo-600"
               initial={{ width: 0 }}
               animate={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }}
             />
           </div>
         </div>
 
-        {/* Form Content Area */}
-        <main className="flex-1 overflow-y-auto p-6 lg:p-12 xl:p-20">
-          <div className="max-w-2xl mx-auto">
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto p-6 lg:p-12 xl:p-20 relative">
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-indigo-600/5 rounded-full blur-[100px] pointer-events-none" />
+          
+          <div className="max-w-2xl mx-auto relative z-10">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3, ease: "circOut" }}
-                className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800 p-8 lg:p-12 shadow-2xl shadow-slate-200/50 dark:shadow-none min-h-[500px] flex flex-col"
+                initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.02, y: -10 }}
+                transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                className="premium-glass rounded-[2.5rem] p-8 lg:p-14 shadow-2xl min-h-[550px] flex flex-col"
               >
+                <div className="rim-highlight" />
                 <div className="flex-1">
                   <Suspense fallback={
-                    <div className="space-y-6">
-                      <Skeleton className="h-10 w-2/3" />
-                      <Skeleton className="h-40 w-full" />
+                    <div className="space-y-8">
+                      <Skeleton className="h-10 w-2/3 bg-white/5" />
+                      <Skeleton className="h-48 w-full bg-white/5" />
                     </div>
                   }>
                     <StepComponent />
                   </Suspense>
                 </div>
 
-                <footer className="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <footer className="mt-12 pt-8 border-t border-white/5 flex items-center justify-between">
                   <button
                     onClick={goToPrevStep}
                     disabled={isFirstStep}
-                    className="h-12 px-6 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-0 transition-colors flex items-center gap-2"
+                    className="h-12 px-6 rounded-xl text-sm font-bold text-slate-500 hover:text-white disabled:opacity-0 transition-colors flex items-center gap-2"
                   >
                     <ChevronLeft size={18} />
                     Back
@@ -169,29 +166,24 @@ const WizardInner = () => {
                   <button
                     type="submit"
                     form="wizard-step-form"
-                    className="h-12 px-10 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-sm shadow-xl shadow-primary-600/20 flex items-center gap-2 transition-all active:scale-95"
+                    className="btn-primary h-14 px-10 text-sm shadow-xl"
                   >
-                    {isLastStep ? 'Final Submission' : 'Save & Continue'}
+                    {isLastStep ? 'Complete Journey' : 'Save & Continue'}
                     {!isLastStep && <ChevronRight size={18} />}
                   </button>
                 </footer>
               </motion.div>
             </AnimatePresence>
             
-            {/* Trust Footer */}
-            <div className="mt-12 flex flex-col items-center gap-6 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500">
-              <div className="flex items-center gap-8">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo.png/1200px-UPI-Logo.png" alt="UPI" className="h-4" />
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/RBI_logo.svg/1200px-RBI_logo.svg.png" alt="RBI" className="h-8" />
-                <div className="flex items-center gap-1 font-black text-slate-500 italic">
-                  <ShieldCheck size={14} />
-                  ISO 27001
+            <div className="mt-12 flex flex-col items-center gap-6 opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700">
+              <div className="flex items-center gap-10">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo.png/1200px-UPI-Logo.png" alt="UPI" className="h-4 invert" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/RBI_logo.svg/1200px-RBI_logo.svg.png" alt="RBI" className="h-8 invert" />
+                <div className="flex items-center gap-2 text-[10px] font-black text-white italic tracking-widest">
+                  <ShieldCheck size={14} className="text-indigo-500" />
+                  ISO 27001 SECURED
                 </div>
               </div>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-center leading-relaxed">
-                Your data is encrypted using banking-grade security protocol.<br />
-                We never share your personal information with third parties.
-              </p>
             </div>
           </div>
         </main>
