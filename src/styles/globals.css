@@ -4,59 +4,94 @@
 
 @layer base {
   :root {
-    --bg-main: #FFFFFF;
-    --bg-alt: #F4F5F7;
-    --primary: #0065FF; /* Atlassian/Fintech Blue */
-    --primary-hover: #0747A6;
-    --text-main: #172B4D;
-    --text-secondary: #42526E;
-    --border: #DFE1E6;
-    --shadow: rgba(9, 30, 66, 0.08);
+    --bg: #FFFFFF;
+    --fg: #121212;
+    --accent: #0065FF;
+    --border: #EEEEEE;
   }
 
   body {
-    @apply bg-white text-[#172B4D] font-sans antialiased selection:bg-blue-100 selection:text-blue-900;
+    @apply bg-white text-[#121212] font-sans antialiased selection:bg-[#F0F0F0] overflow-x-hidden;
   }
 }
 
 @layer components {
-  /* Clean Minimalist Cards */
-  .premium-card {
-    @apply bg-white rounded-3xl border border-[#DFE1E6] shadow-[0_8px_16px_-4px_rgba(9,30,66,0.08),0_0_1px_rgba(9,30,66,0.31)] transition-all duration-300;
+  .font-serif {
+    font-family: 'Instrument Serif', serif;
+  }
+
+  .font-mono {
+    font-family: 'Space Mono', monospace;
+  }
+
+  .font-sans {
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Responsive Typography */
+  .text-editorial {
+    @apply font-serif italic text-5xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.9] tracking-[-0.04em];
+  }
+
+  .text-meta {
+    @apply font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#888888];
+  }
+
+  /* Enhanced Minimalist Buttons */
+  .btn-minimal {
+    @apply relative inline-flex items-center justify-center py-3 px-8 sm:py-4 sm:px-10 text-xs sm:text-sm font-bold tracking-tight rounded-full transition-all duration-500 overflow-hidden;
   }
 
   .btn-primary {
-    @apply bg-[#0065FF] hover:bg-[#0747A6] text-white font-bold py-4 px-8 rounded-2xl shadow-lg shadow-blue-600/10 transition-all duration-200 active:scale-95 disabled:opacity-50;
+    @apply btn-minimal bg-[#121212] text-white hover:bg-[#000000] hover:pr-12;
   }
 
   .btn-secondary {
-    @apply bg-white border-2 border-[#DFE1E6] text-[#42526E] font-bold py-4 px-8 rounded-2xl transition-all duration-200 hover:bg-[#F4F5F7] hover:border-[#C1C7D0];
+    @apply btn-minimal border border-[#EEEEEE] text-[#121212] hover:border-[#121212];
   }
 
-  .input-field {
-    @apply w-full bg-[#F4F5F7] border-2 border-transparent rounded-2xl px-5 py-4 text-[#172B4D] font-medium outline-none transition-all placeholder:text-[#8993A4] focus:bg-white focus:border-[#0065FF] focus:shadow-[0_0_0_4px_rgba(0,101,255,0.1)];
+  /* Mobile-first Responsive Cards */
+  .minimal-card {
+    @apply p-8 sm:p-12 border-b border-[#EEEEEE] lg:border-b-0 lg:border-r last:border-0 transition-all duration-700 hover:bg-[#FAFAFA];
   }
 
-  .glass-nav {
-    @apply bg-white/80 backdrop-blur-md border-b border-[#DFE1E6];
+  /* Immersive Background Texture */
+  .grain-bg {
+    @apply relative;
   }
 
-  .text-gradient {
-    @apply bg-gradient-to-r from-[#0065FF] to-[#00B8D9] bg-clip-text text-transparent;
+  .grain-bg::before {
+    content: "";
+    @apply fixed inset-0 z-[-1] opacity-[0.03] pointer-events-none;
+    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  }
+
+  /* Pinning Utility */
+  .pin-sticky {
+    @apply sticky top-32 self-start;
   }
 }
 
-.font-display {
-  font-family: 'Inter', sans-serif;
+/* Smooth Transitions */
+.reveal-up {
+  @apply opacity-0 translate-y-8 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)];
 }
 
-/* Custom Scrollbar for Light Theme */
-::-webkit-scrollbar {
-  width: 10px;
+.reveal-up.active {
+  @apply opacity-100 translate-y-0;
 }
-::-webkit-scrollbar-track {
-  @apply bg-[#F4F5F7];
+
+/* Selection */
+::selection {
+  background: #121212;
+  color: #FFFFFF;
 }
-::-webkit-scrollbar-thumb {
-  @apply bg-[#C1C7D0] rounded-full border-4 border-[#F4F5F7] hover:bg-[#A5ADBA];
+
+/* Hide scrollbar for immersive feel but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

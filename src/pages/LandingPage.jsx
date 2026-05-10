@@ -1,272 +1,334 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import { 
   ArrowRight, 
   ChevronRight, 
   Zap, 
   ShieldCheck, 
   TrendingUp, 
-  Award,
-  Smartphone,
-  CheckCircle2,
-  Lock,
-  PieChart,
-  Users
+  ArrowUpRight,
+  Menu,
+  X,
+  ArrowDown
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Logo from '@/components/Logo';
 import { cn } from '@/utils/cn';
 
-const Nav = () => (
-  <nav className="fixed top-0 left-0 right-0 z-50 glass-nav">
-    <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-      <Logo />
-      <div className="hidden md:flex items-center gap-10">
-        {['Personal', 'Business', 'Mortgage', 'About Us'].map(item => (
-          <a key={item} href="#" className="text-sm font-bold text-[#42526E] hover:text-[#0065FF] transition-colors">{item}</a>
-        ))}
-      </div>
-      <div className="flex items-center gap-4">
-        <button className="hidden sm:block text-sm font-bold text-[#42526E] hover:text-[#0065FF]">Sign In</button>
-        <Link to="/apply" className="btn-primary py-2.5 px-6 text-sm rounded-xl">
-          Get Started
-        </Link>
-      </div>
-    </div>
-  </nav>
-);
+const Nav = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
-const StatItem = ({ label, val, icon: Icon }) => (
-  <div className="flex items-center gap-4">
-    <div className="w-12 h-12 bg-blue-50 text-[#0065FF] rounded-2xl flex items-center justify-center">
-      <Icon size={24} />
-    </div>
-    <div>
-      <p className="text-2xl font-black text-[#172B4D]">{val}</p>
-      <p className="text-xs font-bold text-[#8993A4] uppercase tracking-widest">{label}</p>
-    </div>
-  </div>
-);
+  return (
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-[#EEEEEE]">
+        <motion.div 
+          className="absolute bottom-0 left-0 right-0 h-[1px] bg-[#121212] origin-left"
+          style={{ scaleX }}
+        />
+        <div className="max-w-[1600px] mx-auto px-6 sm:px-10 h-20 flex items-center justify-between">
+          <Logo />
+          
+          {/* Desktop Nav */}
+          <div className="hidden lg:flex items-center gap-10">
+            {['Capital', 'Markets', 'Company', 'Inside'].map(item => (
+              <a key={item} href="#" className="text-[10px] font-black uppercase tracking-[0.2em] text-[#888888] hover:text-[#121212] transition-colors">{item}</a>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-6">
+            <Link to="/apply" className="hidden sm:block text-xs font-black border-b-2 border-[#121212] pb-0.5 hover:opacity-70 transition-opacity">
+              Start Application
+            </Link>
+            <button 
+              onClick={() => setIsOpen(!isOpen)}
+              className="lg:hidden p-2 hover:bg-[#FAFAFA] rounded-full transition-colors"
+            >
+              {isOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      <motion.div 
+        initial={false}
+        animate={{ opacity: isOpen ? 1 : 0, pointerEvents: isOpen ? 'auto' : 'none' }}
+        className="fixed inset-0 z-40 bg-white pt-32 px-10"
+      >
+        <div className="space-y-10">
+          {['Capital', 'Markets', 'Company', 'Inside'].map((item, i) => (
+            <motion.a 
+              key={item}
+              initial={{ x: -20, opacity: 0 }}
+              animate={isOpen ? { x: 0, opacity: 1 } : { x: -20, opacity: 0 }}
+              transition={{ delay: i * 0.1 }}
+              href="#" 
+              className="block text-5xl font-serif italic hover:text-[#0065FF] transition-colors"
+            >
+              {item}
+            </motion.a>
+          ))}
+          <div className="pt-10 border-t border-[#EEEEEE]">
+            <Link to="/apply" className="btn-primary w-full h-16 rounded-2xl text-lg">
+              Apply Now
+            </Link>
+          </div>
+        </div>
+      </motion.div>
+    </>
+  );
+};
 
 const Hero = () => (
-  <section className="pt-40 pb-24 px-6 overflow-hidden bg-gradient-to-b from-blue-50/50 to-white">
-    <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative">
-      <div className="space-y-10">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[#DFE1E6] rounded-full text-[#0065FF] text-xs font-bold shadow-sm"
-        >
-          <span className="w-2 h-2 bg-[#36B37E] rounded-full animate-pulse" />
-          Join 2M+ truster borrowers in India
-        </motion.div>
-
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-6xl md:text-7xl font-black font-display leading-[1.1] text-[#172B4D]"
-        >
-          Financial Freedom, <br />
-          <span className="text-[#0065FF]">Made Simple.</span>
-        </motion.h1>
-
+  <section className="pt-48 pb-20 sm:pb-32 px-6 sm:px-10 grain-bg">
+    <div className="max-w-[1600px] mx-auto">
+      <div className="space-y-12 mb-24">
         <motion.p 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-xl text-[#42526E] max-w-xl leading-relaxed font-medium"
+          className="text-meta"
         >
-          LendSwift provides transparent, paperless loans with instant approval. 
-          Built for modern needs, designed for complete peace of mind.
+          2026 Edition / Institutional Fluidity
         </motion.p>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+        
+        <motion.h1 
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center gap-4"
+          transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
+          className="text-editorial"
         >
-          <Link to="/apply" className="btn-primary h-16 px-12 text-lg rounded-2xl w-full sm:w-auto flex items-center justify-center gap-2">
-            Apply for Loan
-            <ArrowRight size={20} />
-          </Link>
-          <button className="btn-secondary h-16 px-12 text-lg rounded-2xl w-full sm:w-auto">
-            Check Eligibility
-          </button>
-        </motion.div>
-
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="grid grid-cols-2 gap-12 pt-8"
-        >
-          <StatItem label="Active Users" val="2M+" icon={Users} />
-          <StatItem label="Disbursed" val="₹5k Cr+" icon={TrendingUp} />
-        </motion.div>
+          Capital that <br className="hidden sm:block" /> 
+          breathes <span className="text-[#0065FF] underline decoration-[0.05em] underline-offset-[0.1em]">with</span> you.
+        </motion.h1>
       </div>
 
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8 }}
-        className="relative"
-      >
-        <div className="premium-card p-4 rounded-[2.5rem] bg-white relative z-10">
-          <img 
-            src="https://images.unsplash.com/photo-1551288049-bb1c003f2c8d?auto=format&fit=crop&q=80&w=1200" 
-            alt="Dashboard Preview" 
-            className="w-full h-auto rounded-[1.8rem] shadow-sm"
-          />
+      <div className="grid lg:grid-cols-12 gap-16 items-end">
+        <div className="lg:col-span-7 space-y-10">
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-xl sm:text-2xl text-[#444444] leading-tight font-sans max-w-2xl"
+          >
+            LendSwift redefines the intersection of institutional stability and digital agility. 
+            High-velocity financing for the creators of the next decade.
+          </motion.p>
+          <div className="flex flex-wrap gap-6 pt-4">
+             <ArrowDown size={32} className="animate-bounce text-[#EEEEEE]" />
+          </div>
         </div>
-        {/* Floating Trust Card */}
+
         <motion.div 
-          animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 4, repeat: Infinity }}
-          className="absolute -left-8 top-1/4 z-20 bg-white p-6 rounded-2xl shadow-xl border border-[#DFE1E6] flex items-center gap-4"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.6 }}
+          className="lg:col-span-5 flex flex-col sm:flex-row gap-6 lg:justify-end"
         >
-          <div className="w-10 h-10 bg-[#36B37E] rounded-full flex items-center justify-center text-white">
-            <CheckCircle2 size={24} />
-          </div>
-          <div>
-            <p className="text-xs font-bold text-[#8993A4] uppercase">Status</p>
-            <p className="text-sm font-black text-[#172B4D]">Instant Approval!</p>
-          </div>
+          <Link to="/apply" className="btn-primary group h-14 sm:h-16 px-10 sm:px-14">
+            Apply Now
+            <ArrowUpRight size={18} className="ml-2 group-hover:rotate-45 transition-transform" />
+          </Link>
+          <button className="btn-secondary h-14 sm:h-16 px-10 sm:px-14">
+            Our Methods
+          </button>
         </motion.div>
-      </motion.div>
+      </div>
     </div>
   </section>
 );
 
-const ProductCard = ({ title, amount, rate, icon: Icon, delay }) => (
+const ProductLine = ({ title, desc, rate, amount, index }) => (
   <motion.div 
-    initial={{ opacity: 0, y: 20 }}
+    initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
-    transition={{ delay }}
-    className="premium-card p-10 group hover:border-[#0065FF] hover:-translate-y-2"
+    transition={{ delay: index * 0.2 }}
+    viewport={{ once: true }}
+    className="minimal-card flex flex-col justify-between group h-full min-h-[400px]"
   >
-    <div className="w-14 h-14 bg-blue-50 text-[#0065FF] rounded-2xl flex items-center justify-center mb-8 group-hover:bg-[#0065FF] group-hover:text-white transition-all duration-300">
-      <Icon size={32} />
-    </div>
-    <h3 className="text-2xl font-black text-[#172B4D] mb-4">{title}</h3>
-    <div className="space-y-4">
-      <div className="flex justify-between border-b border-[#F4F5F7] pb-4">
-        <span className="text-sm font-bold text-[#42526E]">Max Amount</span>
-        <span className="text-sm font-black text-[#172B4D]">{amount}</span>
+    <div className="space-y-6">
+      <div className="flex justify-between items-start">
+        <h3 className="text-4xl font-serif italic">{title}</h3>
+        <div className="w-10 h-10 border border-[#EEEEEE] rounded-full flex items-center justify-center group-hover:bg-[#121212] group-hover:text-white transition-all">
+          <ArrowUpRight size={16} />
+        </div>
       </div>
-      <div className="flex justify-between">
-        <span className="text-sm font-bold text-[#42526E]">Interest Rate</span>
-        <span className="text-sm font-black text-[#36B37E]">{rate}</span>
+      <p className="text-sm sm:text-base text-[#888888] font-sans leading-relaxed max-w-[280px]">{desc}</p>
+    </div>
+    
+    <div className="grid grid-cols-2 gap-8 border-t border-[#EEEEEE] pt-10">
+      <div className="space-y-1">
+        <p className="text-meta">Max Limit</p>
+        <p className="text-xl font-mono tracking-tighter">{amount}</p>
+      </div>
+      <div className="space-y-1">
+        <p className="text-meta">Fixed Rate</p>
+        <p className="text-xl font-mono tracking-tighter">{rate}</p>
       </div>
     </div>
-    <Link to="/apply" className="mt-8 w-full btn-primary h-12 text-sm rounded-xl flex items-center justify-center gap-2">
-      Apply Now
-      <ChevronRight size={16} />
-    </Link>
   </motion.div>
 );
 
-const Feature = ({ title, desc, icon: Icon }) => (
-  <div className="flex gap-6">
-    <div className="w-14 h-14 shrink-0 bg-blue-50 text-[#0065FF] rounded-2xl flex items-center justify-center">
-      <Icon size={28} />
+const FeaturesSection = () => (
+  <section className="py-32 sm:py-48 px-6 sm:px-10 border-t border-[#EEEEEE]">
+    <div className="max-w-[1600px] mx-auto grid lg:grid-cols-12 gap-24">
+      <div className="lg:col-span-4 lg:sticky lg:top-40 h-fit space-y-8">
+        <p className="text-meta">Core Philosophy</p>
+        <h2 className="text-5xl sm:text-6xl font-serif italic leading-[1.1]">The mechanics of trust.</h2>
+        <p className="text-slate-500 font-sans leading-relaxed max-w-sm">
+          A three-pillar approach to digital financing, built on absolute transparency and real-time velocity.
+        </p>
+      </div>
+      
+      <div className="lg:col-span-8 space-y-32 sm:space-y-48">
+        {[
+          { 
+            num: "01", 
+            title: "Real-time Verification", 
+            desc: "Using proprietary e-bridge protocols, we verify identity and assets in under 60 seconds. Paperless, friction-less, human-centric.",
+            icon: ShieldCheck
+          },
+          { 
+            num: "02", 
+            title: "Dynamic Underwriting", 
+            desc: "Our algorithms evaluate potential, not just history. We look at the trajectory of your growth to determine liquidity limits.",
+            icon: TrendingUp
+          },
+          { 
+            num: "03", 
+            title: "Atomic Disbursement", 
+            desc: "Once approved, capital moves instantly. Atomic settlement ensures that your ambition is never bottlenecked by legacy banking cycles.",
+            icon: Zap
+          }
+        ].map((f, i) => (
+          <motion.div 
+            key={i}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ margin: "-100px" }}
+            className="grid sm:grid-cols-12 gap-10 items-start group"
+          >
+            <p className="sm:col-span-2 font-serif italic text-6xl sm:text-8xl text-[#EEEEEE] group-hover:text-[#121212] transition-colors duration-700">{f.num}</p>
+            <div className="sm:col-span-10 pt-4 space-y-6">
+              <h4 className="text-2xl font-black uppercase tracking-tight">{f.title}</h4>
+              <p className="text-lg text-[#888888] leading-relaxed max-w-xl">{f.desc}</p>
+              <div className="w-12 h-12 bg-[#FAFAFA] rounded-2xl flex items-center justify-center text-[#121212]">
+                <f.icon size={24} />
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
     </div>
-    <div>
-      <h4 className="text-xl font-black text-[#172B4D] mb-2">{title}</h4>
-      <p className="text-[#42526E] leading-relaxed font-medium">{desc}</p>
-    </div>
-  </div>
+  </section>
 );
 
-const LandingPage = () => (
-  <div className="min-h-screen bg-white font-sans">
-    <Nav />
-    <main>
-      <Hero />
-      
-      <section className="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-3 gap-10">
-        <ProductCard title="Personal Loan" amount="₹25 Lakhs" rate="10.5% p.a." icon={Smartphone} delay={0.1} />
-        <ProductCard title="Business Loan" amount="₹75 Lakhs" rate="11.2% p.a." icon={TrendingUp} delay={0.2} />
-        <ProductCard title="Home Loan" amount="₹5 Crores" rate="8.4% p.a." icon={Award} delay={0.3} />
-      </section>
-
-      <section className="py-24 px-6 bg-[#F4F5F7]">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
-          <div className="space-y-12">
-            <h2 className="text-4xl md:text-5xl font-black font-display text-[#172B4D]">Why Choose LendSwift?</h2>
-            <div className="space-y-8">
-              <Feature title="Lightning Speed" desc="Decision in 60 seconds. Funds in your bank in 2 minutes." icon={Zap} />
-              <Feature title="Zero Paperwork" desc="100% digital process with Aadhaar and Video KYC." icon={PieChart} />
-              <Feature title="Safe & Secure" desc="Bank-grade encryption protecting your personal data." icon={Lock} />
-            </div>
-          </div>
-          <div className="relative">
-             <div className="premium-card p-10 bg-white">
-                <div className="space-y-6">
-                   <div className="flex justify-between items-center">
-                      <p className="text-sm font-bold text-[#42526E]">Security Score</p>
-                      <span className="text-[#36B37E] font-black">EXCELLENT</span>
-                   </div>
-                   <div className="h-4 w-full bg-[#F4F5F7] rounded-full overflow-hidden">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        whileInView={{ width: '92%' }}
-                        className="h-full bg-[#36B37E]"
-                      />
-                   </div>
-                   <div className="flex items-center gap-4 p-4 bg-blue-50 rounded-2xl border border-blue-100">
-                      <ShieldCheck className="text-[#0065FF]" />
-                      <p className="text-xs font-bold text-[#0065FF]">Your data is 256-bit AES encrypted</p>
-                   </div>
-                </div>
-             </div>
-          </div>
-        </div>
-      </section>
-    </main>
-    
-    <footer className="py-20 px-6 border-t border-[#DFE1E6] bg-white">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
-        <div className="space-y-6 max-w-sm">
+const Footer = () => (
+  <footer className="py-24 sm:py-32 px-6 sm:px-10 border-t border-[#EEEEEE] bg-[#FAFAFA]">
+    <div className="max-w-[1600px] mx-auto space-y-32">
+      <div className="flex flex-col lg:flex-row justify-between gap-24">
+        <div className="space-y-12 max-w-sm">
           <Logo />
-          <p className="text-[#42526E] font-medium leading-relaxed">
-            Revolutionizing digital lending in India. Fast, transparent, and built on trust.
+          <p className="text-sm text-[#888888] leading-relaxed font-sans">
+            LendSwift Technologies Inc. / 2026<br />
+            An institutional-grade digital financing platform. 
+            Member of the Global Fintech Alliance.
           </p>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-16">
-          <div className="space-y-4 text-sm">
-            <h5 className="font-black text-[#172B4D] uppercase tracking-widest text-xs">Product</h5>
-            <div className="flex flex-col gap-3 text-[#42526E] font-bold">
-              <a href="#" className="hover:text-[#0065FF]">Loans</a>
-              <a href="#" className="hover:text-[#0065FF]">Eligibility</a>
+        
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-16 sm:gap-24">
+          <div className="space-y-6">
+            <p className="text-meta">Capital</p>
+            <div className="flex flex-col gap-4 text-sm font-bold text-[#121212]">
+              <a href="#" className="hover:opacity-50 transition-opacity">Personal</a>
+              <a href="#" className="hover:opacity-50 transition-opacity">Enterprise</a>
             </div>
           </div>
-          <div className="space-y-4 text-sm">
-            <h5 className="font-black text-[#172B4D] uppercase tracking-widest text-xs">Company</h5>
-            <div className="flex flex-col gap-3 text-[#42526E] font-bold">
-              <a href="#" className="hover:text-[#0065FF]">About</a>
-              <a href="#" className="hover:text-[#0065FF]">Privacy</a>
+          <div className="space-y-6">
+            <p className="text-meta">Corporate</p>
+            <div className="flex flex-col gap-4 text-sm font-bold text-[#121212]">
+              <a href="#" className="hover:opacity-50 transition-opacity">About</a>
+              <a href="#" className="hover:opacity-50 transition-opacity">Privacy</a>
             </div>
           </div>
-          <div className="space-y-4 text-sm">
-            <h5 className="font-black text-[#172B4D] uppercase tracking-widest text-xs">Compliance</h5>
-            <div className="flex flex-col gap-3 text-[#42526E] font-bold text-[10px]">
-              <span>RBI Regulated</span>
-              <span>ISO 27001</span>
+          <div className="space-y-6">
+            <p className="text-meta">Network</p>
+            <div className="flex flex-col gap-4 text-sm font-bold text-[#121212]">
+              <a href="#" className="hover:opacity-50 transition-opacity">LinkedIn</a>
+              <a href="#" className="hover:opacity-50 transition-opacity">Contact</a>
             </div>
           </div>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto pt-12 mt-12 border-t border-[#F4F5F7] flex justify-between items-center text-[10px] font-bold text-[#8993A4] uppercase tracking-widest">
-        <span>© 2026 LendSwift Financial Services</span>
-        <div className="flex gap-6">
-          <Smartphone size={14} />
-          <Lock size={14} />
+
+      <div className="pt-12 border-t border-[#EEEEEE] flex flex-col md:flex-row justify-between items-center gap-10">
+        <p className="text-meta text-[9px]">LendSwift is a regulated financial platform. All loans are subject to credit approval and verification.</p>
+        <div className="flex gap-10 opacity-30">
+          <ShieldCheck size={18} />
+          <Award size={18} />
+          <Zap size={18} />
         </div>
       </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
 );
+
+const LandingPage = () => {
+  return (
+    <div className="min-h-screen bg-white grain-bg font-sans selection:bg-[#121212] selection:text-white">
+      <Nav />
+      <main className="relative">
+        <Hero />
+        
+        <section className="border-t border-[#EEEEEE]">
+          <div className="max-w-[1600px] mx-auto grid md:grid-cols-2 lg:grid-cols-3">
+            <ProductLine 
+              title="Personal" 
+              desc="Liquidity solutions for individual growth and asset management."
+              amount="₹25L"
+              rate="10.4% p.a."
+              index={0}
+            />
+            <ProductLine 
+              title="Enterprise" 
+              desc="Deep-tier working capital for high-growth organizations."
+              amount="₹75L"
+              rate="11.2% p.a."
+              index={1}
+            />
+            <ProductLine 
+              title="Mortgage" 
+              desc="Institutional-grade property and fixed-asset financing."
+              amount="₹5Cr"
+              rate="8.3% p.a."
+              index={2}
+            />
+          </div>
+        </section>
+
+        <FeaturesSection />
+
+        <section className="py-48 px-6 sm:px-10 bg-[#121212] text-white overflow-hidden relative">
+          <div className="max-w-[1600px] mx-auto text-center space-y-12 relative z-10">
+            <h2 className="text-5xl sm:text-7xl md:text-8xl font-serif italic leading-none">Ready to <br /> accelerate?</h2>
+            <div className="pt-6">
+               <Link to="/apply" className="inline-flex items-center justify-center py-5 px-16 bg-white text-[#121212] rounded-full font-black text-lg hover:scale-110 transition-transform">
+                 Apply Now
+               </Link>
+            </div>
+          </div>
+          {/* Abstract background shape */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-tr from-indigo-500/10 to-transparent blur-[120px] pointer-events-none" />
+        </section>
+      </main>
+      <Footer />
+    </div>
+  );
+};
 
 export default LandingPage;
