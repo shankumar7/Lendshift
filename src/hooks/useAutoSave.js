@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import useLoanStore from '../store/useLoanStore';
 
-const useAutoSave = (interval = 30000) => {
+export const useAutoSave = (interval = 30000) => {
   const saveProgress = useLoanStore((state) => state.saveProgress);
   const formData = useLoanStore((state) => state.formData);
   const timerRef = useRef(null);
@@ -27,5 +27,3 @@ const useAutoSave = (interval = 30000) => {
 
   return null;
 };
-
-export default useAutoSave;

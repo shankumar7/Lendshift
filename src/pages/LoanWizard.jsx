@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronRight, 
   ChevronLeft, 
-  ShieldCheck, 
   CheckCircle2, 
-  Circle, 
-  Loader2, 
-  Save,
   Home,
   User,
   Fingerprint,
@@ -19,9 +15,10 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import useLoanStore from '../store/useLoanStore';
-import useAutoSave from '../hooks/useAutoSave';
+import { useAutoSave } from '../hooks/useAutoSave';
 import Logo from '../components/Logo';
 import ResumeModal from '../components/ResumeModal';
+import LoanSelectionStep from '../forms/LoanSelectionStep';
 
 const STEPS = [
   { id: 1, title: 'Loan Selection', desc: 'Configure your capital', icon: Home },
@@ -37,16 +34,16 @@ const STEPS = [
 const LoanWizard = () => {
   const { stepId } = useParams();
   const navigate = useNavigate();
+  const formRef = useRef(null);
+  
   const currentStep = useLoanStore((state) => state.currentStep);
   const setStep = useLoanStore((state) => state.setStep);
   const lastSaved = useLoanStore((state) => state.lastSaved);
   const resetApplication = useLoanStore((state) => state.resetApplication);
   const [showResume, setShowResume] = useState(false);
   
-  // Initialize Auto-save
   useAutoSave(30000);
 
-  // Initial Logic: Check for resume state
   useEffect(() => {
     if (!stepId && lastSaved) {
       setShowResume(true);
@@ -55,7 +52,6 @@ const LoanWizard = () => {
     }
   }, [stepId, lastSaved, navigate]);
 
-  // Sync stepId to store if it changes via URL
   useEffect(() => {
     if (stepId) {
       const id = parseInt(stepId);
@@ -74,11 +70,19 @@ const LoanWizard = () => {
     navigate('/apply/step/1');
   };
 
-  const progress = (currentStep / STEPS.length) * 100;
-
-  const handleNext = () => {
+  const onStepSuccess = () => {
     if (currentStep < STEPS.length) {
       navigate(`/apply/step/${currentStep + 1}`);
+    }
+  };
+
+  const handleNext = () => {
+    if (formRef.current) {
+      // Trigger the hidden submit button in the form
+      const submitBtn = formRef.current.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.click();
+    } else {
+      onStepSuccess();
     }
   };
 
@@ -88,53 +92,38 @@ const LoanWizard = () => {
     }
   };
 
+  const progress = (currentStep / STEPS.length) * 100;
+
   return (
     <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden font-sans">
-      {/* LEFT SIDEBAR: Progress & Navigation */}
       <aside className="w-full lg:w-[400px] bg-[#F8F9FA] border-r border-[#EEEEEE] p-8 lg:p-12 flex flex-col justify-between overflow-y-auto">
         <div className="space-y-12">
           <Link to="/" className="inline-block scale-90 origin-left mb-8">
             <Logo />
           </Link>
-
           <div className="space-y-2">
             <p className="text-meta">Step {currentStep} of 8</p>
             <h2 className="text-3xl font-serif italic tracking-tight">Onboarding</h2>
           </div>
-
           <nav className="space-y-1">
             {STEPS.map((step) => {
               const isActive = step.id === currentStep;
               const isCompleted = step.id < currentStep;
               const Icon = step.icon;
-
               return (
-                <div 
-                  key={step.id}
-                  className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-500 ${
-                    isActive ? 'bg-white shadow-sm ring-1 ring-[#EEEEEE]' : 'opacity-40'
-                  }`}
-                >
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
-                    isActive ? 'bg-[#121212] text-white' : isCompleted ? 'bg-[#0065FF] text-white' : 'bg-[#EEEEEE] text-[#888888]'
-                  }`}>
+                <div key={step.id} className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-500 ${isActive ? 'bg-white shadow-sm ring-1 ring-[#EEEEEE]' : 'opacity-40'}`}>
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${isActive ? 'bg-[#121212] text-white' : isCompleted ? 'bg-[#0065FF] text-white' : 'bg-[#EEEEEE] text-[#888888]'}`}>
                     {isCompleted ? <CheckCircle2 size={20} /> : <Icon size={20} />}
                   </div>
                   <div className="flex-1">
-                    <p className={`text-xs font-black uppercase tracking-widest ${isActive ? 'text-[#121212]' : 'text-[#888888]'}`}>
-                      {step.title}
-                    </p>
+                    <p className={`text-xs font-black uppercase tracking-widest ${isActive ? 'text-[#121212]' : 'text-[#888888]'}`}>{step.title}</p>
                     <p className="text-[10px] text-[#888888] font-mono">{step.desc}</p>
                   </div>
-                  {isActive && (
-                    <motion.div layoutId="activeStep" className="w-1.5 h-1.5 rounded-full bg-[#0065FF]" />
-                  )}
                 </div>
               );
             })}
           </nav>
         </div>
-
         <div className="pt-12 space-y-6">
           <div className="space-y-2">
             <div className="flex justify-between items-end">
@@ -142,140 +131,59 @@ const LoanWizard = () => {
               <p className="text-xs font-black">{Math.round(progress)}%</p>
             </div>
             <div className="h-1 bg-[#EEEEEE] rounded-full overflow-hidden">
-              <motion.div 
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-                className="h-full bg-[#121212]"
-              />
+              <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }} className="h-full bg-[#121212]" />
             </div>
-          </div>
-
-          <div className="flex items-center gap-3 py-4 border-t border-[#EEEEEE]">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <p className="text-[10px] font-mono text-[#888888] uppercase tracking-widest flex items-center gap-2">
-              <Save size={10} />
-              {lastSaved ? `Last Saved: ${new Date(lastSaved).toLocaleTimeString()}` : 'Cloud Sync Active'}
-            </p>
           </div>
         </div>
       </aside>
 
-      {/* RIGHT SIDE: Content Area */}
       <main className="flex-1 bg-white relative flex flex-col">
-        {/* Header (Mobile-ish) */}
         <header className="h-20 border-b border-[#EEEEEE] px-8 lg:px-20 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20">
           <div className="flex items-center gap-4">
-             <button onClick={handleBack} className="p-2 hover:bg-[#FAFAFA] rounded-full transition-colors opacity-40 hover:opacity-100">
-               <ChevronLeft size={20} />
-             </button>
+             <button onClick={handleBack} className="p-2 hover:bg-[#FAFAFA] rounded-full transition-colors opacity-40 hover:opacity-100"><ChevronLeft size={20} /></button>
              <span className="text-[10px] font-mono text-[#EEEEEE]">/</span>
              <p className="text-xs font-black uppercase tracking-widest">{STEPS[currentStep - 1].title}</p>
           </div>
-          
-          <div className="flex items-center gap-6">
-            <button 
-              onClick={() => { if(confirm('Reset application?')) resetApplication(); }}
-              className="text-[10px] font-bold text-[#888888] hover:text-red-500 transition-colors uppercase tracking-widest"
-            >
-              Exit & Reset
-            </button>
-          </div>
+          <button onClick={() => { if(confirm('Reset application?')) resetApplication(); }} className="text-[10px] font-bold text-[#888888] hover:text-red-500 transition-colors uppercase tracking-widest">Exit & Reset</button>
         </header>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar">
-          <div className="max-w-3xl mx-auto py-24 px-8 lg:px-20 space-y-16">
-            {/* Step Header */}
+          <div className="max-w-4xl mx-auto py-24 px-8 lg:px-20 space-y-16">
             <div className="space-y-6">
-              <motion.div
-                key={currentStep + 'badge'}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="inline-flex items-center gap-3 px-4 py-2 bg-[#F8F9FA] rounded-full border border-[#EEEEEE]"
-              >
+              <motion.div key={currentStep + 'badge'} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="inline-flex items-center gap-3 px-4 py-2 bg-[#F8F9FA] rounded-full border border-[#EEEEEE]">
                 <div className="w-2 h-2 rounded-full bg-[#0065FF]" />
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#121212]">Section 0{currentStep}</span>
               </motion.div>
-              
-              <motion.div
-                key={currentStep + 'title'}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="space-y-4"
-              >
-                <h1 className="text-5xl lg:text-7xl font-serif italic leading-tight tracking-tighter">
-                  {STEPS[currentStep - 1].title}
-                </h1>
-                <p className="text-xl text-[#888888] font-sans leading-relaxed">
-                  {STEPS[currentStep - 1].desc}. Please ensure all information provided is accurate and verifiable against your institutional documents.
-                </p>
+              <motion.div key={currentStep + 'title'} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+                <h1 className="text-5xl lg:text-7xl font-serif italic leading-tight tracking-tighter">{STEPS[currentStep - 1].title}</h1>
+                <p className="text-xl text-[#888888] font-sans leading-relaxed">{STEPS[currentStep - 1].desc}</p>
               </motion.div>
             </div>
 
-            {/* Form Area Placeholder */}
             <AnimatePresence mode="wait">
-              <motion.div
-                key={currentStep}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.4 }}
-                className="min-h-[400px] p-12 bg-[#F8F9FA] rounded-[3rem] border border-[#EEEEEE] border-dashed flex flex-col items-center justify-center text-center space-y-6"
-              >
-                <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center border border-[#EEEEEE]">
-                  <Loader2 className="animate-spin text-[#0065FF]" size={24} />
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Configuring Form Architecture...</h3>
-                  <p className="text-sm text-[#888888] font-mono uppercase tracking-widest">Awaiting Zod Schema Validation</p>
-                </div>
+              <motion.div key={currentStep} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+                {currentStep === 1 ? (
+                  <div ref={formRef}>
+                    <LoanSelectionStep onNext={onStepSuccess} />
+                  </div>
+                ) : (
+                  <div className="min-h-[400px] p-12 bg-[#F8F9FA] rounded-[3rem] border border-[#EEEEEE] border-dashed flex flex-col items-center justify-center text-center">
+                    <p className="text-[#888888] font-mono uppercase tracking-widest text-xs">Step {currentStep} implementation pending</p>
+                  </div>
+                )}
               </motion.div>
             </AnimatePresence>
 
-            {/* Navigation Footer */}
             <div className="pt-12 border-t border-[#EEEEEE] flex justify-between items-center">
-              <button 
-                onClick={handleBack}
-                disabled={currentStep === 1}
-                className="flex items-center gap-3 text-sm font-black uppercase tracking-widest disabled:opacity-20 transition-all hover:gap-6"
-              >
-                <ChevronLeft size={20} />
-                Previous Step
-              </button>
-
-              <button 
-                onClick={handleNext}
-                className="btn-primary h-16 px-12 group"
-              >
-                {currentStep === 8 ? 'Submit Application' : 'Continue'}
-                <ChevronRight size={20} className="ml-3 group-hover:translate-x-1 transition-transform" />
-              </button>
+              <button onClick={handleBack} disabled={currentStep === 1} className="flex items-center gap-3 text-sm font-black uppercase tracking-widest disabled:opacity-20 transition-all hover:gap-6"><ChevronLeft size={20} /> Previous</button>
+              <button onClick={handleNext} className="btn-primary h-16 px-12 group">{currentStep === 8 ? 'Submit' : 'Continue'}<ChevronRight size={20} className="ml-3 group-hover:translate-x-1 transition-transform" /></button>
             </div>
           </div>
         </div>
       </main>
 
-      {/* Global CSS for scrollbar refinement */}
-      <style>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #EEEEEE;
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #DDDDDD;
-        }
-      `}</style>
-      <ResumeModal 
-        isOpen={showResume} 
-        onResume={handleResume} 
-        onReset={handleStartFresh} 
-        lastSavedTime={lastSaved} 
-      />
+      <ResumeModal isOpen={showResume} onResume={handleResume} onReset={handleStartFresh} lastSavedTime={lastSaved} />
+      <style>{`.custom-scrollbar::-webkit-scrollbar { width: 6px; } .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } .custom-scrollbar::-webkit-scrollbar-thumb { background: #EEEEEE; border-radius: 10px; } .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #DDDDDD; }`}</style>
     </div>
   );
 };
