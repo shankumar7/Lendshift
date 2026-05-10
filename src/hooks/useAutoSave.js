@@ -15,7 +15,7 @@ export const useAutoSave = (currentData, stepId) => {
       if (lastSavedRef.current !== dataString) {
         updateStepData(stepId, currentData);
         lastSavedRef.current = dataString;
-        
+
         // Silent toast for feedback if needed, but usually silent is better for UX
         console.log(`[LendSwift] Auto-saved step: ${stepId}`);
       }

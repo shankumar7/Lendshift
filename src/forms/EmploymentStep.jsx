@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schemas } from '@/schemas/loanSchema';
-import { useWizard } from '@/components/WizardController';
+import { useWizard } from '@/context/WizardContext';
 import { useAutoSave } from '@/hooks/useAutoSave';
 import FormField from '@/components/FormField';
 import { Briefcase, DollarSign, TrendingUp } from 'lucide-react';

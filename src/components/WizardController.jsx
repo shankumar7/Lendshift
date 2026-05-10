@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useLoanStore from '@/store/useLoanStore';
 import { STEP_REGISTRY } from '@/registry/stepRegistry';
 import { toast } from 'react-hot-toast';
-
-const WizardContext = createContext(null);
+import { WizardContext } from '@/context/WizardContext';
 
 export const WizardProvider = ({ children }) => {
   const { 
@@ -14,43 +14,53 @@ export const WizardProvider = ({ children }) => {
     isSubmitted 
   } = useLoanStore();
 
+  const navigate = useNavigate();
   const totalSteps = STEP_REGISTRY.length;
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === totalSteps - 1;
 
+  const updateStepInUrl = useCallback((stepIndex) => {
+    const stepId = STEP_REGISTRY[stepIndex].id;
+    navigate(`/apply/step/${stepId}`);
+  }, [navigate]);
+
   const goToNextStep = useCallback(() => {
     if (currentStep < totalSteps - 1) {
-      setStep(currentStep + 1);
-      // Focus management: move focus to the top of the new step
+      const nextIndex = currentStep + 1;
+      setStep(nextIndex);
+      updateStepInUrl(nextIndex);
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate('/success');
     }
-  }, [currentStep, totalSteps, setStep]);
+  }, [currentStep, totalSteps, setStep, updateStepInUrl, navigate]);
 
   const goToPrevStep = useCallback(() => {
     if (currentStep > 0) {
-      setStep(currentStep - 1);
+      const prevIndex = currentStep - 1;
+      setStep(prevIndex);
+      updateStepInUrl(prevIndex);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [currentStep, setStep]);
+  }, [currentStep, setStep, updateStepInUrl]);
 
   const canNavigateToStep = useCallback((targetStepIndex) => {
-    // Prevent skipping steps
     if (targetStepIndex > currentStep + 1) return false;
-    // Allow going back
-    if (targetStepIndex < currentStep) return true;
     return true;
   }, [currentStep]);
 
   const handleStepNavigation = useCallback((index) => {
     if (canNavigateToStep(index)) {
       setStep(index);
+      updateStepInUrl(index);
     } else {
       toast.error('Please complete the current step first.');
     }
-  }, [canNavigateToStep, setStep]);
+  }, [canNavigateToStep, setStep, updateStepInUrl]);
 
   const value = useMemo(() => ({
     currentStep,
+    setStep,
     totalSteps,
     isFirstStep,
     isLastStep,
@@ -62,6 +72,7 @@ export const WizardProvider = ({ children }) => {
     isSubmitted
   }), [
     currentStep, 
+    setStep,
     totalSteps, 
     isFirstStep, 
     isLastStep, 
@@ -78,12 +89,4 @@ export const WizardProvider = ({ children }) => {
       {children}
     </WizardContext.Provider>
   );
-};
-
-export const useWizard = () => {
-  const context = useContext(WizardContext);
-  if (!context) {
-    throw new Error('useWizard must be used within a WizardProvider');
-  }
-  return context;
 };

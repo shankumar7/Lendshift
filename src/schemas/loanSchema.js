@@ -31,34 +31,41 @@ export const schemas = {
     }, 'Must be at least 18 years old'),
   }),
 
-  employment: z.object({
-    employmentType: z.enum(['full_time', 'part_time', 'self_employed', 'unemployed']),
-    employerName: z.string().optional(),
-    monthlyIncome: z.coerce.number().min(500, 'Minimum monthly income required is $500'),
-    workExperience: z.coerce.number().min(0),
-  }).superRefine((data, ctx) => {
-    if (data.employmentType !== 'unemployed' && (!data.employerName || data.employerName.length < 2)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Employer name is required if employed',
-        path: ['employerName'],
-      });
-    }
-  }),
+  employment: z
+    .object({
+      employmentType: z.enum(['full_time', 'part_time', 'self_employed', 'unemployed']),
+      employerName: z.string().optional(),
+      monthlyIncome: z.coerce.number().min(500, 'Minimum monthly income required is $500'),
+      workExperience: z.coerce.number().min(0),
+    })
+    .superRefine((data, ctx) => {
+      if (
+        data.employmentType !== 'unemployed' &&
+        (!data.employerName || data.employerName.length < 2)
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Employer name is required if employed',
+          path: ['employerName'],
+        });
+      }
+    }),
 
-  financials: z.object({
-    hasExistingLoans: z.boolean(),
-    monthlyEMI: z.coerce.number().optional(),
-    creditScore: z.coerce.number().min(300).max(900).optional(),
-  }).superRefine((data, ctx) => {
-    if (data.hasExistingLoans && (!data.monthlyEMI || data.monthlyEMI <= 0)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Monthly EMI is required for existing loans',
-        path: ['monthlyEMI'],
-      });
-    }
-  }),
+  financials: z
+    .object({
+      hasExistingLoans: z.boolean(),
+      monthlyEMI: z.coerce.number().optional(),
+      creditScore: z.coerce.number().min(300).max(900).optional(),
+    })
+    .superRefine((data, ctx) => {
+      if (data.hasExistingLoans && (!data.monthlyEMI || data.monthlyEMI <= 0)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Monthly EMI is required for existing loans',
+          path: ['monthlyEMI'],
+        });
+      }
+    }),
 
   purpose: z.object({
     loanAmount: z.coerce.number().min(1000).max(1000000),

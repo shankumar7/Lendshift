@@ -168,7 +168,7 @@ const LoanProducts = () => {
       maxAmount: '₹5 Crores',
       rate: '8.4% p.a.',
       tenure: 'Up to 30 Years',
-      icon: award, // Award changed to Award below
+      icon: Award,
       color: 'bg-accent-600'
     }
   ];

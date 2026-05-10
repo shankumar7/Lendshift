@@ -1,14 +1,14 @@
 import { lazy } from 'react';
-import { 
-  User, 
-  Briefcase, 
-  DollarSign, 
-  Home, 
-  ShieldCheck, 
-  FileText, 
-  Upload, 
+import {
+  User,
+  Briefcase,
+  DollarSign,
+  Home,
+  ShieldCheck,
+  FileText,
+  Upload,
   PenTool,
-  CheckSquare
+  CheckSquare,
 } from 'lucide-react';
 
 // Lazy load step components for performance
@@ -80,5 +80,5 @@ export const STEP_REGISTRY = [
   },
 ];
 
-export const getStepById = (id) => STEP_REGISTRY.find(step => step.id === id);
-export const getStepIndexById = (id) => STEP_REGISTRY.findIndex(step => step.id === id);
+export const getStepById = (id) => STEP_REGISTRY.find((step) => step.id === id);
+export const getStepIndexById = (id) => STEP_REGISTRY.findIndex((step) => step.id === id);

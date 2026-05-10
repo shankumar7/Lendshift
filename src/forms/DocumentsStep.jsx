@@ -1,5 +1,5 @@
 import React from 'react';
-import { useWizard } from '@/components/WizardController';
+import { useWizard } from '@/context/WizardContext';
 import FileUploader from '@/components/FileUploader';
 import { motion } from 'framer-motion';
 
