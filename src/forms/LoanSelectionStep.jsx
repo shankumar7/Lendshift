@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Briefcase, 
   Home, 
@@ -9,11 +9,28 @@ import {
   Building2, 
   BadgeCheck, 
   CircleDollarSign,
-  Info
+  Info,
+  AlertCircle
 } from 'lucide-react';
 import { loanSelectionSchema } from '../schemas/loanSelectionSchema';
 import useLoanStore from '../store/useLoanStore';
 import EMIPanel from '../components/EMIPanel';
+
+const ErrorField = ({ error, touched }) => (
+  <AnimatePresence mode="wait">
+    {error && touched && (
+      <motion.div
+        initial={{ opacity: 0, y: -5 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -5 }}
+        className="flex items-center gap-1.5 mt-2 text-red-500"
+      >
+        <AlertCircle size={10} />
+        <p className="text-[10px] font-mono font-bold uppercase tracking-widest">{error.message}</p>
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
 
 const LoanTypeCard = ({ type, icon: Icon, title, desc, selected, onClick }) => (
   <button
@@ -60,7 +77,7 @@ const LoanSelectionStep = ({ onNext }) => {
     control, 
     handleSubmit, 
     watch, 
-    formState: { errors, isValid } 
+    formState: { errors, isValid, touchedFields, isSubmitted } 
   } = useForm({
     resolver: zodResolver(loanSelectionSchema),
     defaultValues: formData.loanSelection,
@@ -124,7 +141,7 @@ const LoanSelectionStep = ({ onNext }) => {
             </div>
           )}
         />
-        {errors.loanType && <p className="text-xs text-red-500 font-mono italic">{errors.loanType.message}</p>}
+        <ErrorField error={errors.loanType} touched={touchedFields.loanType || isSubmitted} />
       </div>
 
       {/* 2. Amount & Tenure Configuration */}
@@ -160,7 +177,7 @@ const LoanSelectionStep = ({ onNext }) => {
                 </div>
               )}
             />
-            {errors.amount && <p className="text-xs text-red-500 font-mono italic">{errors.amount.message}</p>}
+            <ErrorField error={errors.amount} touched={touchedFields.amount || isSubmitted} />
           </div>
 
           {/* Tenure Slider */}
@@ -193,7 +210,7 @@ const LoanSelectionStep = ({ onNext }) => {
                 </div>
               )}
             />
-            {errors.tenure && <p className="text-xs text-red-500 font-mono italic">{errors.tenure.message}</p>}
+            <ErrorField error={errors.tenure} touched={touchedFields.tenure || isSubmitted} />
           </div>
         </div>
 
@@ -217,7 +234,7 @@ const LoanSelectionStep = ({ onNext }) => {
               </select>
             )}
           />
-          {errors.purpose && <p className="text-xs text-red-500 font-mono italic">{errors.purpose.message}</p>}
+          <ErrorField error={errors.purpose} touched={touchedFields.purpose || isSubmitted} />
         </div>
 
         <div className="space-y-3">
@@ -234,7 +251,7 @@ const LoanSelectionStep = ({ onNext }) => {
               </select>
             )}
           />
-          {errors.employmentType && <p className="text-xs text-red-500 font-mono italic">{errors.employmentType.message}</p>}
+          <ErrorField error={errors.employmentType} touched={touchedFields.employmentType || isSubmitted} />
         </div>
 
         <div className="space-y-3">
@@ -248,6 +265,7 @@ const LoanSelectionStep = ({ onNext }) => {
                 <input
                   type="number"
                   {...field}
+                  onBlur={field.onBlur}
                   onChange={(e) => field.onChange(parseInt(e.target.value))}
                   placeholder="0.00"
                   className="w-full h-14 bg-white border border-[#EEEEEE] rounded-xl pl-8 pr-4 text-sm focus:border-[#0065FF] outline-none transition-all"
@@ -255,7 +273,7 @@ const LoanSelectionStep = ({ onNext }) => {
               )}
             />
           </div>
-          {errors.monthlyIncome && <p className="text-xs text-red-500 font-mono italic">{errors.monthlyIncome.message}</p>}
+          <ErrorField error={errors.monthlyIncome} touched={touchedFields.monthlyIncome || isSubmitted} />
         </div>
       </div>
 
