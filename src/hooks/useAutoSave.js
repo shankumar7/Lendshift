@@ -1,40 +1,31 @@
 import { useEffect, useRef } from 'react';
-import useLoanStore from '@/store/useLoanStore';
+import useLoanStore from '../store/useLoanStore';
 
-const AUTO_SAVE_INTERVAL = 30000; // 30 seconds
+const useAutoSave = (interval = 30000) => {
+  const saveProgress = useLoanStore((state) => state.saveProgress);
+  const formData = useLoanStore((state) => state.formData);
+  const timerRef = useRef(null);
+  const lastDataRef = useRef(JSON.stringify(formData));
 
-export const useAutoSave = (currentData, stepId) => {
-  const updateStepData = useLoanStore((state) => state.updateStepData);
-  const lastSavedRef = useRef(null);
-  const currentDataRef = useRef(currentData);
-
-  // Keep ref in sync with latest data without triggering effects
   useEffect(() => {
-    currentDataRef.current = currentData;
-  }, [currentData]);
-
-  // Interval-based auto-save
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const dataString = JSON.stringify(currentDataRef.current);
-      if (lastSavedRef.current !== dataString) {
-        updateStepData(stepId, currentDataRef.current);
-        lastSavedRef.current = dataString;
-        console.log(`[LendSwift] Periodic auto-save: ${stepId}`);
+    // Check for changes every interval
+    timerRef.current = setInterval(() => {
+      const currentData = JSON.stringify(formData);
+      
+      // Only save if data has actually changed
+      if (currentData !== lastDataRef.current) {
+        saveProgress();
+        lastDataRef.current = currentData;
+        console.log('Progress auto-saved at', new Date().toLocaleTimeString());
       }
-    }, AUTO_SAVE_INTERVAL);
+    }, interval);
 
-    return () => clearInterval(timer);
-  }, [stepId, updateStepData]);
-
-  // Final save on unmount only
-  useEffect(() => {
     return () => {
-      if (currentDataRef.current) {
-        updateStepData(stepId, currentDataRef.current);
-        console.log(`[LendSwift] Final auto-save on unmount: ${stepId}`);
-      }
+      if (timerRef.current) clearInterval(timerRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stepId]); // Only run on unmount or if stepId changes
+  }, [formData, saveProgress, interval]);
+
+  return null;
 };
+
+export default useAutoSave;

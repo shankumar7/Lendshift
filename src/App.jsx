@@ -1,13 +1,20 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import AppRoutes from './routes/AppRoutes';
+import LandingPage from './pages/LandingPage';
+import LoanWizard from './pages/LoanWizard';
+import SuccessPage from './pages/SuccessPage';
 import './styles/globals.css';
 
 function App() {
   return (
     <BrowserRouter>
-      <AppRoutes />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/apply" element={<LoanWizard />} />
+        <Route path="/apply/step/:stepId" element={<LoanWizard />} />
+        <Route path="/success" element={<SuccessPage />} />
+      </Routes>
       <Toaster
         position="top-right"
         toastOptions={{

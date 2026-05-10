@@ -151,11 +151,11 @@ const Hero = () => (
           transition={{ delay: 0.6 }}
           className="lg:col-span-5 flex flex-col sm:flex-row gap-6 lg:justify-end"
         >
-          <Link to="/apply" className="btn-primary group h-14 sm:h-15 px-10 sm:px-12 text-xs sm:text-sm">
+          <Link to="/apply" className="btn-primary group h-14 sm:h-16 px-10 sm:px-12 text-xs sm:text-sm">
             Apply Now
             <ArrowUpRight size={16} className="ml-2 group-hover:rotate-45 transition-transform" />
           </Link>
-          <button className="btn-secondary h-14 sm:h-15 px-10 sm:px-12 text-xs sm:text-sm">
+          <button className="btn-secondary h-14 sm:h-16 px-10 sm:px-12 text-xs sm:text-sm">
             Our Methods
           </button>
         </motion.div>

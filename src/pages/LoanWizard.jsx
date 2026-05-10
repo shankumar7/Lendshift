@@ -1,206 +1,282 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate, useParams } from 'react-router-dom';
-import { WizardProvider } from '@/components/WizardController';
-import { useWizard } from '@/context/WizardContext';
-import { STEP_REGISTRY, getStepIndexById } from '@/registry/stepRegistry';
 import { 
-  ChevronLeft, 
   ChevronRight, 
+  ChevronLeft, 
   ShieldCheck, 
-  Clock,
-  ArrowLeft,
-  Lock
+  CheckCircle2, 
+  Circle, 
+  Loader2, 
+  Save,
+  Home,
+  User,
+  Fingerprint,
+  MapPin,
+  Briefcase,
+  Users,
+  FileText,
+  Send
 } from 'lucide-react';
-import { cn } from '@/utils/cn';
-import Skeleton from '@/components/Skeleton';
-import useLoanStore from '@/store/useLoanStore';
-import Logo from '@/components/Logo';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import useLoanStore from '../store/useLoanStore';
+import useAutoSave from '../hooks/useAutoSave';
+import Logo from '../components/Logo';
+import ResumeModal from '../components/ResumeModal';
 
-const WizardInner = () => {
-  const { 
-    currentStep, 
-    setStep,
-    totalSteps, 
-    isFirstStep, 
-    isLastStep, 
-    goToPrevStep, 
-    handleStepNavigation,
-  } = useWizard();
-  
-  const navigate = useNavigate();
+const STEPS = [
+  { id: 1, title: 'Loan Selection', desc: 'Configure your capital', icon: Home },
+  { id: 2, title: 'Personal Info', desc: 'Basic identity details', icon: User },
+  { id: 3, title: 'KYC Verification', desc: 'Identity validation', icon: Fingerprint },
+  { id: 4, title: 'Address', desc: 'Residency information', icon: MapPin },
+  { id: 5, title: 'Employment', desc: 'Income & profession', icon: Briefcase },
+  { id: 6, title: 'Co-Applicant', desc: 'Secondary security', icon: Users },
+  { id: 7, title: 'Documents', desc: 'Verify & Sign', icon: FileText },
+  { id: 8, title: 'Review', desc: 'Final confirmation', icon: Send },
+];
+
+const LoanWizard = () => {
   const { stepId } = useParams();
+  const navigate = useNavigate();
+  const currentStep = useLoanStore((state) => state.currentStep);
+  const setStep = useLoanStore((state) => state.setStep);
+  const lastSaved = useLoanStore((state) => state.lastSaved);
+  const resetApplication = useLoanStore((state) => state.resetApplication);
+  const [showResume, setShowResume] = useState(false);
+  
+  // Initialize Auto-save
+  useAutoSave(30000);
 
+  // Initial Logic: Check for resume state
+  useEffect(() => {
+    if (!stepId && lastSaved) {
+      setShowResume(true);
+    } else if (!stepId) {
+      navigate('/apply/step/1', { replace: true });
+    }
+  }, [stepId, lastSaved, navigate]);
+
+  // Sync stepId to store if it changes via URL
   useEffect(() => {
     if (stepId) {
-      const index = getStepIndexById(stepId);
-      if (index !== -1 && index !== currentStep) {
-        setStep(index);
-      }
-    } else {
-      navigate(`/apply/step/${STEP_REGISTRY[0].id}`, { replace: true });
+      const id = parseInt(stepId);
+      if (id !== currentStep) setStep(id);
     }
-  }, [stepId, navigate, setStep, currentStep]);
+  }, [stepId, setStep, currentStep]);
 
-  const activeStep = STEP_REGISTRY[currentStep];
-  const StepComponent = activeStep.component;
+  const handleResume = () => {
+    setShowResume(false);
+    navigate(`/apply/step/${currentStep}`);
+  };
 
-  const handleBackToLanding = () => navigate('/');
+  const handleStartFresh = () => {
+    resetApplication();
+    setShowResume(false);
+    navigate('/apply/step/1');
+  };
+
+  const progress = (currentStep / STEPS.length) * 100;
+
+  const handleNext = () => {
+    if (currentStep < STEPS.length) {
+      navigate(`/apply/step/${currentStep + 1}`);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 1) {
+      navigate(`/apply/step/${currentStep - 1}`);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-[#F4F5F7] text-[#172B4D] flex flex-col font-sans">
-      {/* Professional Header */}
-      <header className="h-20 bg-white border-b border-[#DFE1E6] px-6 flex items-center justify-between sticky top-0 z-40">
-        <div className="flex items-center gap-6">
-          <button 
-            onClick={handleBackToLanding}
-            className="p-2 hover:bg-[#F4F5F7] rounded-full transition-colors text-[#42526E]"
-          >
-            <ArrowLeft size={20} />
-          </button>
-          <Logo className="scale-90" />
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden font-sans">
+      {/* LEFT SIDEBAR: Progress & Navigation */}
+      <aside className="w-full lg:w-[400px] bg-[#F8F9FA] border-r border-[#EEEEEE] p-8 lg:p-12 flex flex-col justify-between overflow-y-auto">
+        <div className="space-y-12">
+          <Link to="/" className="inline-block scale-90 origin-left mb-8">
+            <Logo />
+          </Link>
+
+          <div className="space-y-2">
+            <p className="text-meta">Step {currentStep} of 8</p>
+            <h2 className="text-3xl font-serif italic tracking-tight">Onboarding</h2>
+          </div>
+
+          <nav className="space-y-1">
+            {STEPS.map((step) => {
+              const isActive = step.id === currentStep;
+              const isCompleted = step.id < currentStep;
+              const Icon = step.icon;
+
+              return (
+                <div 
+                  key={step.id}
+                  className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-500 ${
+                    isActive ? 'bg-white shadow-sm ring-1 ring-[#EEEEEE]' : 'opacity-40'
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+                    isActive ? 'bg-[#121212] text-white' : isCompleted ? 'bg-[#0065FF] text-white' : 'bg-[#EEEEEE] text-[#888888]'
+                  }`}>
+                    {isCompleted ? <CheckCircle2 size={20} /> : <Icon size={20} />}
+                  </div>
+                  <div className="flex-1">
+                    <p className={`text-xs font-black uppercase tracking-widest ${isActive ? 'text-[#121212]' : 'text-[#888888]'}`}>
+                      {step.title}
+                    </p>
+                    <p className="text-[10px] text-[#888888] font-mono">{step.desc}</p>
+                  </div>
+                  {isActive && (
+                    <motion.div layoutId="activeStep" className="w-1.5 h-1.5 rounded-full bg-[#0065FF]" />
+                  )}
+                </div>
+              );
+            })}
+          </nav>
         </div>
 
-        <div className="flex items-center gap-6">
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-[#36B37E] rounded-full border border-emerald-100 font-bold text-[10px] uppercase tracking-widest">
-            <Lock size={12} />
-            Secure Session
+        <div className="pt-12 space-y-6">
+          <div className="space-y-2">
+            <div className="flex justify-between items-end">
+              <p className="text-[10px] font-mono text-[#888888] uppercase tracking-widest">Application Progress</p>
+              <p className="text-xs font-black">{Math.round(progress)}%</p>
+            </div>
+            <div className="h-1 bg-[#EEEEEE] rounded-full overflow-hidden">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                className="h-full bg-[#121212]"
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-[#8993A4]">
-            <Clock size={16} />
-            <span className="text-xs font-bold uppercase tracking-widest">~4 mins</span>
+
+          <div className="flex items-center gap-3 py-4 border-t border-[#EEEEEE]">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            <p className="text-[10px] font-mono text-[#888888] uppercase tracking-widest flex items-center gap-2">
+              <Save size={10} />
+              {lastSaved ? `Last Saved: ${new Date(lastSaved).toLocaleTimeString()}` : 'Cloud Sync Active'}
+            </p>
           </div>
         </div>
-      </header>
+      </aside>
 
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        {/* Sidebar Navigation */}
-        <aside className="lg:w-80 bg-white border-r border-[#DFE1E6] p-8 overflow-y-auto hidden lg:block">
-          <div className="space-y-10">
-            <div className="space-y-1">
-              <p className="text-[10px] font-black text-[#0065FF] uppercase tracking-[0.2em]">Application Flow</p>
-              <h2 className="text-xl font-bold">Step {currentStep + 1} of {totalSteps}</h2>
+      {/* RIGHT SIDE: Content Area */}
+      <main className="flex-1 bg-white relative flex flex-col">
+        {/* Header (Mobile-ish) */}
+        <header className="h-20 border-b border-[#EEEEEE] px-8 lg:px-20 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20">
+          <div className="flex items-center gap-4">
+             <button onClick={handleBack} className="p-2 hover:bg-[#FAFAFA] rounded-full transition-colors opacity-40 hover:opacity-100">
+               <ChevronLeft size={20} />
+             </button>
+             <span className="text-[10px] font-mono text-[#EEEEEE]">/</span>
+             <p className="text-xs font-black uppercase tracking-widest">{STEPS[currentStep - 1].title}</p>
+          </div>
+          
+          <div className="flex items-center gap-6">
+            <button 
+              onClick={() => { if(confirm('Reset application?')) resetApplication(); }}
+              className="text-[10px] font-bold text-[#888888] hover:text-red-500 transition-colors uppercase tracking-widest"
+            >
+              Exit & Reset
+            </button>
+          </div>
+        </header>
+
+        <div className="flex-1 overflow-y-auto custom-scrollbar">
+          <div className="max-w-3xl mx-auto py-24 px-8 lg:px-20 space-y-16">
+            {/* Step Header */}
+            <div className="space-y-6">
+              <motion.div
+                key={currentStep + 'badge'}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="inline-flex items-center gap-3 px-4 py-2 bg-[#F8F9FA] rounded-full border border-[#EEEEEE]"
+              >
+                <div className="w-2 h-2 rounded-full bg-[#0065FF]" />
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#121212]">Section 0{currentStep}</span>
+              </motion.div>
+              
+              <motion.div
+                key={currentStep + 'title'}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-4"
+              >
+                <h1 className="text-5xl lg:text-7xl font-serif italic leading-tight tracking-tighter">
+                  {STEPS[currentStep - 1].title}
+                </h1>
+                <p className="text-xl text-[#888888] font-sans leading-relaxed">
+                  {STEPS[currentStep - 1].desc}. Please ensure all information provided is accurate and verifiable against your institutional documents.
+                </p>
+              </motion.div>
             </div>
 
-            <nav className="space-y-1">
-              {STEP_REGISTRY.map((step, index) => {
-                const isCompleted = index < currentStep;
-                const isActive = index === currentStep;
-                const isLocked = index > currentStep;
-
-                return (
-                  <button
-                    key={step.id}
-                    onClick={() => handleStepNavigation(index)}
-                    disabled={isLocked}
-                    className={cn(
-                      "w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-300 text-left relative",
-                      isActive ? "bg-blue-50 text-[#0065FF]" : 
-                      isCompleted ? "text-[#36B37E]" : "text-[#42526E] opacity-60"
-                    )}
-                  >
-                    <div className={cn(
-                      "w-6 h-6 rounded-full flex items-center justify-center shrink-0 font-bold text-[10px] border-2 transition-all",
-                      isActive ? "border-[#0065FF] bg-[#0065FF] text-white" : 
-                      isCompleted ? "border-[#36B37E] bg-[#36B37E] text-white" : "border-[#DFE1E6]"
-                    )}>
-                      {isCompleted ? <CheckCircle2 size={12} /> : index + 1}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-bold truncate">{step.title}</p>
-                    </div>
-                    {isActive && (
-                      <motion.div 
-                        layoutId="active-nav-indicator"
-                        className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-[#0065FF] rounded-r-full"
-                      />
-                    )}
-                  </button>
-                );
-              })}
-            </nav>
-          </div>
-        </aside>
-
-        {/* Mobile Top Stepper */}
-        <div className="lg:hidden bg-white border-b border-[#DFE1E6] p-4 sticky top-20 z-30">
-          <div className="h-1.5 w-full bg-[#F4F5F7] rounded-full overflow-hidden">
-            <motion.div 
-              className="h-full bg-[#0065FF]"
-              initial={{ width: 0 }}
-              animate={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto p-6 lg:p-12 xl:p-24">
-          <div className="max-w-2xl mx-auto">
+            {/* Form Area Placeholder */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="bg-white rounded-3xl border border-[#DFE1E6] p-8 lg:p-14 shadow-sm min-h-[500px] flex flex-col"
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+                className="min-h-[400px] p-12 bg-[#F8F9FA] rounded-[3rem] border border-[#EEEEEE] border-dashed flex flex-col items-center justify-center text-center space-y-6"
               >
-                <div className="flex-1">
-                  <Suspense fallback={
-                    <div className="space-y-8">
-                      <Skeleton className="h-10 w-2/3 bg-[#F4F5F7]" />
-                      <Skeleton className="h-40 w-full bg-[#F4F5F7]" />
-                    </div>
-                  }>
-                    <StepComponent />
-                  </Suspense>
+                <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center border border-[#EEEEEE]">
+                  <Loader2 className="animate-spin text-[#0065FF]" size={24} />
                 </div>
-
-                <footer className="mt-12 pt-8 border-t border-[#F4F5F7] flex items-center justify-between">
-                  <button
-                    onClick={goToPrevStep}
-                    disabled={isFirstStep}
-                    className="h-12 px-6 rounded-xl text-sm font-bold text-[#42526E] hover:bg-[#F4F5F7] disabled:opacity-0 transition-colors flex items-center gap-2"
-                  >
-                    <ChevronLeft size={18} />
-                    Previous
-                  </button>
-
-                  <button
-                    type="submit"
-                    form="wizard-step-form"
-                    className="btn-primary h-14 px-10 text-sm"
-                  >
-                    {isLastStep ? 'Complete Application' : 'Save & Continue'}
-                    {!isLastStep && <ChevronRight size={18} />}
-                  </button>
-                </footer>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold">Configuring Form Architecture...</h3>
+                  <p className="text-sm text-[#888888] font-mono uppercase tracking-widest">Awaiting Zod Schema Validation</p>
+                </div>
               </motion.div>
             </AnimatePresence>
-            
-            {/* Compliance Section */}
-            <div className="mt-12 flex flex-col items-center gap-8 opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500">
-               <div className="flex items-center gap-12">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo.png/1200px-UPI-Logo.png" alt="UPI" className="h-4" />
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/RBI_logo.svg/1200px-RBI_logo.svg.png" alt="RBI" className="h-8" />
-                  <div className="flex items-center gap-2 text-[10px] font-black text-[#172B4D] uppercase tracking-widest">
-                     <ShieldCheck size={14} className="text-[#0065FF]" />
-                     SECURED BY 256-BIT AES
-                  </div>
-               </div>
+
+            {/* Navigation Footer */}
+            <div className="pt-12 border-t border-[#EEEEEE] flex justify-between items-center">
+              <button 
+                onClick={handleBack}
+                disabled={currentStep === 1}
+                className="flex items-center gap-3 text-sm font-black uppercase tracking-widest disabled:opacity-20 transition-all hover:gap-6"
+              >
+                <ChevronLeft size={20} />
+                Previous Step
+              </button>
+
+              <button 
+                onClick={handleNext}
+                className="btn-primary h-16 px-12 group"
+              >
+                {currentStep === 8 ? 'Submit Application' : 'Continue'}
+                <ChevronRight size={20} className="ml-3 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
           </div>
-        </main>
-      </div>
-    </div>
-  );
-};
+        </div>
+      </main>
 
-const LoanWizard = () => {
-  return (
-    <WizardProvider>
-      <WizardInner />
-    </WizardProvider>
+      {/* Global CSS for scrollbar refinement */}
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #EEEEEE;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #DDDDDD;
+        }
+      `}</style>
+      <ResumeModal 
+        isOpen={showResume} 
+        onResume={handleResume} 
+        onReset={handleStartFresh} 
+        lastSavedTime={lastSaved} 
+      />
+    </div>
   );
 };
 
