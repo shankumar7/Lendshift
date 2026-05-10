@@ -13,9 +13,11 @@ export const loanSelectionSchema = z.object({
   }).min(6, "Minimum tenure is 6 months"),
   purpose: z.string({
     required_error: "Please choose a loan purpose",
+    invalid_type_error: "Please choose a loan purpose",
   }).min(1, "Please choose a loan purpose"),
   employmentType: z.string({
     required_error: "Please select employment type",
+    invalid_type_error: "Please select employment type",
   }).min(1, "Please select employment type"),
   monthlyIncome: z.number({
     required_error: "Please enter your monthly income",

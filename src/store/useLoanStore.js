@@ -12,9 +12,12 @@ const useLoanStore = create(
       // Form Data Structure
       formData: {
         loanSelection: {
-          type: null, // 'personal', 'enterprise', 'mortgage'
+          loanType: 'personal', 
           amount: 500000,
           tenure: 12,
+          purpose: '',
+          employmentType: '',
+          monthlyIncome: 50000,
         },
         personalInfo: {
           firstName: '',
@@ -76,7 +79,14 @@ const useLoanStore = create(
       resetApplication: () => set({
         currentStep: 1,
         formData: {
-          loanSelection: { type: null, amount: 500000, tenure: 12 },
+          loanSelection: { 
+            loanType: 'personal', 
+            amount: 500000, 
+            tenure: 12, 
+            purpose: '', 
+            employmentType: '', 
+            monthlyIncome: 50000 
+          },
           personalInfo: { firstName: '', lastName: '', email: '', phone: '', dob: '' },
           kyc: { pan: '', aadhaar: '', verificationStatus: 'pending' },
           address: { current: { street: '', city: '', state: '', zip: '' }, permanentSameAsCurrent: true },

@@ -72,6 +72,17 @@ const LoanTypeCard = ({ type, icon: Icon, title, desc, selected, onClick }) => (
 
 const LoanSelectionStep = ({ onNext }) => {
   const { formData, updateFormData } = useLoanStore();
+
+  // Defensive defaults to handle stale localStorage from previous versions
+  const safeDefaults = {
+    loanType: 'personal',
+    amount: 500000,
+    tenure: 12,
+    purpose: '',
+    employmentType: '',
+    monthlyIncome: 50000,
+    ...formData.loanSelection
+  };
   
   const { 
     control, 
@@ -80,7 +91,7 @@ const LoanSelectionStep = ({ onNext }) => {
     formState: { errors, isValid, touchedFields, isSubmitted } 
   } = useForm({
     resolver: zodResolver(loanSelectionSchema),
-    defaultValues: formData.loanSelection,
+    defaultValues: safeDefaults,
     mode: 'onBlur'
   });
 
@@ -144,9 +155,9 @@ const LoanSelectionStep = ({ onNext }) => {
         <ErrorField error={errors.loanType} touched={touchedFields.loanType || isSubmitted} />
       </div>
 
-      {/* 2. Amount & Tenure Configuration */}
-      <div className="grid lg:grid-cols-2 gap-12 items-start">
-        <div className="space-y-12">
+      {/* 2. Main Configuration Grid */}
+      <div className="grid lg:grid-cols-2 gap-16 items-start">
+        <div className="space-y-16">
           {/* Amount Input */}
           <div className="space-y-6">
             <div className="flex justify-between items-end">
@@ -212,68 +223,71 @@ const LoanSelectionStep = ({ onNext }) => {
             />
             <ErrorField error={errors.tenure} touched={touchedFields.tenure || isSubmitted} />
           </div>
+
+          {/* Sub-grid: Purpose & Employment */}
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="space-y-3">
+              <label className="text-[10px] font-black uppercase tracking-widest">Purpose</label>
+              <Controller
+                name="purpose"
+                control={control}
+                render={({ field }) => (
+                  <select {...field} className="w-full h-14 bg-white border border-[#EEEEEE] rounded-2xl px-4 text-sm focus:border-[#121212] outline-none transition-all appearance-none cursor-pointer hover:bg-[#FAFAFA]">
+                    <option value="">Select Purpose</option>
+                    {selectedLoanType && purposeOptions[selectedLoanType].map(opt => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                )}
+              />
+              <ErrorField error={errors.purpose} touched={touchedFields.purpose || isSubmitted} />
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-[10px] font-black uppercase tracking-widest">Employment</label>
+              <Controller
+                name="employmentType"
+                control={control}
+                render={({ field }) => (
+                  <select {...field} className="w-full h-14 bg-white border border-[#EEEEEE] rounded-2xl px-4 text-sm focus:border-[#121212] outline-none transition-all appearance-none cursor-pointer hover:bg-[#FAFAFA]">
+                    <option value="">Select Type</option>
+                    <option value="salaried">Salaried</option>
+                    <option value="self-employed">Self Employed</option>
+                    <option value="business-owner">Business Owner</option>
+                  </select>
+                )}
+              />
+              <ErrorField error={errors.employmentType} touched={touchedFields.employmentType || isSubmitted} />
+            </div>
+          </div>
+
+          {/* Monthly Income */}
+          <div className="space-y-3">
+            <label className="text-[10px] font-black uppercase tracking-widest">Monthly Income</label>
+            <div className="relative">
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[#121212]/20 font-serif italic text-lg">₹</span>
+              <Controller
+                name="monthlyIncome"
+                control={control}
+                render={({ field }) => (
+                  <input
+                    type="number"
+                    {...field}
+                    onBlur={field.onBlur}
+                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    placeholder="0.00"
+                    className="w-full h-16 bg-white border border-[#EEEEEE] rounded-2xl pl-12 pr-6 text-xl font-serif italic text-[#121212] focus:border-[#121212] outline-none transition-all placeholder:text-[#EEEEEE]"
+                  />
+                )}
+              />
+            </div>
+            <ErrorField error={errors.monthlyIncome} touched={touchedFields.monthlyIncome || isSubmitted} />
+          </div>
         </div>
 
         {/* EMI PREVIEW */}
-        <EMIPanel amount={amount} tenure={tenure} loanType={selectedLoanType} />
-      </div>
-
-      {/* 3. Purpose & Income */}
-      <div className="grid md:grid-cols-3 gap-8">
-        <div className="space-y-3">
-          <label className="text-[10px] font-black uppercase tracking-widest">Purpose</label>
-          <Controller
-            name="purpose"
-            control={control}
-            render={({ field }) => (
-              <select {...field} className="w-full h-14 bg-white border border-[#EEEEEE] rounded-xl px-4 text-sm focus:border-[#0065FF] outline-none transition-all">
-                <option value="">Select Purpose</option>
-                {selectedLoanType && purposeOptions[selectedLoanType].map(opt => (
-                  <option key={opt} value={opt}>{opt}</option>
-                ))}
-              </select>
-            )}
-          />
-          <ErrorField error={errors.purpose} touched={touchedFields.purpose || isSubmitted} />
-        </div>
-
-        <div className="space-y-3">
-          <label className="text-[10px] font-black uppercase tracking-widest">Employment</label>
-          <Controller
-            name="employmentType"
-            control={control}
-            render={({ field }) => (
-              <select {...field} className="w-full h-14 bg-white border border-[#EEEEEE] rounded-xl px-4 text-sm focus:border-[#0065FF] outline-none transition-all">
-                <option value="">Select Type</option>
-                <option value="salaried">Salaried</option>
-                <option value="self-employed">Self Employed</option>
-                <option value="business-owner">Business Owner</option>
-              </select>
-            )}
-          />
-          <ErrorField error={errors.employmentType} touched={touchedFields.employmentType || isSubmitted} />
-        </div>
-
-        <div className="space-y-3">
-          <label className="text-[10px] font-black uppercase tracking-widest">Monthly Income</label>
-          <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#888888] font-mono text-xs">₹</span>
-            <Controller
-              name="monthlyIncome"
-              control={control}
-              render={({ field }) => (
-                <input
-                  type="number"
-                  {...field}
-                  onBlur={field.onBlur}
-                  onChange={(e) => field.onChange(parseInt(e.target.value))}
-                  placeholder="0.00"
-                  className="w-full h-14 bg-white border border-[#EEEEEE] rounded-xl pl-8 pr-4 text-sm focus:border-[#0065FF] outline-none transition-all"
-                />
-              )}
-            />
-          </div>
-          <ErrorField error={errors.monthlyIncome} touched={touchedFields.monthlyIncome || isSubmitted} />
+        <div className="sticky top-32">
+          <EMIPanel amount={amount} tenure={tenure} loanType={selectedLoanType} />
         </div>
       </div>
 
