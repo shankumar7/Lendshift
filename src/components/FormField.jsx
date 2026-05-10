@@ -1,136 +1,96 @@
-import React, { useId } from 'react';
+import React, { forwardRef } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/utils/cn';
-import { motion, AnimatePresence } from 'framer-motion';
 
-const FormField = React.forwardRef(({ 
+const FormField = forwardRef(({ 
   name, 
   label, 
   type = 'text', 
   placeholder, 
-  description, 
-  icon: Icon, 
-  options, 
+  icon: Icon,
+  description,
+  options = [],
   mask,
-  className,
-  ...props 
+  autoFocus = false,
 }, ref) => {
-  const { register, formState: { errors } } = useFormContext();
-  const error = errors[name];
-  const fieldId = useId();
-  const descriptionId = `${fieldId}-description`;
-  const errorId = `${fieldId}-error`;
+  const { 
+    register, 
+    formState: { errors }, 
+    watch 
+  } = useFormContext();
 
-  // Standard input logic with mask support (simplified for demo)
-  const handleChange = (e) => {
-    if (mask === 'pan') {
-      e.target.value = e.target.value.toUpperCase().slice(0, 10);
-    }
-    // Mask logic can be expanded here
-  };
+  const error = errors[name];
+  const value = watch(name);
+  const isFilled = value && value.length > 0;
 
   return (
-    <div className={cn("space-y-2 w-full group", className)}>
-      <div className="flex justify-between items-center">
-        {label && (
-          <label 
-            htmlFor={fieldId} 
-            className="text-sm font-bold text-slate-700 dark:text-slate-300 transition-colors group-focus-within:text-primary-600"
-          >
-            {label}
-          </label>
-        )}
-        <AnimatePresence>
-          {error && (
-            <motion.span
-              initial={{ opacity: 0, x: 5 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="text-[10px] font-black uppercase text-rose-500 tracking-wider"
-            >
-              Required
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </div>
-      
+    <div className="space-y-2.5 w-full group">
+      {label && (
+        <label 
+          htmlFor={name}
+          className="text-xs font-black uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400 ml-1 transition-colors group-focus-within:text-indigo-600"
+        >
+          {label}
+        </label>
+      )}
+
       <div className="relative">
-        {Icon && (
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-all duration-300 pointer-events-none">
-            <Icon size={18} strokeWidth={2.5} />
+        <div className={cn(
+          "relative flex items-center transition-all duration-300 rounded-2xl overflow-hidden bg-white dark:bg-[#0D0D15] border-2 shadow-sm",
+          error ? "border-rose-500 shadow-rose-100" : 
+          "border-slate-100 dark:border-white/5 focus-within:border-indigo-600 focus-within:shadow-indigo-100 dark:focus-within:shadow-none focus-within:scale-[1.01]",
+          isFilled && !error && "border-slate-200 dark:border-white/10"
+        )}>
+          {Icon && (
+            <div className="pl-5 text-slate-400 transition-colors group-focus-within:text-indigo-600">
+              <Icon size={20} />
+            </div>
+          )}
+
+          {type === 'select' ? (
+            <select
+              id={name}
+              {...register(name)}
+              className="w-full py-4 px-4 bg-transparent outline-none text-sm font-bold dark:text-white appearance-none cursor-pointer"
+            >
+              <option value="">Select option</option>
+              {options.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          ) : (
+            <input
+              id={name}
+              type={type}
+              placeholder={placeholder}
+              autoFocus={autoFocus}
+              {...register(name)}
+              className="w-full py-4 px-4 bg-transparent outline-none text-sm font-bold dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700"
+            />
+          )}
+
+          <div className="pr-5 flex items-center gap-2">
+            {error && <AlertCircle className="text-rose-500" size={18} />}
+            {isFilled && !error && <CheckCircle2 className="text-emerald-500 animate-in fade-in zoom-in duration-300" size={18} />}
           </div>
-        )}
-        
-        {type === 'select' ? (
-          <select
-            id={fieldId}
-            {...register(name)}
-            aria-describedby={error ? errorId : description ? descriptionId : undefined}
-            aria-invalid={!!error}
-            className={cn(
-              "input-field appearance-none pr-10",
-              Icon && "pl-12",
-              error ? "border-rose-500 ring-rose-500/10" : "border-slate-200 dark:border-slate-800",
-              "focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus-visible:outline-none"
-            )}
-            {...props}
-          >
-            <option value="">Select {label}</option>
-            {options?.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-        ) : (
-          <input
-            id={fieldId}
-            type={type}
-            placeholder={placeholder}
-            {...register(name)}
-            onChange={(e) => {
-              register(name).onChange(e);
-              handleChange(e);
-            }}
-            aria-describedby={error ? errorId : description ? descriptionId : undefined}
-            aria-invalid={!!error}
-            className={cn(
-              "input-field h-12",
-              Icon && "pl-12",
-              error ? "border-rose-500 ring-rose-500/10" : "border-slate-200 dark:border-slate-800",
-              "focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus-visible:outline-none"
-            )}
-            {...props}
-          />
-        )}
+        </div>
       </div>
 
-      <div className="min-h-[20px]">
-        <AnimatePresence mode="wait">
-          {error ? (
-            <motion.p
-              key="error"
-              id={errorId}
-              role="alert"
-              aria-live="polite"
-              initial={{ opacity: 0, y: -5 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -5 }}
-              className="text-xs font-medium text-rose-500 flex items-center gap-1.5"
-            >
-              <span className="w-1 h-1 bg-rose-500 rounded-full" />
-              {error.message}
-            </motion.p>
-          ) : description ? (
-            <motion.p
-              key="description"
-              id={descriptionId}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-[11px] text-slate-500 leading-relaxed"
-            >
-              {description}
-            </motion.p>
-          ) : null}
-        </AnimatePresence>
-      </div>
+      {description && !error && (
+        <p className="text-[10px] font-bold text-slate-400 ml-1 uppercase tracking-wider">{description}</p>
+      )}
+
+      {error && (
+        <p 
+          role="alert" 
+          aria-live="polite"
+          className="text-xs font-black text-rose-500 ml-1 flex items-center gap-1.5 animate-in slide-in-from-top-2 duration-300"
+        >
+          <AlertCircle size={12} />
+          {error.message}
+        </p>
+      )}
     </div>
   );
 });

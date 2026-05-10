@@ -1,290 +1,317 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { 
+  ArrowRight, 
   ChevronRight, 
-  ShieldCheck, 
   Zap, 
-  Award, 
-  Clock, 
+  ShieldCheck, 
+  TrendingUp, 
+  Award,
   Smartphone,
-  ArrowRight,
   Star,
-  CheckCircle2,
-  TrendingUp,
-  Percent
+  Users,
+  Layout,
+  Fingerprint
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { cn } from '@/utils/cn';
 
 const Navbar = () => (
-  <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
-    <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-600/20">
-          <span className="text-white font-black text-2xl">L</span>
+  <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl">
+    <div className="glass px-8 py-4 rounded-[2rem] flex items-center justify-between">
+      <div className="flex items-center gap-3 group cursor-pointer">
+        <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform duration-300">
+          <span className="text-white font-black text-xl">L</span>
         </div>
-        <span className="text-2xl font-black font-display tracking-tight dark:text-white">LendSwift</span>
+        <span className="text-xl font-black font-display tracking-tight dark:text-white">LendSwift</span>
       </div>
       
-      <div className="hidden md:flex items-center gap-10">
-        <a href="#products" className="text-sm font-bold text-slate-600 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Products</a>
-        <a href="#features" className="text-sm font-bold text-slate-600 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Features</a>
-        <a href="#why-us" className="text-sm font-bold text-slate-600 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Why LendSwift</a>
-        <a href="#emi-calc" className="text-sm font-bold text-slate-600 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">EMI Calculator</a>
+      <div className="hidden md:flex items-center gap-8">
+        {['Products', 'Solutions', 'Resources', 'Support'].map((item) => (
+          <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-bold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors">{item}</a>
+        ))}
       </div>
 
-      <Link to="/apply" className="btn-primary h-12 px-8 rounded-full shadow-xl shadow-primary-600/20 flex items-center gap-2 group">
-        Apply Now
-        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-      </Link>
+      <div className="flex items-center gap-4">
+        <button className="hidden sm:block text-sm font-bold text-indigo-600 dark:text-indigo-400">Login</button>
+        <Link to="/apply" className="btn-primary py-2.5 px-6 text-sm rounded-xl">
+          Get Started
+          <ChevronRight size={16} />
+        </Link>
+      </div>
     </div>
   </nav>
 );
 
+const MorphIcon = ({ icon: Icon, color }) => (
+  <div className={cn("w-16 h-16 rounded-[1.5rem] flex items-center justify-center shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),_0_10px_20px_rgba(0,0,0,0.05)]", color)}>
+    <Icon size={28} className="text-white" />
+  </div>
+);
+
 const Hero = () => (
-  <section className="pt-40 pb-20 px-6 overflow-hidden relative">
-    {/* Background Glow */}
-    <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-500/10 rounded-full blur-3xl -mr-80 -mt-80"></div>
-    <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent-500/10 rounded-full blur-3xl -ml-40 -mb-40"></div>
+  <section className="relative pt-48 pb-32 px-6 overflow-hidden">
+    {/* Abstract Blob Background */}
+    <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[60%] bg-indigo-600/5 blur-[120px] rounded-full pointer-events-none"></div>
+    <div className="absolute bottom-[10%] left-[-5%] w-[30%] h-[50%] bg-rose-500/5 blur-[100px] rounded-full pointer-events-none"></div>
 
-    <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 relative z-10">
-      <div className="flex-1 space-y-8 text-center lg:text-left">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 text-xs font-black uppercase tracking-widest border border-primary-100 dark:border-primary-900/50"
-        >
-          <Zap size={14} fill="currentColor" />
-          Instant Approval in 2 Minutes
-        </motion.div>
-        
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="text-5xl lg:text-7xl font-black font-display leading-[1.1] dark:text-white"
-        >
-          Loans That Move <br />
-          <span className="text-primary-600 italic">As Fast As You Do.</span>
-        </motion.h1>
+    <div className="max-w-7xl mx-auto flex flex-col items-center text-center space-y-12 relative z-10">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm"
+      >
+        <div className="w-2 h-2 rounded-full bg-indigo-600 animate-pulse"></div>
+        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Fastest disbursement in 2026</span>
+      </motion.div>
 
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-lg text-slate-500 dark:text-slate-400 max-w-xl mx-auto lg:mx-0 leading-relaxed"
-        >
-          Join 2M+ Indians who trust LendSwift for their financial needs. 100% digital process, zero paperwork, and funds in your bank in minutes.
-        </motion.p>
+      <motion.h1 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8 }}
+        className="text-6xl md:text-8xl font-black font-display leading-[0.9] tracking-tighter dark:text-white"
+      >
+        Credit that <br />
+        <span className="bg-gradient-to-r from-indigo-600 via-indigo-400 to-rose-500 bg-clip-text text-transparent">Empowers.</span>
+      </motion.h1>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
-        >
-          <Link to="/apply" className="btn-primary h-14 px-10 rounded-2xl text-lg shadow-2xl shadow-primary-600/30 w-full sm:w-auto flex items-center justify-center gap-2">
-            Get Started
-            <ArrowRight className="w-5 h-5" />
-          </Link>
-          <button className="btn-secondary h-14 px-10 rounded-2xl text-lg w-full sm:w-auto border-2">
-            Check Eligibility
-          </button>
-        </motion.div>
-
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="flex items-center justify-center lg:justify-start gap-8 pt-4"
-        >
-          <div>
-            <p className="text-2xl font-black dark:text-white">4.8/5</p>
-            <div className="flex gap-1 text-amber-400">
-              <Star size={14} fill="currentColor" />
-              <Star size={14} fill="currentColor" />
-              <Star size={14} fill="currentColor" />
-              <Star size={14} fill="currentColor" />
-              <Star size={14} fill="currentColor" />
-            </div>
-          </div>
-          <div className="w-px h-10 bg-slate-200 dark:bg-slate-800"></div>
-          <div>
-            <p className="text-2xl font-black dark:text-white">100%</p>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Digital</p>
-          </div>
-        </motion.div>
-      </div>
+      <motion.p 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="text-xl text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed font-medium"
+      >
+        LendSwift bridges the gap between your ambitions and reality. 
+        100% digital, zero paperwork, and built for the modern Indian economy.
+      </motion.p>
 
       <motion.div 
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3, duration: 0.8 }}
-        className="flex-1 relative"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="flex flex-col sm:flex-row items-center gap-6"
       >
-        <div className="relative z-10 p-4">
-          <img src="/src/assets/hero.png" alt="Hero" className="w-full h-auto rounded-[3rem] shadow-2xl shadow-primary-600/20" />
-        </div>
-        {/* Floating Card */}
-        <motion.div 
-          animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 4, repeat: Infinity }}
-          className="absolute -left-12 top-1/4 z-20 bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600">
-              <CheckCircle2 />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-slate-500">Loan Status</p>
-              <p className="text-sm font-black dark:text-white">Disbursed!</p>
-            </div>
+        <Link to="/apply" className="btn-primary h-16 px-12 rounded-2xl text-lg group">
+          Apply for Loan
+          <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+        </Link>
+        <button className="btn-secondary h-16 px-12 rounded-2xl text-lg">
+          Check Score
+        </button>
+      </motion.div>
+
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+        className="grid grid-cols-2 md:grid-cols-4 gap-12 pt-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500"
+      >
+        {[
+          { label: 'Users', val: '2M+', icon: Users },
+          { label: 'Disbursed', val: '₹5k Cr+', icon: TrendingUp },
+          { label: 'Approval', val: '98%', icon: ShieldCheck },
+          { label: 'Rating', val: '4.9/5', icon: Star },
+        ].map((stat, i) => (
+          <div key={i} className="flex flex-col items-center gap-2">
+            <stat.icon size={20} className="text-slate-400" />
+            <p className="text-lg font-black dark:text-white">{stat.val}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{stat.label}</p>
           </div>
-        </motion.div>
+        ))}
       </motion.div>
     </div>
   </section>
 );
 
-const LoanProducts = () => {
-  const products = [
-    {
-      title: 'Personal Loan',
-      maxAmount: '₹25 Lakhs',
-      rate: '10.5% p.a.',
-      tenure: 'Up to 60 Months',
-      icon: TrendingUp,
-      color: 'bg-blue-500'
-    },
-    {
-      title: 'Business Loan',
-      maxAmount: '₹75 Lakhs',
-      rate: '12.0% p.a.',
-      tenure: 'Up to 84 Months',
-      icon: Zap,
-      color: 'bg-primary-600'
-    },
-    {
-      title: 'Home Loan',
-      maxAmount: '₹5 Crores',
-      rate: '8.4% p.a.',
-      tenure: 'Up to 30 Years',
-      icon: Award,
-      color: 'bg-accent-600'
-    }
-  ];
+const ProductCard = ({ title, amount, rate, icon, color }) => (
+  <motion.div 
+    whileHover={{ y: -12 }}
+    className="clay-card p-10 flex flex-col gap-10 group"
+  >
+    <div className="flex justify-between items-start">
+      <MorphIcon icon={icon} color={color} />
+      <div className="w-12 h-12 rounded-full border-2 border-slate-50 dark:border-white/5 flex items-center justify-center text-slate-400 group-hover:bg-indigo-600 group-hover:text-white transition-all">
+        <ChevronRight size={24} />
+      </div>
+    </div>
+    <div className="space-y-2">
+      <h3 className="text-3xl font-black dark:text-white">{title}</h3>
+      <p className="text-slate-500 font-medium">Starting from {rate}</p>
+    </div>
+    <div className="neu-inset p-6 rounded-2xl space-y-4">
+      <div className="flex justify-between items-end">
+        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Max Limit</p>
+        <p className="text-xl font-black dark:text-white">{amount}</p>
+      </div>
+      <div className="h-1.5 w-full bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
+        <motion.div 
+          initial={{ width: 0 }}
+          whileInView={{ width: '70%' }}
+          className={cn("h-full", color)}
+        />
+      </div>
+    </div>
+  </motion.div>
+);
 
-  return (
-    <section id="products" className="py-24 px-6 bg-slate-50 dark:bg-slate-900/50">
-      <div className="max-w-7xl mx-auto space-y-16">
-        <div className="text-center space-y-4">
-          <h2 className="text-4xl lg:text-5xl font-black font-display dark:text-white">Choose Your Loan</h2>
-          <p className="text-slate-500 max-w-2xl mx-auto">Flexible options tailored for your personal and professional growth.</p>
+const Products = () => (
+  <section id="products" className="py-32 px-6">
+    <div className="max-w-7xl mx-auto space-y-20">
+      <div className="flex flex-col md:flex-row justify-between items-end gap-8">
+        <div className="space-y-4 max-w-xl">
+          <h2 className="text-5xl font-black font-display leading-tight dark:text-white">Smart Financing for <br />Every Lifecycle.</h2>
+          <p className="text-lg text-slate-500 font-medium leading-relaxed">Whether it's a new home, a business pivot, or personal growth, we have a specialized instrument for you.</p>
         </div>
+        <Link to="/apply" className="text-indigo-600 font-black flex items-center gap-2 hover:gap-4 transition-all">
+          View All Products
+          <ArrowRight />
+        </Link>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {products.map((product, i) => (
-            <motion.div 
-              key={i}
-              whileHover={{ y: -10 }}
-              className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none space-y-8"
-            >
-              <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg", product.color)}>
-                <product.icon size={28} />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <ProductCard 
+          title="Personal" 
+          amount="₹25 Lakhs" 
+          rate="10.49%" 
+          icon={Layout} 
+          color="bg-indigo-600" 
+        />
+        <ProductCard 
+          title="Business" 
+          amount="₹75 Lakhs" 
+          rate="11.99%" 
+          icon={TrendingUp} 
+          color="bg-[#1A1A1A] dark:bg-white dark:!text-black" 
+        />
+        <ProductCard 
+          title="Mortgage" 
+          amount="₹5 Crores" 
+          rate="8.35%" 
+          icon={Award} 
+          color="bg-rose-500" 
+        />
+      </div>
+    </div>
+  </section>
+);
+
+const Features = () => (
+  <section className="py-32 px-6 bg-[#F8F9FF] dark:bg-[#08080C]">
+    <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+      <div className="space-y-12">
+        <h2 className="text-5xl font-black font-display leading-tight dark:text-white">Built for speed, <br />Secured by Design.</h2>
+        <div className="space-y-8">
+          {[
+            { 
+              title: 'Instant e-KYC', 
+              desc: 'Paperless onboarding using Aadhaar & Video KYC.',
+              icon: Fingerprint,
+              color: 'text-indigo-600'
+            },
+            { 
+              title: 'Smart Underwriting', 
+              desc: 'AI-driven credit assessment for fair approval odds.',
+              icon: Zap,
+              color: 'text-rose-500'
+            },
+            { 
+              title: 'Bank-Grade Security', 
+              desc: 'Your data is encrypted with AES-256 protocols.',
+              icon: ShieldCheck,
+              color: 'text-emerald-500'
+            }
+          ].map((f, i) => (
+            <div key={i} className="flex gap-6 group">
+              <div className="w-12 h-12 rounded-xl bg-white dark:bg-white/5 shadow-sm flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                <f.icon className={f.color} />
               </div>
-              <div className="space-y-4">
-                <h3 className="text-2xl font-black dark:text-white">{product.title}</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500 font-medium">Max Amount</span>
-                    <span className="font-black dark:text-white">{product.maxAmount}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500 font-medium">Interest Rate</span>
-                    <span className="font-black dark:text-white">{product.rate}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500 font-medium">Tenure</span>
-                    <span className="font-black dark:text-white">{product.tenure}</span>
-                  </div>
-                </div>
+              <div className="space-y-1">
+                <h4 className="text-xl font-black dark:text-white">{f.title}</h4>
+                <p className="text-slate-500 font-medium">{f.desc}</p>
               </div>
-              <Link to="/apply" className="w-full btn-primary h-12 rounded-xl font-bold flex items-center justify-center gap-2 group">
-                Apply Now
-                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
-    </section>
-  );
-};
 
-const Footer = () => (
-  <footer className="py-20 px-6 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
-    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-      <div className="space-y-6">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-black text-xl">L</span>
+      <div className="relative">
+        <div className="clay-card p-4 aspect-square max-w-md mx-auto relative z-10 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=800" alt="App Preview" className="w-full h-full object-cover rounded-[1.5rem]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-10">
+            <p className="text-white text-2xl font-black">Digital-First <br />Experience.</p>
           </div>
-          <span className="text-xl font-black font-display tracking-tight dark:text-white">LendSwift</span>
         </div>
-        <p className="text-sm text-slate-500 leading-relaxed">
-          India's leading digital lending platform. Empowering millions with instant credit and transparent terms.
-        </p>
-      </div>
-
-      <div>
-        <h4 className="font-black mb-6 dark:text-white uppercase text-xs tracking-widest">Products</h4>
-        <ul className="space-y-4 text-sm text-slate-500">
-          <li><Link to="/apply" className="hover:text-primary-600 transition-colors">Personal Loans</Link></li>
-          <li><Link to="/apply" className="hover:text-primary-600 transition-colors">Business Loans</Link></li>
-          <li><Link to="/apply" className="hover:text-primary-600 transition-colors">Home Loans</Link></li>
-          <li><Link to="/apply" className="hover:text-primary-600 transition-colors">Credit Lines</Link></li>
-        </ul>
-      </div>
-
-      <div>
-        <h4 className="font-black mb-6 dark:text-white uppercase text-xs tracking-widest">Company</h4>
-        <ul className="space-y-4 text-sm text-slate-500">
-          <li><a href="#" className="hover:text-primary-600 transition-colors">About Us</a></li>
-          <li><a href="#" className="hover:text-primary-600 transition-colors">Careers</a></li>
-          <li><a href="#" className="hover:text-primary-600 transition-colors">Compliance</a></li>
-          <li><a href="#" className="hover:text-primary-600 transition-colors">Privacy Policy</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h4 className="font-black mb-6 dark:text-white uppercase text-xs tracking-widest">Contact</h4>
-        <ul className="space-y-4 text-sm text-slate-500">
-          <li>support@lendswift.com</li>
-          <li>1800-123-4567</li>
-          <li>Bengaluru, India</li>
-        </ul>
+        {/* Floating Morph Elements */}
+        <div className="absolute -top-12 -right-12 w-32 h-32 glass rounded-3xl animate-float flex items-center justify-center">
+          <Smartphone size={48} className="text-indigo-600" />
+        </div>
+        <div className="absolute -bottom-8 -left-8 w-40 h-40 glass rounded-full blur-2xl bg-indigo-600/20"></div>
       </div>
     </div>
-    <div className="max-w-7xl mx-auto pt-12 mt-12 border-t border-slate-100 dark:border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6">
-      <p className="text-xs text-slate-500 italic">© 2026 LendSwift Financial Services. All rights reserved.</p>
-      <div className="flex gap-6 text-slate-400">
-        <Smartphone size={18} />
-        <ShieldCheck size={18} />
-        <Percent size={18} />
+  </section>
+);
+
+const Footer = () => (
+  <footer className="py-24 px-6 bg-white dark:bg-[#050508] border-t border-slate-100 dark:border-white/5">
+    <div className="max-w-7xl mx-auto space-y-16">
+      <div className="flex flex-col md:flex-row justify-between items-start gap-12">
+        <div className="space-y-6 max-w-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold">L</span>
+            </div>
+            <span className="text-xl font-black dark:text-white">LendSwift</span>
+          </div>
+          <p className="text-slate-500 font-medium leading-relaxed">
+            Revolutionizing digital credit for the next billion users. Built with trust in Bengaluru.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-16">
+          <div className="space-y-4">
+            <h5 className="font-black text-xs uppercase tracking-widest dark:text-white">Products</h5>
+            <div className="flex flex-col gap-3 text-slate-500 font-bold text-sm">
+              <a href="#">Personal</a>
+              <a href="#">Business</a>
+              <a href="#">Mortgage</a>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <h5 className="font-black text-xs uppercase tracking-widest dark:text-white">Company</h5>
+            <div className="flex flex-col gap-3 text-slate-500 font-bold text-sm">
+              <a href="#">About</a>
+              <a href="#">Privacy</a>
+              <a href="#">Careers</a>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <h5 className="font-black text-xs uppercase tracking-widest dark:text-white">Social</h5>
+            <div className="flex flex-col gap-3 text-slate-500 font-bold text-sm">
+              <a href="#">Twitter</a>
+              <a href="#">LinkedIn</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="pt-12 border-t border-slate-50 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">© 2026 LendSwift Financial. Member of NBFC Federation.</p>
+        <div className="flex gap-4">
+          <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-white/5 flex items-center justify-center grayscale opacity-50"><ShieldCheck size={16} /></div>
+          <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-white/5 flex items-center justify-center grayscale opacity-50"><Zap size={16} /></div>
+        </div>
       </div>
     </div>
   </footer>
 );
 
-import { cn } from '@/utils/cn';
-
 const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 font-sans selection:bg-primary-100 selection:text-primary-700">
+    <div className="min-h-screen bg-white dark:bg-[#050508] font-sans">
       <Navbar />
       <main>
         <Hero />
-        <LoanProducts />
-        {/* Additional sections like Features, Why Choose Us, Timeline, Testimonials can be added here */}
+        <Products />
+        <Features />
       </main>
       <Footer />
     </div>
