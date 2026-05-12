@@ -114,19 +114,20 @@ const LoanWizard = () => {
               const isActive = step.id === currentStep;
               const isCompleted = step.id < currentStep;
               const Icon = step.icon;
+
+              const getStepStyles = () => {
+                if (isActive) return 'bg-[#121212] text-white';
+                if (isCompleted) return 'bg-[#0065FF] text-white';
+                return 'bg-[#EEEEEE] text-[#888888]';
+              };
+
               return (
                 <div
                   key={step.id}
                   className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-500 ${isActive ? 'bg-white shadow-sm ring-1 ring-[#EEEEEE]' : 'opacity-40'}`}
                 >
                   <div
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
-                      isActive
-                        ? 'bg-[#121212] text-white'
-                        : isCompleted
-                          ? 'bg-[#0065FF] text-white'
-                          : 'bg-[#EEEEEE] text-[#888888]'
-                    }`}
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${getStepStyles()}`}
                   >
                     {isCompleted ? <CheckCircle2 size={20} /> : <Icon size={20} />}
                   </div>
