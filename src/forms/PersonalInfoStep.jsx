@@ -97,6 +97,13 @@ const PersonalInfoStep = ({ onNext }) => {
 
   const age = calculateAge(dob);
 
+  // Sync occupation with step 1 employmentType if empty
+  useEffect(() => {
+    if (!formData.personalInfo.occupation && formData.loanSelection.employmentType) {
+      setValue('occupation', formData.loanSelection.employmentType);
+    }
+  }, [formData.loanSelection.employmentType, formData.personalInfo.occupation, setValue]);
+
   // OTP Timer
   useEffect(() => {
     let timer;
@@ -148,7 +155,7 @@ const PersonalInfoStep = ({ onNext }) => {
       {/* 1. Identity Basics */}
       <section>
         <SectionHeader icon={User} title="Identity Foundation" desc="Your legal name & birth records" />
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6">
           <InputWrapper label="First Name" id="firstName" error={errors.firstName} touched={touchedFields.firstName || isSubmitted}>
             <Controller
               name="firstName"
@@ -159,7 +166,7 @@ const PersonalInfoStep = ({ onNext }) => {
             />
           </InputWrapper>
 
-          <InputWrapper label="Middle Name (Optional)" id="middleName" error={errors.middleName} touched={touchedFields.middleName || isSubmitted}>
+          <InputWrapper label="Middle Name" id="middleName" error={errors.middleName} touched={touchedFields.middleName || isSubmitted}>
             <Controller
               name="middleName"
               control={control}
@@ -180,37 +187,39 @@ const PersonalInfoStep = ({ onNext }) => {
           </InputWrapper>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 mt-8">
-          <InputWrapper label="Date of Birth" id="dob" error={errors.dob} touched={touchedFields.dob || isSubmitted}>
-            <div className="relative">
-              <Controller
-                name="dob"
-                control={control}
-                render={({ field }) => (
-                  <input {...field} type="date" id="dob" className="input-premium pr-12" />
+        <div className="grid md:grid-cols-12 gap-8 mt-10">
+          <div className="md:col-span-5">
+            <InputWrapper label="Date of Birth" id="dob" error={errors.dob} touched={touchedFields.dob || isSubmitted}>
+              <div className="relative">
+                <Controller
+                  name="dob"
+                  control={control}
+                  render={({ field }) => (
+                    <input {...field} type="date" id="dob" className="input-premium pr-12" />
+                  )}
+                />
+                {age !== null && (
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-mono font-bold text-[#0065FF]">
+                    {age} YRS
+                  </div>
                 )}
-              />
-              {age !== null && (
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-mono font-bold text-[#0065FF]">
-                  {age} YRS
-                </div>
-              )}
-            </div>
-          </InputWrapper>
+              </div>
+            </InputWrapper>
+          </div>
 
-          <div className="space-y-2">
+          <div className="md:col-span-7 space-y-2">
             <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Gender</label>
             <Controller
               name="gender"
               control={control}
               render={({ field }) => (
-                <div className="flex flex-wrap gap-3">
+                <div className="grid grid-cols-2 gap-3">
                   {['male', 'female', 'non-binary', 'prefer-not-to-say'].map((g) => (
                     <button
                       key={g}
                       type="button"
                       onClick={() => field.onChange(g)}
-                      className={`px-6 h-12 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
+                      className={`h-16 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 border px-2 ${
                         field.value === g 
                         ? 'bg-[#121212] border-[#121212] text-white shadow-lg' 
                         : 'bg-white border-[#EEEEEE] text-[#121212]/40 hover:border-[#121212]/20'
@@ -237,13 +246,13 @@ const PersonalInfoStep = ({ onNext }) => {
               name="maritalStatus"
               control={control}
               render={({ field }) => (
-                <div className="flex flex-wrap gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {['single', 'married', 'divorced', 'widowed'].map((m) => (
                     <button
                       key={m}
                       type="button"
                       onClick={() => field.onChange(m)}
-                      className={`px-6 h-12 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
+                      className={`h-16 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
                         field.value === m 
                         ? 'bg-[#121212] border-[#121212] text-white shadow-lg' 
                         : 'bg-white border-[#EEEEEE] text-[#121212]/40 hover:border-[#121212]/20'
@@ -479,7 +488,7 @@ const PersonalInfoStep = ({ onNext }) => {
       {/* 5. Professional & Financial */}
       <section>
         <SectionHeader icon={Briefcase} title="Professional Profile" desc="Occupation & Annual earnings" />
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 gap-x-12 gap-y-10">
           <div className="space-y-2">
             <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Occupation</label>
             <Controller
@@ -517,25 +526,27 @@ const PersonalInfoStep = ({ onNext }) => {
             <ErrorField error={errors.education} touched={touchedFields.education || isSubmitted} />
           </div>
 
-          <InputWrapper label="Annual Income (INR)" id="annualIncome" error={errors.annualIncome} touched={touchedFields.annualIncome || isSubmitted}>
-            <div className="relative">
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-xl font-serif italic text-[#121212]/20">₹</span>
-              <Controller
-                name="annualIncome"
-                control={control}
-                render={({ field }) => (
-                  <input 
-                    {...field} 
-                    id="annualIncome" 
-                    type="number" 
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                    placeholder="0.00" 
-                    className="input-premium pl-12 font-serif italic text-2xl" 
-                  />
-                )}
-              />
-            </div>
-          </InputWrapper>
+          <div className="md:col-span-2">
+            <InputWrapper label="Annual Income (INR)" id="annualIncome" error={errors.annualIncome} touched={touchedFields.annualIncome || isSubmitted}>
+              <div className="relative">
+                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-xl font-serif italic text-[#121212]/20">₹</span>
+                <Controller
+                  name="annualIncome"
+                  control={control}
+                  render={({ field }) => (
+                    <input 
+                      {...field} 
+                      id="annualIncome" 
+                      type="number" 
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      placeholder="0.00" 
+                      className="input-premium pl-12 font-serif italic text-2xl" 
+                    />
+                  )}
+                />
+              </div>
+            </InputWrapper>
+          </div>
         </div>
       </section>
 

@@ -32,10 +32,10 @@ const personalInfoSchema = z
         return age >= 21 && age <= 65;
       }, 'Age must be between 21 and 65 years'),
     gender: z.enum(['male', 'female', 'non-binary', 'prefer-not-to-say'], {
-      required_error: 'Please select gender',
+      errorMap: () => ({ message: 'Please select your gender' }),
     }),
     maritalStatus: z.enum(['single', 'married', 'divorced', 'widowed'], {
-      required_error: 'Please select marital status',
+      errorMap: () => ({ message: 'Please select your marital status' }),
     }),
     spouseName: z.string().trim().optional(),
     mobileNumber: z
@@ -61,10 +61,10 @@ const personalInfoSchema = z
       .length(12, 'Aadhaar number must be 12 digits')
       .regex(/^\d{12}$/, 'Invalid Aadhaar number'),
     occupation: z.enum(['salaried', 'self-employed', 'student', 'retired', 'business-owner'], {
-      required_error: 'Please select occupation',
+      errorMap: () => ({ message: 'Please select your occupation' }),
     }),
     education: z.enum(['high-school', 'graduate', 'post-graduate', 'doctorate'], {
-      required_error: 'Please select education level',
+      errorMap: () => ({ message: 'Please select your education level' }),
     }),
     annualIncome: z
       .number({ required_error: 'Annual income is required' })
