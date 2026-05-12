@@ -70,6 +70,18 @@
   .pin-sticky {
     @apply sticky top-32 self-start;
   }
+
+  .input-premium {
+    @apply w-full h-16 bg-white border border-[#EEEEEE] rounded-[1.25rem] px-6 text-sm focus:border-[#121212] focus:ring-0 outline-none transition-all duration-300 placeholder:text-[#EEEEEE] hover:bg-[#FAFAFA] disabled:bg-[#F8F9FA] disabled:border-[#EEEEEE] disabled:text-[#121212]/40;
+  }
+
+  .select-premium {
+    @apply input-premium appearance-none cursor-pointer;
+  }
+
+  .card-premium {
+    @apply p-8 rounded-[2.5rem] border border-[#EEEEEE] bg-white transition-all duration-700;
+  }
 }
 
 .selection-dark::selection {

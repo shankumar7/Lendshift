@@ -19,6 +19,7 @@ import useAutoSave from '../hooks/useAutoSave';
 import Logo from '../components/Logo';
 import ResumeModal from '../components/ResumeModal';
 import LoanSelectionStep from '../forms/LoanSelectionStep';
+import PersonalInfoStep from '../forms/PersonalInfoStep';
 
 const STEPS = [
   { id: 1, title: 'Loan Selection', desc: 'Configure your capital', icon: Home },
@@ -40,6 +41,7 @@ const LoanWizard = () => {
   const setStep = useLoanStore((state) => state.setStep);
   const lastSaved = useLoanStore((state) => state.lastSaved);
   const resetApplication = useLoanStore((state) => state.resetApplication);
+  const personalInfo = useLoanStore((state) => state.formData.personalInfo);
   const [showResume, setShowResume] = useState(false);
 
   useAutoSave(30000);
@@ -227,11 +229,17 @@ const LoanWizard = () => {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.4 }}
               >
-                {currentStep === 1 ? (
+                {currentStep === 1 && (
                   <div ref={formRef}>
                     <LoanSelectionStep onNext={onStepSuccess} />
                   </div>
-                ) : (
+                )}
+                {currentStep === 2 && (
+                  <div ref={formRef}>
+                    <PersonalInfoStep onNext={onStepSuccess} />
+                  </div>
+                )}
+                {currentStep > 2 && (
                   <div className="min-h-[400px] p-12 bg-[#F8F9FA] rounded-[3rem] border border-[#EEEEEE] border-dashed flex flex-col items-center justify-center text-center">
                     <p className="text-[#888888] font-mono uppercase tracking-widest text-xs">
                       Step {currentStep} implementation pending
@@ -250,7 +258,17 @@ const LoanWizard = () => {
               >
                 <ChevronLeft size={20} /> Previous
               </button>
-              <button type="button" onClick={handleNext} className="btn-primary h-16 px-12 group">
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={
+                  currentStep === 2 &&
+                  (!personalInfo.isMobileVerified ||
+                    !personalInfo.isPanVerified ||
+                    !personalInfo.isAadhaarVerified)
+                }
+                className="btn-primary h-16 px-12 group disabled:opacity-20 transition-all"
+              >
                 {currentStep === 8 ? 'Submit' : 'Continue'}
                 <ChevronRight
                   size={20}
