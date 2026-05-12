@@ -40,7 +40,14 @@ const useLoanStore = create(
           isAadhaarVerified: false,
         },
         kyc: {
-          verificationStatus: 'pending',
+          panNumber: '',
+          aadhaarNumber: '',
+          idType: '',
+          idNumber: '',
+          isPanVerified: false,
+          isAadhaarVerified: false,
+          isFaceVerified: false,
+          faceMatchScore: 0,
         },
         address: {
           current: {
@@ -63,10 +70,10 @@ const useLoanStore = create(
           relation: '',
         },
         documents: {
-          panFile: null,
-          addressProofFile: null,
-          incomeProofFile: null,
-          signature: null,
+          panCard: null,
+          aadhaarCard: null,
+          secondaryId: null,
+          selfie: null,
         },
         submission: {
           status: 'idle', // 'idle', 'submitting', 'success', 'error'
@@ -120,7 +127,16 @@ const useLoanStore = create(
               isPanVerified: false,
               isAadhaarVerified: false,
             },
-            kyc: { verificationStatus: 'pending' },
+            kyc: {
+              panNumber: '',
+              aadhaarNumber: '',
+              idType: '',
+              idNumber: '',
+              isPanVerified: false,
+              isAadhaarVerified: false,
+              isFaceVerified: false,
+              faceMatchScore: 0,
+            },
             address: {
               current: { street: '', city: '', state: '', zip: '' },
               permanentSameAsCurrent: true,
@@ -128,10 +144,10 @@ const useLoanStore = create(
             employment: { type: '', employerName: '', monthlyIncome: '', workExp: '' },
             coApplicant: { hasCoApplicant: false, name: '', relation: '' },
             documents: {
-              panFile: null,
-              addressProofFile: null,
-              incomeProofFile: null,
-              signature: null,
+              panCard: null,
+              aadhaarCard: null,
+              secondaryId: null,
+              selfie: null,
             },
             submission: { status: 'idle', timestamp: null },
           },
