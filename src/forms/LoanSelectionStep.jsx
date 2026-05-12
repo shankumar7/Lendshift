@@ -224,15 +224,16 @@ const LoanSelectionStep = ({ onNext }) => {
             <ErrorField error={errors.tenure} touched={touchedFields.tenure || isSubmitted} />
           </div>
 
-          {/* Sub-grid: Purpose & Employment */}
-          <div className="grid md:grid-cols-2 gap-8">
+          {/* Stacked Configuration Fields */}
+          <div className="space-y-12">
+            {/* Purpose */}
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-widest">Purpose</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-[#121212]/60">Loan Purpose</label>
               <Controller
                 name="purpose"
                 control={control}
                 render={({ field }) => (
-                  <select {...field} className="w-full h-14 bg-white border border-[#EEEEEE] rounded-2xl px-4 text-sm focus:border-[#121212] outline-none transition-all appearance-none cursor-pointer hover:bg-[#FAFAFA]">
+                  <select {...field} className="w-full h-16 bg-white border border-[#EEEEEE] rounded-[1.25rem] px-6 text-sm focus:border-[#121212] outline-none transition-all appearance-none cursor-pointer hover:bg-[#FAFAFA]">
                     <option value="">Select Purpose</option>
                     {selectedLoanType && purposeOptions[selectedLoanType].map(opt => (
                       <option key={opt} value={opt}>{opt}</option>
@@ -243,45 +244,46 @@ const LoanSelectionStep = ({ onNext }) => {
               <ErrorField error={errors.purpose} touched={touchedFields.purpose || isSubmitted} />
             </div>
 
+            {/* Employment */}
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-widest">Employment</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-[#121212]/60">Employment Status</label>
               <Controller
                 name="employmentType"
                 control={control}
                 render={({ field }) => (
-                  <select {...field} className="w-full h-14 bg-white border border-[#EEEEEE] rounded-2xl px-4 text-sm focus:border-[#121212] outline-none transition-all appearance-none cursor-pointer hover:bg-[#FAFAFA]">
+                  <select {...field} className="w-full h-16 bg-white border border-[#EEEEEE] rounded-[1.25rem] px-6 text-sm focus:border-[#121212] outline-none transition-all appearance-none cursor-pointer hover:bg-[#FAFAFA]">
                     <option value="">Select Type</option>
-                    <option value="salaried">Salaried</option>
+                    <option value="salaried">Salaried Professional</option>
                     <option value="self-employed">Self Employed</option>
-                    <option value="business-owner">Business Owner</option>
+                    <option value="business-owner">Enterprise Owner</option>
                   </select>
                 )}
               />
               <ErrorField error={errors.employmentType} touched={touchedFields.employmentType || isSubmitted} />
             </div>
-          </div>
 
-          {/* Monthly Income */}
-          <div className="space-y-3">
-            <label className="text-[10px] font-black uppercase tracking-widest">Monthly Income</label>
-            <div className="relative">
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[#121212]/20 font-serif italic text-lg">₹</span>
-              <Controller
-                name="monthlyIncome"
-                control={control}
-                render={({ field }) => (
-                  <input
-                    type="number"
-                    {...field}
-                    onBlur={field.onBlur}
-                    onChange={(e) => field.onChange(parseInt(e.target.value))}
-                    placeholder="0.00"
-                    className="w-full h-16 bg-white border border-[#EEEEEE] rounded-2xl pl-12 pr-6 text-xl font-serif italic text-[#121212] focus:border-[#121212] outline-none transition-all placeholder:text-[#EEEEEE]"
-                  />
-                )}
-              />
+            {/* Monthly Income */}
+            <div className="space-y-3">
+              <label className="text-[10px] font-black uppercase tracking-widest text-[#121212]/60">Net Monthly Income</label>
+              <div className="relative">
+                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[#121212]/20 font-serif italic text-xl">₹</span>
+                <Controller
+                  name="monthlyIncome"
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      type="number"
+                      {...field}
+                      onBlur={field.onBlur}
+                      onChange={(e) => field.onChange(parseInt(e.target.value))}
+                      placeholder="0.00"
+                      className="w-full h-20 bg-white border border-[#EEEEEE] rounded-[1.25rem] pl-12 pr-6 text-2xl font-serif italic text-[#121212] focus:border-[#121212] outline-none transition-all placeholder:text-[#EEEEEE]"
+                    />
+                  )}
+                />
+              </div>
+              <ErrorField error={errors.monthlyIncome} touched={touchedFields.monthlyIncome || isSubmitted} />
             </div>
-            <ErrorField error={errors.monthlyIncome} touched={touchedFields.monthlyIncome || isSubmitted} />
           </div>
         </div>
 
