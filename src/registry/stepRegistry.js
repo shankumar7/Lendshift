@@ -5,7 +5,6 @@ import {
   DollarSign,
   Home,
   ShieldCheck,
-  FileText,
   Upload,
   PenTool,
   CheckSquare,

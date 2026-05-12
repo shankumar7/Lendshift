@@ -42,7 +42,7 @@ const LoanDetailsForm = ({ onSubmit, defaultValues }) => {
             description="Between 6 and 120 months"
           />
         </div>
-        
+
         <FormField
           name="loanPurpose"
           label="Loan Purpose"

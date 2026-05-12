@@ -18,14 +18,14 @@ const AppRoutes = () => {
       <Routes>
         {/* Landing Experience */}
         <Route path="/" element={<LandingPage />} />
-        
+
         {/* Multi-Step Onboarding Flow */}
         <Route path="/apply" element={<LoanWizard />} />
         <Route path="/apply/step/:stepId" element={<LoanWizard />} />
-        
+
         {/* Post-Application Experience */}
         <Route path="/success" element={<SuccessPage />} />
-        
+
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

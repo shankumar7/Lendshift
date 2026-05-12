@@ -4,10 +4,10 @@
 
 @layer base {
   :root {
-    --bg: #FFFFFF;
+    --bg: #ffffff;
     --fg: #121212;
-    --accent: #0065FF;
-    --border: #EEEEEE;
+    --accent: #0065ff;
+    --border: #eeeeee;
   }
 
   /* Set a neutral background to prevent white flashes on overscroll */
@@ -62,9 +62,9 @@
   }
 
   .grain-bg::before {
-    content: "";
+    content: '';
     @apply fixed inset-0 z-[-1] opacity-[0.03] pointer-events-none;
-    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+    background-image: url('https://grainy-gradients.vercel.app/noise.svg');
   }
 
   .pin-sticky {
@@ -73,13 +73,13 @@
 }
 
 .selection-dark::selection {
-  background: #FFFFFF;
+  background: #ffffff;
   color: #121212;
 }
 
 ::selection {
   background: #121212;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .no-scrollbar::-webkit-scrollbar {

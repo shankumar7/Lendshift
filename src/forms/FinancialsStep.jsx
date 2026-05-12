@@ -3,7 +3,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schemas } from '@/schemas/loanSchema';
 import { useWizard } from '@/context/WizardContext';
-import { useAutoSave } from '@/hooks/useAutoSave';
+import useAutoSave from '@/hooks/useAutoSave';
 import FormField from '@/components/FormField';
 import { DollarSign, PieChart, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -34,7 +34,9 @@ const FinancialsStep = () => {
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
         <div className="space-y-2">
           <h2 className="text-2xl font-bold font-display">Financial Health</h2>
-          <p className="text-sm text-slate-500">This helps us understand your debt-to-income ratio.</p>
+          <p className="text-sm text-slate-500">
+            This helps us understand your debt-to-income ratio.
+          </p>
         </div>
 
         <form id="wizard-step-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -49,8 +51,10 @@ const FinancialsStep = () => {
                   type="button"
                   onClick={() => setValue('hasExistingLoans', true)}
                   className={cn(
-                    "px-4 py-2 rounded-lg text-xs font-bold transition-all",
-                    hasExistingLoans ? "bg-primary-600 text-white shadow-lg" : "text-slate-500 hover:bg-slate-50"
+                    'px-4 py-2 rounded-lg text-xs font-bold transition-all',
+                    hasExistingLoans
+                      ? 'bg-primary-600 text-white shadow-lg'
+                      : 'text-slate-500 hover:bg-slate-50'
                   )}
                 >
                   Yes
@@ -59,8 +63,10 @@ const FinancialsStep = () => {
                   type="button"
                   onClick={() => setValue('hasExistingLoans', false)}
                   className={cn(
-                    "px-4 py-2 rounded-lg text-xs font-bold transition-all",
-                    !hasExistingLoans ? "bg-primary-600 text-white shadow-lg" : "text-slate-500 hover:bg-slate-50"
+                    'px-4 py-2 rounded-lg text-xs font-bold transition-all',
+                    !hasExistingLoans
+                      ? 'bg-primary-600 text-white shadow-lg'
+                      : 'text-slate-500 hover:bg-slate-50'
                   )}
                 >
                   No

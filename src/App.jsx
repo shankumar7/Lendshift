@@ -6,7 +6,7 @@ import LoanWizard from './pages/LoanWizard';
 import SuccessPage from './pages/SuccessPage';
 import './styles/globals.css';
 
-function App() {
+const App = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -24,6 +24,6 @@ function App() {
       />
     </BrowserRouter>
   );
-}
+};
 
 export default App;

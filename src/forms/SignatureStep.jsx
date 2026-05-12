@@ -29,7 +29,8 @@ const SignatureStep = ({ onSave }) => {
       <div className="space-y-2">
         <h2 className="text-2xl font-bold font-display">Digital Signature</h2>
         <p className="text-sm text-slate-500 leading-relaxed">
-          Please provide your signature below. By signing, you agree that the information provided is accurate and you consent to a credit check.
+          Please provide your signature below. By signing, you agree that the information provided
+          is accurate and you consent to a credit check.
         </p>
       </div>
 
@@ -39,7 +40,7 @@ const SignatureStep = ({ onSave }) => {
             <PenTool size={14} />
             Sign Here
           </div>
-          <button 
+          <button
             onClick={clear}
             className="text-xs font-bold text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/10 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-2"
           >
@@ -52,7 +53,7 @@ const SignatureStep = ({ onSave }) => {
             ref={sigCanvas}
             penColor="#0ea5e9"
             canvasProps={{
-              className: 'w-full h-full'
+              className: 'w-full h-full',
             }}
             onBegin={() => setIsEmpty(false)}
             onEnd={save}
@@ -74,7 +75,7 @@ const SignatureStep = ({ onSave }) => {
           <div className="bg-white dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
             <img src={preview} alt="Signature Preview" className="max-h-24 object-contain" />
           </div>
-          <button 
+          <button
             className="text-xs font-bold text-primary-600 hover:underline flex items-center gap-1"
             onClick={() => {
               const link = document.createElement('a');

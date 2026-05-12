@@ -3,7 +3,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schemas } from '@/schemas/loanSchema';
 import { useWizard } from '@/context/WizardContext';
-import { useAutoSave } from '@/hooks/useAutoSave';
+import useAutoSave from '@/hooks/useAutoSave';
 import FormField from '@/components/FormField';
 import { User, Mail, Phone, Calendar, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -31,14 +31,18 @@ const PersonalInfoStep = () => {
 
   return (
     <FormProvider {...methods}>
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         className="space-y-8"
       >
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold font-display tracking-tight dark:text-white">Personal Information</h2>
-          <p className="text-sm text-slate-500 leading-relaxed">Please provide your legal name and contact details as they appear on your government ID.</p>
+          <h2 className="text-2xl font-bold font-display tracking-tight dark:text-white">
+            Personal Information
+          </h2>
+          <p className="text-sm text-slate-500 leading-relaxed">
+            Please provide your legal name and contact details as they appear on your government ID.
+          </p>
         </div>
 
         <form id="wizard-step-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -50,12 +54,7 @@ const PersonalInfoStep = () => {
               icon={User}
               autoFocus
             />
-            <FormField
-              name="lastName"
-              label="Last Name"
-              placeholder="e.g. Scofield"
-              icon={User}
-            />
+            <FormField name="lastName" label="Last Name" placeholder="e.g. Scofield" icon={User} />
           </div>
 
           <FormField

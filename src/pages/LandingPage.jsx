@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import {
-  ArrowRight,
-  ChevronRight,
   Zap,
   ShieldCheck,
   TrendingUp,
@@ -10,11 +8,10 @@ import {
   Menu,
   X,
   ArrowDown,
-  Award
+  Award,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Logo from '@/components/Logo';
-import { cn } from '@/utils/cn';
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,30 +19,30 @@ const Nav = () => {
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
-    restDelta: 0.001
+    restDelta: 0.001,
   });
 
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl transition-all duration-300 border-b border-[#EEEEEE]/40">
         {/* Minimalist Progress Line */}
-        <motion.div 
+        <motion.div
           className="absolute bottom-[-1px] left-0 right-0 h-[1px] bg-[#121212] origin-left z-50"
           style={{ scaleX }}
         />
-        
+
         <div className="max-w-[1600px] mx-auto px-6 sm:px-10 h-16 flex items-center justify-between">
           <div className="flex items-center gap-12">
             <Link to="/" className="scale-90 origin-left">
               <Logo />
             </Link>
-            
+
             {/* Ultra-Sharp Desktop Nav */}
             <div className="hidden lg:flex items-center gap-8">
-              {['Markets', 'Enterprise', 'Institutional', 'Vision'].map(item => (
-                <a 
-                  key={item} 
-                  href="#" 
+              {['Markets', 'Enterprise', 'Institutional', 'Vision'].map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase()}`}
                   className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#121212]/40 hover:text-[#121212] transition-all"
                 >
                   {item}
@@ -56,13 +53,19 @@ const Nav = () => {
 
           <div className="flex items-center gap-6">
             <div className="hidden sm:flex items-center gap-5">
-               <Link to="/apply" className="group flex items-center gap-2">
-                 <span className="text-[10px] font-black uppercase tracking-widest text-[#121212]">Apply</span>
-                 <ArrowUpRight size={14} className="opacity-40 group-hover:opacity-100 transition-opacity" />
-               </Link>
+              <Link to="/apply" className="group flex items-center gap-2">
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#121212]">
+                  Apply
+                </span>
+                <ArrowUpRight
+                  size={14}
+                  className="opacity-40 group-hover:opacity-100 transition-opacity"
+                />
+              </Link>
             </div>
-            
-            <button 
+
+            <button
+              type="button"
               onClick={() => setIsOpen(!isOpen)}
               className="lg:hidden w-8 h-8 flex items-center justify-center hover:bg-[#FAFAFA] rounded-lg transition-colors"
             >
@@ -73,23 +76,23 @@ const Nav = () => {
       </nav>
 
       {/* Sleek Mobile Overlay */}
-      <motion.div 
+      <motion.div
         initial={false}
-        animate={{ 
-          opacity: isOpen ? 1 : 0, 
+        animate={{
+          opacity: isOpen ? 1 : 0,
           y: isOpen ? 0 : -10,
-          pointerEvents: isOpen ? 'auto' : 'none' 
+          pointerEvents: isOpen ? 'auto' : 'none',
         }}
         className="fixed inset-0 z-40 bg-white pt-32 px-8"
       >
         <div className="space-y-8">
           {['Markets', 'Enterprise', 'Institutional', 'Vision'].map((item, i) => (
-            <motion.a 
+            <motion.a
               key={item}
               initial={{ opacity: 0 }}
               animate={isOpen ? { opacity: 1 } : { opacity: 0 }}
               transition={{ delay: i * 0.05 }}
-              href="#" 
+              href={`#${item.toLowerCase()}`}
               className="block text-4xl font-serif italic tracking-tighter"
             >
               {item}
@@ -110,11 +113,7 @@ const Hero = () => (
   <section className="pt-48 pb-20 sm:pb-32 px-6 sm:px-10 grain-bg">
     <div className="max-w-[1600px] mx-auto">
       <div className="space-y-12 mb-24">
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-meta"
-        >
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-meta">
           2026 Edition / Institutional Fluidity
         </motion.p>
 
@@ -125,7 +124,11 @@ const Hero = () => (
           className="text-editorial"
         >
           Capital that <br className="hidden sm:block" />
-          breathes <span className="text-[#0065FF] underline decoration-[0.05em] underline-offset-[0.1em]">with</span> you.
+          breathes{' '}
+          <span className="text-[#0065FF] underline decoration-[0.05em] underline-offset-[0.1em]">
+            with
+          </span>{' '}
+          you.
         </motion.h1>
       </div>
 
@@ -151,11 +154,17 @@ const Hero = () => (
           transition={{ delay: 0.6 }}
           className="lg:col-span-5 flex flex-col sm:flex-row gap-6 lg:justify-end"
         >
-          <Link to="/apply" className="btn-primary group h-14 sm:h-16 px-10 sm:px-12 text-xs sm:text-sm">
+          <Link
+            to="/apply"
+            className="btn-primary group h-14 sm:h-16 px-10 sm:px-12 text-xs sm:text-sm"
+          >
             Apply Now
             <ArrowUpRight size={16} className="ml-2 group-hover:rotate-45 transition-transform" />
           </Link>
-          <button className="btn-secondary h-14 sm:h-16 px-10 sm:px-12 text-xs sm:text-sm">
+          <button
+            type="button"
+            className="btn-secondary h-14 sm:h-16 px-10 sm:px-12 text-xs sm:text-sm"
+          >
             Our Methods
           </button>
         </motion.div>
@@ -179,7 +188,9 @@ const ProductLine = ({ title, desc, rate, amount, index }) => (
           <ArrowUpRight size={16} />
         </div>
       </div>
-      <p className="text-sm sm:text-base text-[#888888] font-sans leading-relaxed max-w-[280px]">{desc}</p>
+      <p className="text-sm sm:text-base text-[#888888] font-sans leading-relaxed max-w-[280px]">
+        {desc}
+      </p>
     </div>
 
     <div className="grid grid-cols-2 gap-8 border-t border-[#EEEEEE] pt-10">
@@ -200,41 +211,46 @@ const FeaturesSection = () => (
     <div className="max-w-[1600px] mx-auto grid lg:grid-cols-12 gap-24">
       <div className="lg:col-span-4 lg:sticky lg:top-40 h-fit space-y-8">
         <p className="text-meta">Core Philosophy</p>
-        <h2 className="text-5xl sm:text-6xl font-serif italic leading-[1.1]">The mechanics of trust.</h2>
+        <h2 className="text-5xl sm:text-6xl font-serif italic leading-[1.1]">
+          The mechanics of trust.
+        </h2>
         <p className="text-slate-500 font-sans leading-relaxed max-w-sm">
-          A three-pillar approach to digital financing, built on absolute transparency and real-time velocity.
+          A three-pillar approach to digital financing, built on absolute transparency and real-time
+          velocity.
         </p>
       </div>
 
       <div className="lg:col-span-8 space-y-32 sm:space-y-48">
         {[
           {
-            num: "01",
-            title: "Real-time Verification",
-            desc: "Using proprietary e-bridge protocols, we verify identity and assets in under 60 seconds. Paperless, friction-less, human-centric.",
-            icon: ShieldCheck
+            num: '01',
+            title: 'Real-time Verification',
+            desc: 'Using proprietary e-bridge protocols, we verify identity and assets in under 60 seconds. Paperless, friction-less, human-centric.',
+            icon: ShieldCheck,
           },
           {
-            num: "02",
-            title: "Dynamic Underwriting",
-            desc: "Our algorithms evaluate potential, not just history. We look at the trajectory of your growth to determine liquidity limits.",
-            icon: TrendingUp
+            num: '02',
+            title: 'Dynamic Underwriting',
+            desc: 'Our algorithms evaluate potential, not just history. We look at the trajectory of your growth to determine liquidity limits.',
+            icon: TrendingUp,
           },
           {
-            num: "03",
-            title: "Atomic Disbursement",
-            desc: "Once approved, capital moves instantly. Atomic settlement ensures that your ambition is never bottlenecked by legacy banking cycles.",
-            icon: Zap
-          }
-        ].map((f, i) => (
+            num: '03',
+            title: 'Atomic Disbursement',
+            desc: 'Once approved, capital moves instantly. Atomic settlement ensures that your ambition is never bottlenecked by legacy banking cycles.',
+            icon: Zap,
+          },
+        ].map((f) => (
           <motion.div
-            key={i}
+            key={f.num}
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ margin: "-100px" }}
+            viewport={{ margin: '-100px' }}
             className="grid sm:grid-cols-12 gap-10 items-start group"
           >
-            <p className="sm:col-span-2 font-serif italic text-6xl sm:text-8xl text-[#EEEEEE] group-hover:text-[#121212] transition-colors duration-700">{f.num}</p>
+            <p className="sm:col-span-2 font-serif italic text-6xl sm:text-8xl text-[#EEEEEE] group-hover:text-[#121212] transition-colors duration-700">
+              {f.num}
+            </p>
             <div className="sm:col-span-10 pt-4 space-y-6">
               <h4 className="text-2xl font-black uppercase tracking-tight">{f.title}</h4>
               <p className="text-lg text-[#888888] leading-relaxed max-w-xl">{f.desc}</p>
@@ -269,7 +285,10 @@ const Footer = () => (
             of modern liquidity.
           </h2>
           <div className="pt-6">
-            <Link to="/apply" className="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-white hover:gap-6 transition-all border-b border-white/20 pb-2 hover:border-white">
+            <Link
+              to="/apply"
+              className="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-white hover:gap-6 transition-all border-b border-white/20 pb-2 hover:border-white"
+            >
               Start a conversation
               <ArrowUpRight size={16} />
             </Link>
@@ -281,24 +300,42 @@ const Footer = () => (
           <div className="space-y-8">
             <p className="text-meta text-white/30 font-black tracking-[0.3em]">Capital</p>
             <div className="flex flex-col gap-5 text-sm font-bold">
-              {['Personal', 'Enterprise', 'Mortgage', 'Markets'].map(item => (
-                <a key={item} href="#" className="hover:text-[#0065FF] transition-colors">{item}</a>
+              {['Personal', 'Enterprise', 'Mortgage', 'Markets'].map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase()}`}
+                  className="hover:text-[#0065FF] transition-colors"
+                >
+                  {item}
+                </a>
               ))}
             </div>
           </div>
           <div className="space-y-8">
             <p className="text-meta text-white/30 font-black tracking-[0.3em]">Identity</p>
             <div className="flex flex-col gap-5 text-sm font-bold">
-              {['About', 'Vision', 'Careers', 'Ethics'].map(item => (
-                <a key={item} href="#" className="hover:text-[#0065FF] transition-colors">{item}</a>
+              {['About', 'Vision', 'Careers', 'Ethics'].map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase()}`}
+                  className="hover:text-[#0065FF] transition-colors"
+                >
+                  {item}
+                </a>
               ))}
             </div>
           </div>
           <div className="space-y-8">
             <p className="text-meta text-white/30 font-black tracking-[0.3em]">Network</p>
             <div className="flex flex-col gap-5 text-sm font-bold">
-              {['LinkedIn', 'Twitter', 'Contact', 'Support'].map(item => (
-                <a key={item} href="#" className="hover:text-[#0065FF] transition-colors">{item}</a>
+              {['LinkedIn', 'Twitter', 'Contact', 'Support'].map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase()}`}
+                  className="hover:text-[#0065FF] transition-colors"
+                >
+                  {item}
+                </a>
               ))}
             </div>
           </div>
@@ -310,8 +347,9 @@ const Footer = () => (
         <div className="space-y-4 max-w-2xl">
           <p className="text-mono text-[9px] text-white/40 uppercase tracking-widest leading-relaxed">
             LendSwift Technologies Inc. © 2026 / An institutional digital financing platform. <br />
-            LendSwift is a regulated entity. All lending activities are subject to local financial laws and credit verification protocols.
-            Privacy and security are prioritized using 256-bit AES encryption.
+            LendSwift is a regulated entity. All lending activities are subject to local financial
+            laws and credit verification protocols. Privacy and security are prioritized using
+            256-bit AES encryption.
           </p>
         </div>
         <div className="flex gap-12 text-white/20">
@@ -380,7 +418,9 @@ const LandingPage = () => {
                 <h2 className="text-6xl sm:text-8xl font-serif italic leading-[0.9] tracking-tighter text-[#121212]">
                   The capital <br />
                   you deserve, <br />
-                  <span className="text-[#EEEEEE] hover:text-[#121212] transition-colors cursor-default">delivered.</span>
+                  <span className="text-[#EEEEEE] hover:text-[#121212] transition-colors cursor-default">
+                    delivered.
+                  </span>
                 </h2>
               </motion.div>
 
@@ -401,16 +441,24 @@ const LandingPage = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 className="relative z-10 p-12 sm:p-20 bg-[#F4F5F7] rounded-[3rem] border border-[#EEEEEE] flex flex-col items-center text-center space-y-12"
               >
-                <Logo withBackground={true} />
+                <Logo withBackground />
 
                 <div className="space-y-4">
                   <h3 className="text-4xl font-serif italic">Begin your journey.</h3>
-                  <p className="text-xs font-mono text-[#888888] uppercase tracking-[0.2em]">Institutional Grade / Instant Approval</p>
+                  <p className="text-xs font-mono text-[#888888] uppercase tracking-[0.2em]">
+                    Institutional Grade / Instant Approval
+                  </p>
                 </div>
-                
-                <Link to="/apply" className="btn-primary w-full h-14 sm:h-16 rounded-xl text-sm sm:text-base group">
+
+                <Link
+                  to="/apply"
+                  className="btn-primary w-full h-14 sm:h-16 rounded-xl text-sm sm:text-base group"
+                >
                   Apply for Capital
-                  <ArrowUpRight size={18} className="ml-3 group-hover:rotate-45 transition-transform" />
+                  <ArrowUpRight
+                    size={18}
+                    className="ml-3 group-hover:rotate-45 transition-transform"
+                  />
                 </Link>
               </motion.div>
 

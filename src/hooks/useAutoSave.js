@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import useLoanStore from '../store/useLoanStore';
 
-export const useAutoSave = (interval = 30000) => {
+const useAutoSave = (interval = 30000) => {
   const saveProgress = useLoanStore((state) => state.saveProgress);
   const formData = useLoanStore((state) => state.formData);
   const timerRef = useRef(null);
@@ -11,12 +11,10 @@ export const useAutoSave = (interval = 30000) => {
     // Check for changes every interval
     timerRef.current = setInterval(() => {
       const currentData = JSON.stringify(formData);
-      
+
       // Only save if data has actually changed
       if (currentData !== lastDataRef.current) {
         saveProgress();
-        lastDataRef.current = currentData;
-        console.log('Progress auto-saved at', new Date().toLocaleTimeString());
       }
     }, interval);
 
@@ -27,3 +25,5 @@ export const useAutoSave = (interval = 30000) => {
 
   return null;
 };
+
+export default useAutoSave;

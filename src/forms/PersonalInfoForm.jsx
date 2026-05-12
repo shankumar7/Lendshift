@@ -16,20 +16,10 @@ const PersonalInfoForm = ({ onSubmit, defaultValues }) => {
     <FormProvider {...methods}>
       <form id="step-form" onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField
-            name="firstName"
-            label="First Name"
-            placeholder="e.g. John"
-            icon={User}
-          />
-          <FormField
-            name="lastName"
-            label="Last Name"
-            placeholder="e.g. Doe"
-            icon={User}
-          />
+          <FormField name="firstName" label="First Name" placeholder="e.g. John" icon={User} />
+          <FormField name="lastName" label="Last Name" placeholder="e.g. Doe" icon={User} />
         </div>
-        
+
         <FormField
           name="email"
           label="Email Address"
@@ -45,12 +35,7 @@ const PersonalInfoForm = ({ onSubmit, defaultValues }) => {
             placeholder="+1 (555) 000-0000"
             icon={Phone}
           />
-          <FormField
-            name="dob"
-            label="Date of Birth"
-            type="date"
-            icon={Calendar}
-          />
+          <FormField name="dob" label="Date of Birth" type="date" icon={Calendar} />
         </div>
       </form>
     </FormProvider>

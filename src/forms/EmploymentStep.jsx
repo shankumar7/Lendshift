@@ -3,7 +3,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schemas } from '@/schemas/loanSchema';
 import { useWizard } from '@/context/WizardContext';
-import { useAutoSave } from '@/hooks/useAutoSave';
+import useAutoSave from '@/hooks/useAutoSave';
 import FormField from '@/components/FormField';
 import { Briefcase, DollarSign, TrendingUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -41,7 +41,9 @@ const EmploymentStep = () => {
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
         <div className="space-y-2">
           <h2 className="text-2xl font-bold font-display">Employment Status</h2>
-          <p className="text-sm text-slate-500">Tell us about your current professional situation and income.</p>
+          <p className="text-sm text-slate-500">
+            Tell us about your current professional situation and income.
+          </p>
         </div>
 
         <form id="wizard-step-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">

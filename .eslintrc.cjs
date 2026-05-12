@@ -10,6 +10,14 @@ module.exports = {
     'plugin:jsx-a11y/recommended',
     'plugin:prettier/recommended',
   ],
+  globals: {
+    cy: 'readonly',
+    describe: 'readonly',
+    it: 'readonly',
+    beforeEach: 'readonly',
+    expect: 'readonly',
+    Cypress: 'readonly',
+  },
   parserOptions: {
     ecmaFeatures: {
       jsx: true,

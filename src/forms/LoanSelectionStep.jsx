@@ -1,18 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Briefcase, 
-  Home, 
-  User, 
-  Building2, 
-  BadgeCheck, 
-  CircleDollarSign,
-  Info,
-  AlertCircle
-} from 'lucide-react';
-import { loanSelectionSchema } from '../schemas/loanSelectionSchema';
+import { Home, User, Building2, AlertCircle } from 'lucide-react';
+import loanSelectionSchema from '../schemas/loanSelectionSchema';
 import useLoanStore from '../store/useLoanStore';
 import EMIPanel from '../components/EMIPanel';
 
@@ -32,38 +23,43 @@ const ErrorField = ({ error, touched }) => (
   </AnimatePresence>
 );
 
-const LoanTypeCard = ({ type, icon: Icon, title, desc, selected, onClick }) => (
+const LoanTypeCard = ({ icon: Icon, title, desc, selected, onClick }) => (
   <button
     type="button"
     onClick={onClick}
     className={`relative p-8 rounded-[2.5rem] border transition-all duration-700 text-left flex flex-col gap-8 group ${
-      selected 
-        ? 'border-[#121212] bg-[#121212] text-white shadow-2xl shadow-black/10' 
+      selected
+        ? 'border-[#121212] bg-[#121212] text-white shadow-2xl shadow-black/10'
         : 'border-[#EEEEEE] bg-white hover:border-[#121212]/20'
     }`}
   >
-    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 ${
-      selected ? 'bg-white/10 text-white' : 'bg-[#F8F9FA] text-[#121212]/40 group-hover:text-[#121212]'
-    }`}>
+    <div
+      className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 ${
+        selected
+          ? 'bg-white/10 text-white'
+          : 'bg-[#F8F9FA] text-[#121212]/40 group-hover:text-[#121212]'
+      }`}
+    >
       <Icon size={20} strokeWidth={1.5} />
     </div>
-    
+
     <div className="space-y-3">
-      <h3 className={`text-3xl font-serif italic leading-none transition-colors ${selected ? 'text-white' : 'text-[#121212]'}`}>
+      <h3
+        className={`text-3xl font-serif italic leading-none transition-colors ${selected ? 'text-white' : 'text-[#121212]'}`}
+      >
         {title}
       </h3>
-      <p className={`text-[10px] font-mono uppercase tracking-[0.15em] leading-relaxed transition-colors ${
-        selected ? 'text-white/40' : 'text-[#888888]'
-      }`}>
+      <p
+        className={`text-[10px] font-mono uppercase tracking-[0.15em] leading-relaxed transition-colors ${
+          selected ? 'text-white/40' : 'text-[#888888]'
+        }`}
+      >
         {desc}
       </p>
     </div>
 
     {selected && (
-      <motion.div 
-        layoutId="selection-dot"
-        className="absolute top-8 right-8"
-      >
+      <motion.div layoutId="selection-dot" className="absolute top-8 right-8">
         <div className="w-2 h-2 rounded-full bg-[#0065FF] shadow-[0_0_15px_#0065FF]" />
       </motion.div>
     )}
@@ -81,18 +77,18 @@ const LoanSelectionStep = ({ onNext }) => {
     purpose: '',
     employmentType: '',
     monthlyIncome: 50000,
-    ...formData.loanSelection
+    ...formData.loanSelection,
   };
-  
-  const { 
-    control, 
-    handleSubmit, 
-    watch, 
-    formState: { errors, isValid, touchedFields, isSubmitted } 
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors, touchedFields, isSubmitted },
   } = useForm({
     resolver: zodResolver(loanSelectionSchema),
     defaultValues: safeDefaults,
-    mode: 'onBlur'
+    mode: 'onBlur',
   });
 
   const selectedLoanType = watch('loanType');
@@ -103,7 +99,19 @@ const LoanSelectionStep = ({ onNext }) => {
   const purposeOptions = {
     personal: ['Medical', 'Travel', 'Education', 'Wedding', 'Other'],
     home: ['Purchase of Plot', 'Home Construction', 'Renovation', 'Refinance'],
-    business: ['Working Capital', 'Expansion', 'Machinery', 'Inventory']
+    business: ['Working Capital', 'Expansion', 'Machinery', 'Inventory'],
+  };
+
+  const getMaxAmount = () => {
+    if (selectedLoanType === 'home') return 50000000;
+    if (selectedLoanType === 'business') return 7500000;
+    return 2500000;
+  };
+
+  const getMaxTenure = () => {
+    if (selectedLoanType === 'home') return 360;
+    if (selectedLoanType === 'business') return 120;
+    return 60;
   };
 
   const onSubmit = (data) => {
@@ -116,17 +124,16 @@ const LoanSelectionStep = ({ onNext }) => {
       {/* 1. Loan Type Selection */}
       <div className="space-y-8">
         <div className="flex items-center gap-4">
-           <div className="w-1 h-1 rounded-full bg-[#0065FF]" />
-           <p className="text-xs font-black uppercase tracking-widest">Select Capital Program</p>
+          <div className="w-1 h-1 rounded-full bg-[#0065FF]" />
+          <p className="text-xs font-black uppercase tracking-widest">Select Capital Program</p>
         </div>
-        
+
         <Controller
           name="loanType"
           control={control}
           render={({ field }) => (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <LoanTypeCard
-                type="personal"
                 title="Personal"
                 desc="Flexible liquidity for lifestyle & emergencies."
                 icon={User}
@@ -134,7 +141,6 @@ const LoanSelectionStep = ({ onNext }) => {
                 onClick={() => field.onChange('personal')}
               />
               <LoanTypeCard
-                type="home"
                 title="Property"
                 desc="Institutional backing for your estate journey."
                 icon={Home}
@@ -142,7 +148,6 @@ const LoanSelectionStep = ({ onNext }) => {
                 onClick={() => field.onChange('home')}
               />
               <LoanTypeCard
-                type="business"
                 title="Enterprise"
                 desc="Accelerate growth with strategic capital."
                 icon={Building2}
@@ -160,67 +165,74 @@ const LoanSelectionStep = ({ onNext }) => {
         <div className="space-y-16">
           {/* Amount Input */}
           <div className="space-y-6">
-            <div className="flex justify-between items-end">
-               <label className="text-xs font-black uppercase tracking-widest">Loan Amount</label>
-               <div className="text-2xl font-serif italic text-[#121212]">
-                 ₹{(amount || 0).toLocaleString('en-IN')}
-               </div>
-            </div>
-            
-            <Controller
-              name="amount"
-              control={control}
-              render={({ field }) => (
-                <div className="space-y-4">
-                  <input
-                    type="range"
-                    min={selectedLoanType === 'home' ? 500000 : 50000}
-                    max={selectedLoanType === 'home' ? 50000000 : (selectedLoanType === 'business' ? 7500000 : 2500000)}
-                    step={10000}
-                    value={field.value}
-                    onChange={(e) => field.onChange(parseInt(e.target.value))}
-                    className="w-full h-2 bg-[#EEEEEE] rounded-lg appearance-none cursor-pointer accent-[#121212]"
-                  />
-                  <div className="flex justify-between text-[10px] font-mono text-[#888888] uppercase tracking-widest">
-                    <span>Min ₹50K</span>
-                    <span>Max ₹5Cr</span>
-                  </div>
+            <label htmlFor="amount-slider" className="block space-y-6 cursor-pointer">
+              <div className="flex justify-between items-end">
+                <span className="text-xs font-black uppercase tracking-widest">Loan Amount</span>
+                <div className="text-2xl font-serif italic text-[#121212]">
+                  ₹{(amount || 0).toLocaleString('en-IN')}
                 </div>
-              )}
-            />
+              </div>
+
+              <Controller
+                name="amount"
+                control={control}
+                render={({ field }) => (
+                  <div className="space-y-4">
+                    <input
+                      id="amount-slider"
+                      type="range"
+                      min={selectedLoanType === 'home' ? 500000 : 50000}
+                      max={getMaxAmount()}
+                      step={10000}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      className="w-full h-2 bg-[#EEEEEE] rounded-lg appearance-none cursor-pointer accent-[#121212]"
+                    />
+                    <div className="flex justify-between text-[10px] font-mono text-[#888888] uppercase tracking-widest">
+                      <span>Min ₹50K</span>
+                      <span>Max ₹5Cr</span>
+                    </div>
+                  </div>
+                )}
+              />
+            </label>
             <ErrorField error={errors.amount} touched={touchedFields.amount || isSubmitted} />
           </div>
 
           {/* Tenure Slider */}
           <div className="space-y-6">
-            <div className="flex justify-between items-end">
-               <label className="text-xs font-black uppercase tracking-widest">Tenure</label>
-               <div className="text-2xl font-serif italic text-[#121212]">
-                 {tenure} <span className="text-xs font-sans not-italic text-[#888888]">Months</span>
-               </div>
-            </div>
-            
-            <Controller
-              name="tenure"
-              control={control}
-              render={({ field }) => (
-                <div className="space-y-4">
-                  <input
-                    type="range"
-                    min={6}
-                    max={selectedLoanType === 'home' ? 360 : (selectedLoanType === 'business' ? 120 : 60)}
-                    step={6}
-                    value={field.value}
-                    onChange={(e) => field.onChange(parseInt(e.target.value))}
-                    className="w-full h-2 bg-[#EEEEEE] rounded-lg appearance-none cursor-pointer accent-[#121212]"
-                  />
-                  <div className="flex justify-between text-[10px] font-mono text-[#888888] uppercase tracking-widest">
-                    <span>6 Months</span>
-                    <span>30 Years</span>
-                  </div>
+            <label htmlFor="tenure-slider" className="block space-y-6 cursor-pointer">
+              <div className="flex justify-between items-end">
+                <span className="text-xs font-black uppercase tracking-widest">Tenure</span>
+                <div className="text-2xl font-serif italic text-[#121212]">
+                  {tenure}{' '}
+                  <span className="text-xs font-sans not-italic text-[#888888]">Months</span>
                 </div>
-              )}
-            />
+              </div>
+
+              <Controller
+                name="tenure"
+                control={control}
+                render={({ field }) => (
+                  <div className="space-y-4">
+                    <input
+                      id="tenure-slider"
+                      type="range"
+                      min={6}
+                      max={getMaxTenure()}
+                      step={6}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      className="w-full h-2 bg-[#EEEEEE] rounded-lg appearance-none cursor-pointer accent-[#121212]"
+                    />
+                    <div className="flex justify-between text-[10px] font-mono text-[#888888] uppercase tracking-widest">
+                      <span>6 Months</span>
+                      <span>30 Years</span>
+                    </div>
+                  </div>
+                )}
+              />
+            </label>
             <ErrorField error={errors.tenure} touched={touchedFields.tenure || isSubmitted} />
           </div>
 
@@ -228,61 +240,93 @@ const LoanSelectionStep = ({ onNext }) => {
           <div className="space-y-12">
             {/* Purpose */}
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-widest text-[#121212]/60">Loan Purpose</label>
-              <Controller
-                name="purpose"
-                control={control}
-                render={({ field }) => (
-                  <select {...field} className="w-full h-16 bg-white border border-[#EEEEEE] rounded-[1.25rem] px-6 text-sm focus:border-[#121212] outline-none transition-all appearance-none cursor-pointer hover:bg-[#FAFAFA]">
-                    <option value="">Select Purpose</option>
-                    {selectedLoanType && purposeOptions[selectedLoanType].map(opt => (
-                      <option key={opt} value={opt}>{opt}</option>
-                    ))}
-                  </select>
-                )}
-              />
+              <label htmlFor="loan-purpose" className="block space-y-3 cursor-pointer">
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#121212]/60">
+                  Loan Purpose
+                </span>
+                <Controller
+                  name="purpose"
+                  control={control}
+                  render={({ field }) => (
+                    <select
+                      {...field}
+                      id="loan-purpose"
+                      className="w-full h-16 bg-white border border-[#EEEEEE] rounded-[1.25rem] px-6 text-sm focus:border-[#121212] outline-none transition-all appearance-none cursor-pointer hover:bg-[#FAFAFA]"
+                    >
+                      <option value="">Select Purpose</option>
+                      {selectedLoanType &&
+                        purposeOptions[selectedLoanType].map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                    </select>
+                  )}
+                />
+              </label>
               <ErrorField error={errors.purpose} touched={touchedFields.purpose || isSubmitted} />
             </div>
 
             {/* Employment */}
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-widest text-[#121212]/60">Employment Status</label>
-              <Controller
-                name="employmentType"
-                control={control}
-                render={({ field }) => (
-                  <select {...field} className="w-full h-16 bg-white border border-[#EEEEEE] rounded-[1.25rem] px-6 text-sm focus:border-[#121212] outline-none transition-all appearance-none cursor-pointer hover:bg-[#FAFAFA]">
-                    <option value="">Select Type</option>
-                    <option value="salaried">Salaried Professional</option>
-                    <option value="self-employed">Self Employed</option>
-                    <option value="business-owner">Enterprise Owner</option>
-                  </select>
-                )}
+              <label htmlFor="employment-type" className="block space-y-3 cursor-pointer">
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#121212]/60">
+                  Employment Status
+                </span>
+                <Controller
+                  name="employmentType"
+                  control={control}
+                  render={({ field }) => (
+                    <select
+                      {...field}
+                      id="employment-type"
+                      className="w-full h-16 bg-white border border-[#EEEEEE] rounded-[1.25rem] px-6 text-sm focus:border-[#121212] outline-none transition-all appearance-none cursor-pointer hover:bg-[#FAFAFA]"
+                    >
+                      <option value="">Select Type</option>
+                      <option value="salaried">Salaried Professional</option>
+                      <option value="self-employed">Self Employed</option>
+                      <option value="business-owner">Enterprise Owner</option>
+                    </select>
+                  )}
+                />
+              </label>
+              <ErrorField
+                error={errors.employmentType}
+                touched={touchedFields.employmentType || isSubmitted}
               />
-              <ErrorField error={errors.employmentType} touched={touchedFields.employmentType || isSubmitted} />
             </div>
 
             {/* Monthly Income */}
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-widest text-[#121212]/60">Net Monthly Income</label>
-              <div className="relative">
-                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[#121212]/20 font-serif italic text-xl">₹</span>
-                <Controller
-                  name="monthlyIncome"
-                  control={control}
-                  render={({ field }) => (
-                    <input
-                      type="number"
-                      {...field}
-                      onBlur={field.onBlur}
-                      onChange={(e) => field.onChange(parseInt(e.target.value))}
-                      placeholder="0.00"
-                      className="w-full h-20 bg-white border border-[#EEEEEE] rounded-[1.25rem] pl-12 pr-6 text-2xl font-serif italic text-[#121212] focus:border-[#121212] outline-none transition-all placeholder:text-[#EEEEEE]"
-                    />
-                  )}
-                />
-              </div>
-              <ErrorField error={errors.monthlyIncome} touched={touchedFields.monthlyIncome || isSubmitted} />
+              <label htmlFor="monthly-income" className="block space-y-3 cursor-pointer">
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#121212]/60">
+                  Net Monthly Income
+                </span>
+                <div className="relative">
+                  <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[#121212]/20 font-serif italic text-xl">
+                    ₹
+                  </span>
+                  <Controller
+                    name="monthlyIncome"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        id="monthly-income"
+                        type="number"
+                        {...field}
+                        onBlur={field.onBlur}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        placeholder="0.00"
+                        className="w-full h-20 bg-white border border-[#EEEEEE] rounded-[1.25rem] pl-12 pr-6 text-2xl font-serif italic text-[#121212] focus:border-[#121212] outline-none transition-all placeholder:text-[#EEEEEE]"
+                      />
+                    )}
+                  />
+                </div>
+              </label>
+              <ErrorField
+                error={errors.monthlyIncome}
+                touched={touchedFields.monthlyIncome || isSubmitted}
+              />
             </div>
           </div>
         </div>
@@ -295,7 +339,9 @@ const LoanSelectionStep = ({ onNext }) => {
 
       {/* Navigation - Controlled by parent for shell consistency but we trigger handleSubmit here */}
       <div className="hidden">
-        <button type="submit" id="wizard-submit-btn">Submit</button>
+        <button type="submit" id="wizard-submit-btn">
+          Submit
+        </button>
       </div>
     </form>
   );
