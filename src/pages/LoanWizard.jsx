@@ -20,6 +20,7 @@ import Logo from '../components/Logo';
 import ResumeModal from '../components/ResumeModal';
 import LoanSelectionStep from '../forms/LoanSelectionStep';
 import PersonalInfoStep from '../forms/PersonalInfoStep';
+import KYCStep from '../forms/KYCStep';
 
 const STEPS = [
   { id: 1, title: 'Loan Selection', desc: 'Configure your capital', icon: Home },
@@ -42,6 +43,8 @@ const LoanWizard = () => {
   const lastSaved = useLoanStore((state) => state.lastSaved);
   const resetApplication = useLoanStore((state) => state.resetApplication);
   const personalInfo = useLoanStore((state) => state.formData.personalInfo);
+  const kyc = useLoanStore((state) => state.formData.kyc);
+  const docs = useLoanStore((state) => state.formData.documents);
   const [showResume, setShowResume] = useState(false);
 
   useAutoSave(30000);
@@ -239,7 +242,12 @@ const LoanWizard = () => {
                     <PersonalInfoStep onNext={onStepSuccess} />
                   </div>
                 )}
-                {currentStep > 2 && (
+                {currentStep === 3 && (
+                  <div ref={formRef}>
+                    <KYCStep onNext={onStepSuccess} />
+                  </div>
+                )}
+                {currentStep > 3 && (
                   <div className="min-h-[400px] p-12 bg-[#F8F9FA] rounded-[3rem] border border-[#EEEEEE] border-dashed flex flex-col items-center justify-center text-center">
                     <p className="text-[#888888] font-mono uppercase tracking-widest text-xs">
                       Step {currentStep} implementation pending
@@ -262,10 +270,17 @@ const LoanWizard = () => {
                 type="button"
                 onClick={handleNext}
                 disabled={
-                  currentStep === 2 &&
-                  (!personalInfo.isMobileVerified ||
-                    !personalInfo.isPanVerified ||
-                    !personalInfo.isAadhaarVerified)
+                  (currentStep === 2 &&
+                    (!personalInfo.isMobileVerified ||
+                      !personalInfo.isPanVerified ||
+                      !personalInfo.isAadhaarVerified)) ||
+                  (currentStep === 3 &&
+                    (!kyc.isPanVerified ||
+                      !kyc.isAadhaarVerified ||
+                      !kyc.isFaceVerified ||
+                      !docs.panCard ||
+                      !docs.aadhaarCard ||
+                      !docs.secondaryId))
                 }
                 className="btn-primary h-16 px-12 group disabled:opacity-20 transition-all"
               >
