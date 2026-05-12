@@ -23,6 +23,7 @@ const AnimatedNumber = ({ value, prefix = '₹' }) => {
 
     const animationFrame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrame);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   return (

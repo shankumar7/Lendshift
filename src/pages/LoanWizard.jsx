@@ -49,7 +49,8 @@ const LoanWizard = () => {
       // Use a timeout to avoid synchronous setState in effect
       const timer = setTimeout(() => setShowResume(true), 0);
       return () => clearTimeout(timer);
-    } else if (!stepId) {
+    }
+    if (!stepId) {
       navigate('/apply/step/1', { replace: true });
     }
     return undefined;

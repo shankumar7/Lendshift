@@ -83,14 +83,13 @@ const LoanSelectionStep = ({ onNext }) => {
   const {
     control,
     handleSubmit,
-    watch,
     formState: { errors, touchedFields, isSubmitted },
   } = useForm({
     resolver: zodResolver(loanSelectionSchema),
     defaultValues: safeDefaults,
     mode: 'onBlur',
   });
- 
+
   const selectedLoanType = useWatch({ control, name: 'loanType' });
   const amount = useWatch({ control, name: 'amount' });
   const tenure = useWatch({ control, name: 'tenure' });
