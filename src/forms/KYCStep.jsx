@@ -297,7 +297,8 @@ const KYCStep = ({ onNext }) => {
                     render={({ field }) => (
                       <input
                         {...field}
-                        maxLength={12}
+                        value={field.value?.replace(/(\d{4})(?=\d)/g, '$1 ') || ''}
+                        maxLength={14}
                         disabled={isAadhaarVerified}
                         placeholder="XXXX XXXX XXXX"
                         onChange={(e) => field.onChange(e.target.value.replace(/\D/g, ''))}
