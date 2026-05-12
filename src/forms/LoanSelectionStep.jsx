@@ -1,5 +1,5 @@
 import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, User, Building2, AlertCircle } from 'lucide-react';
@@ -90,10 +90,10 @@ const LoanSelectionStep = ({ onNext }) => {
     defaultValues: safeDefaults,
     mode: 'onBlur',
   });
-
-  const selectedLoanType = watch('loanType');
-  const amount = watch('amount');
-  const tenure = watch('tenure');
+ 
+  const selectedLoanType = useWatch({ control, name: 'loanType' });
+  const amount = useWatch({ control, name: 'amount' });
+  const tenure = useWatch({ control, name: 'tenure' });
 
   // Purpose options based on loan type
   const purposeOptions = {
@@ -240,6 +240,7 @@ const LoanSelectionStep = ({ onNext }) => {
           <div className="space-y-12">
             {/* Purpose */}
             <div className="space-y-3">
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
               <label htmlFor="loan-purpose" className="block space-y-3 cursor-pointer">
                 <span className="text-[10px] font-black uppercase tracking-widest text-[#121212]/60">
                   Loan Purpose
@@ -248,19 +249,21 @@ const LoanSelectionStep = ({ onNext }) => {
                   name="purpose"
                   control={control}
                   render={({ field }) => (
-                    <select
-                      {...field}
-                      id="loan-purpose"
-                      className="w-full h-16 bg-white border border-[#EEEEEE] rounded-[1.25rem] px-6 text-sm focus:border-[#121212] outline-none transition-all appearance-none cursor-pointer hover:bg-[#FAFAFA]"
-                    >
-                      <option value="">Select Purpose</option>
-                      {selectedLoanType &&
-                        purposeOptions[selectedLoanType].map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                    </select>
+                    <div className="relative">
+                      <select
+                        {...field}
+                        id="loan-purpose"
+                        className="w-full h-16 bg-white border border-[#EEEEEE] rounded-[1.25rem] px-6 text-sm focus:border-[#121212] outline-none transition-all appearance-none cursor-pointer hover:bg-[#FAFAFA]"
+                      >
+                        <option value="">Select Purpose</option>
+                        {selectedLoanType &&
+                          purposeOptions[selectedLoanType].map((opt) => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
                   )}
                 />
               </label>
@@ -269,6 +272,7 @@ const LoanSelectionStep = ({ onNext }) => {
 
             {/* Employment */}
             <div className="space-y-3">
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
               <label htmlFor="employment-type" className="block space-y-3 cursor-pointer">
                 <span className="text-[10px] font-black uppercase tracking-widest text-[#121212]/60">
                   Employment Status
@@ -277,16 +281,18 @@ const LoanSelectionStep = ({ onNext }) => {
                   name="employmentType"
                   control={control}
                   render={({ field }) => (
-                    <select
-                      {...field}
-                      id="employment-type"
-                      className="w-full h-16 bg-white border border-[#EEEEEE] rounded-[1.25rem] px-6 text-sm focus:border-[#121212] outline-none transition-all appearance-none cursor-pointer hover:bg-[#FAFAFA]"
-                    >
-                      <option value="">Select Type</option>
-                      <option value="salaried">Salaried Professional</option>
-                      <option value="self-employed">Self Employed</option>
-                      <option value="business-owner">Enterprise Owner</option>
-                    </select>
+                    <div className="relative">
+                      <select
+                        {...field}
+                        id="employment-type"
+                        className="w-full h-16 bg-white border border-[#EEEEEE] rounded-[1.25rem] px-6 text-sm focus:border-[#121212] outline-none transition-all appearance-none cursor-pointer hover:bg-[#FAFAFA]"
+                      >
+                        <option value="">Select Type</option>
+                        <option value="salaried">Salaried Professional</option>
+                        <option value="self-employed">Self Employed</option>
+                        <option value="business-owner">Enterprise Owner</option>
+                      </select>
+                    </div>
                   )}
                 />
               </label>
@@ -298,18 +304,19 @@ const LoanSelectionStep = ({ onNext }) => {
 
             {/* Monthly Income */}
             <div className="space-y-3">
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
               <label htmlFor="monthly-income" className="block space-y-3 cursor-pointer">
                 <span className="text-[10px] font-black uppercase tracking-widest text-[#121212]/60">
                   Net Monthly Income
                 </span>
-                <div className="relative">
-                  <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[#121212]/20 font-serif italic text-xl">
-                    ₹
-                  </span>
-                  <Controller
-                    name="monthlyIncome"
-                    control={control}
-                    render={({ field }) => (
+                <Controller
+                  name="monthlyIncome"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="relative">
+                      <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[#121212]/20 font-serif italic text-xl">
+                        ₹
+                      </span>
                       <input
                         id="monthly-income"
                         type="number"
@@ -319,9 +326,9 @@ const LoanSelectionStep = ({ onNext }) => {
                         placeholder="0.00"
                         className="w-full h-20 bg-white border border-[#EEEEEE] rounded-[1.25rem] pl-12 pr-6 text-2xl font-serif italic text-[#121212] focus:border-[#121212] outline-none transition-all placeholder:text-[#EEEEEE]"
                       />
-                    )}
-                  />
-                </div>
+                    </div>
+                  )}
+                />
               </label>
               <ErrorField
                 error={errors.monthlyIncome}
