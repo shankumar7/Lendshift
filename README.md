@@ -1,18 +1,77 @@
-# React + Vite
+# LendSwift — Premium Fintech Loan Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+LendSwift is a production-grade, editorial-style fintech platform designed to provide a seamless and premium loan application experience. Built with a focus on visual excellence and technical robustness, it features a comprehensive multi-step wizard, real-time financial feedback, and intelligent state persistence.
 
-Currently, two official plugins are available:
+![LendSwift Banner](https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=1200)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 💎 Core Features
 
-## React Compiler
+- **8-Step Editorial Wizard**: A meticulously crafted multi-step application flow designed with high-density layouts and smooth transitions.
+- **Real-time EMI Panel**: Dynamic financial calculator that provides instant feedback on monthly installments, interest costs, and principal ratios as users adjust their loan parameters.
+- **Intelligent Auto-Save**: Seamless state persistence using Zustand and local storage, allowing users to resume their application exactly where they left off.
+- **Zero-Friction Design**: Premium UI/UX featuring glassmorphism, fluid animations (Framer Motion), and a curated minimalist color palette.
+- **Production-Ready**: 100% compliant with strict ESLint and React Compiler rules, ensuring high performance and maintainability.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Tech Stack
 
-## Expanding the ESLint configuration
+- **Framework**: [React 19](https://reactjs.org/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
+- **Form Handling**: [React Hook Form](https://react-hook-form.com/)
+- **Validation**: [Zod](https://zod.dev/)
+- **Icons**: [Lucide React](https://lucide.dev/)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Project Structure
 
-# multi-step-loan-application
+```text
+src/
+├── components/     # Reusable UI components (EMI Panel, Logo, Modals)
+├── forms/          # Wizard step implementations
+├── hooks/          # Custom hooks (useAutoSave, etc.)
+├── pages/          # Main application screens (Landing, Wizard, Success)
+├── schemas/        # Zod validation schemas
+├── store/          # Zustand state definitions
+└── styles/         # Global styles and Tailwind configurations
+```
+
+## 🏁 Getting Started
+
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Installation
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Development
+Start the local development server:
+```bash
+npm run dev
+```
+
+### Quality Assurance
+Run the production linting check:
+```bash
+npm run lint
+```
+
+Format the codebase:
+```bash
+npm run format
+```
+
+## 🎨 Design Philosophy
+LendSwift follows an **Editorial Fintech** philosophy. We move away from generic "dashboard" aesthetics towards a more premium, magazine-like experience. This involves:
+- **Bold Typography**: Using high-contrast serif and sans-serif pairings.
+- **Fluidity**: Every interaction is backed by subtle, non-intrusive animations.
+- **Clarity**: High-density information is presented in a way that minimizes cognitive load.
+
+---
+
+Built with precision by the LendSwift Team.
