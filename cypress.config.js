@@ -1,12 +1,18 @@
-const { defineConfig } = require('cypress');
+import { defineConfig } from 'cypress';
 
-module.exports = defineConfig({
+export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:5173',
+    viewportWidth: 1280,
+    viewportHeight: 720,
+    video: false,
+    screenshotOnRunFailure: true,
     setupNodeEvents() {
       // implement node event listeners here
     },
-    viewportWidth: 1280,
-    viewportHeight: 720,
+    retries: {
+      runMode: 2,
+      openMode: 0,
+    },
   },
 });
