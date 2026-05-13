@@ -6,9 +6,8 @@ LendSwift is a production-grade, editorial-style fintech platform designed to pr
 
 ## 💎 Core Features
 
-- **8-Step Editorial Wizard**: A meticulously crafted multi-step application flow designed with refined grid layouts, smooth transitions, and high-density logic.
-- **Real-time EMI Panel**: Dynamic financial calculator that provides instant feedback on monthly installments, interest costs, and principal ratios as users adjust their loan parameters.
-- **Intelligent Auto-Save**: Seamless state persistence using Zustand and local storage, ensuring all data and verification statuses are preserved.
+- **Institutional KYC System**: A banking-grade verification engine featuring PAN/Aadhaar validation, biometric face matching (AI simulation), and a secure document repository.
+- **Biometric Identity Matching**: Real-time facial verification simulation with animated scanning effects and confidence score metrics.
 - **Data Synchronization**: Intelligently pre-fills information (e.g., Occupation) across steps to minimize friction and improve the onboarding experience.
 - **Zero-Friction Design**: Premium UI/UX featuring uniform grid arrangements, glassmorphism, and fluid animations (Framer Motion).
 - **Production-Ready**: 100% compliant with strict ESLint and React Compiler rules, ensuring high performance and maintainability.

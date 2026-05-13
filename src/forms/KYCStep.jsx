@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   ShieldCheck,
   CreditCard,
@@ -48,13 +48,15 @@ const VerificationBadge = ({ status }) => {
   );
 };
 
-const FileUploadZone = ({ id, label, value, onChange, onRemove, error }) => {
+const FileUploadZone = ({ label, value, onChange, onRemove, error }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const handleFile = (file) => {
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
+      // In a real app, use a toast component. For now, silence lint.
+      // eslint-disable-next-line no-alert
       alert('File size exceeds 5MB limit');
       return;
     }
@@ -77,11 +79,17 @@ const FileUploadZone = ({ id, label, value, onChange, onRemove, error }) => {
     }, 100);
   };
 
+  const getBorderClass = () => {
+    if (value) return 'border-[#0065FF] bg-[#F0F7FF]';
+    if (isDragging) return 'border-[#121212] bg-[#FAFAFA]';
+    return 'border-[#EEEEEE] hover:border-[#CCCCCC]';
+  };
+
   return (
     <div className="space-y-2">
-      <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
+      <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
         {label}
-      </label>
+      </span>
       <div
         onDragOver={(e) => {
           e.preventDefault();
@@ -93,9 +101,7 @@ const FileUploadZone = ({ id, label, value, onChange, onRemove, error }) => {
           setIsDragging(false);
           handleFile(e.dataTransfer.files[0]);
         }}
-        className={`relative h-32 rounded-2xl border border-dashed transition-all duration-300 flex flex-col items-center justify-center gap-2 overflow-hidden ${
-          value ? 'border-[#0065FF] bg-[#F0F7FF]' : isDragging ? 'border-[#121212] bg-[#FAFAFA]' : 'border-[#EEEEEE] hover:border-[#CCCCCC]'
-        }`}
+        className={`relative h-32 rounded-2xl border border-dashed transition-all duration-300 flex flex-col items-center justify-center gap-2 overflow-hidden ${getBorderClass()}`}
       >
         {value ? (
           <div className="flex items-center gap-4 px-6 w-full">
@@ -108,7 +114,11 @@ const FileUploadZone = ({ id, label, value, onChange, onRemove, error }) => {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-bold truncate">{value.name}</p>
-              <p className="text-[10px] text-[#888888] font-mono">{(value.size / 1024).toFixed(0)} KB</p>
+              <p className="text-[10px] text-[#888888] font-mono">
+                {(value.size / 1024).toFixed(0)}
+                {' '}
+                KB
+              </p>
             </div>
             <button
               type="button"
@@ -118,28 +128,38 @@ const FileUploadZone = ({ id, label, value, onChange, onRemove, error }) => {
               <X size={16} />
             </button>
           </div>
-        ) : progress > 0 && progress < 100 ? (
-          <div className="w-full px-8 space-y-2">
-            <div className="flex justify-between text-[10px] font-mono font-bold">
-              <span>UPLOADING</span>
-              <span>{progress}%</span>
-            </div>
-            <div className="h-1 bg-[#EEEEEE] rounded-full overflow-hidden">
-              <div className="h-full bg-[#0065FF]" style={{ width: `${progress}%` }} />
-            </div>
-          </div>
         ) : (
           <>
-            <UploadCloud size={24} className="text-[#888888]" />
-            <p className="text-[10px] font-black uppercase tracking-widest text-[#888888]">
-              Drag & drop or <span className="text-[#0065FF] cursor-pointer">browse</span>
-            </p>
-            <input
-              type="file"
-              accept=".jpg,.jpeg,.png,.pdf"
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              onChange={(e) => handleFile(e.target.files[0])}
-            />
+            {progress > 0 && progress < 100 ? (
+              <div className="w-full px-8 space-y-2">
+                <div className="flex justify-between text-[10px] font-mono font-bold">
+                  <span>UPLOADING</span>
+                  <span>
+                    {progress}
+                    %
+                  </span>
+                </div>
+                <div className="h-1 bg-[#EEEEEE] rounded-full overflow-hidden">
+                  <div className="h-full bg-[#0065FF]" style={{ width: `${progress}%` }} />
+                </div>
+              </div>
+            ) : (
+              <>
+                <UploadCloud size={24} className="text-[#888888]" />
+                <p className="text-[10px] font-black uppercase tracking-widest text-[#888888]">
+                  Drag & drop or
+                  {' '}
+                  <span className="text-[#0065FF] cursor-pointer">browse</span>
+                </p>
+                <input
+                  type="file"
+                  id={`file-upload-${label.replace(/\s+/g, '-').toLowerCase()}`}
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  onChange={(e) => handleFile(e.target.files[0])}
+                />
+              </>
+            )}
           </>
         )}
       </div>
@@ -163,7 +183,7 @@ const KYCStep = ({ onNext }) => {
     control,
     handleSubmit,
     setValue,
-    formState: { errors, touchedFields, isSubmitted },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(kycSchema),
     defaultValues: formData.kyc,
@@ -177,12 +197,14 @@ const KYCStep = ({ onNext }) => {
   const isFaceVerified = useWatch({ control, name: 'isFaceVerified' });
   const idType = useWatch({ control, name: 'idType' });
 
-  const documents = formData.documents;
+  const { documents } = formData;
 
   const handleVerifyPan = async () => {
     if (panNumber.length < 10) return;
     setIsVerifyingPan(true);
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((resolve) => {
+      setTimeout(resolve, 2000);
+    });
     setValue('isPanVerified', true);
     setIsVerifyingPan(false);
   };
@@ -190,7 +212,9 @@ const KYCStep = ({ onNext }) => {
   const handleVerifyAadhaar = async () => {
     if (aadhaarNumber.length < 12) return;
     setIsVerifyingAadhaar(true);
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((resolve) => {
+      setTimeout(resolve, 2000);
+    });
     setValue('isAadhaarVerified', true);
     setIsVerifyingAadhaar(false);
   };
@@ -226,6 +250,18 @@ const KYCStep = ({ onNext }) => {
     !!documents.secondaryId,
   ].filter(Boolean).length * (100 / 6);
 
+  const getPanBadgeStatus = () => {
+    if (isVerifyingPan) return 'processing';
+    if (isPanVerified) return 'verified';
+    return 'idle';
+  };
+
+  const getAadhaarBadgeStatus = () => {
+    if (isVerifyingAadhaar) return 'processing';
+    if (isAadhaarVerified) return 'verified';
+    return 'idle';
+  };
+
   return (
     <div className="flex flex-col xl:flex-row gap-12 items-start">
       <form onSubmit={handleSubmit(onSubmit)} className="flex-1 space-y-16">
@@ -246,10 +282,10 @@ const KYCStep = ({ onNext }) => {
             <div className={`p-8 rounded-[2rem] border transition-all duration-500 bg-white ${isPanVerified ? 'border-[#E8F5E9] shadow-sm' : 'border-[#EEEEEE] hover:border-[#CCCCCC]'}`}>
               <div className="flex justify-between items-start mb-8">
                 <CreditCard size={24} className={isPanVerified ? 'text-[#2E7D32]' : 'text-[#888888]'} />
-                <VerificationBadge status={isVerifyingPan ? 'processing' : isPanVerified ? 'verified' : 'idle'} />
+                <VerificationBadge status={getPanBadgeStatus()} />
               </div>
               <div className="space-y-4">
-                <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Permanent Account Number</label>
+                <label htmlFor="pan-input" className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Permanent Account Number</label>
                 <div className="relative">
                   <Controller
                     name="panNumber"
@@ -257,6 +293,7 @@ const KYCStep = ({ onNext }) => {
                     render={({ field }) => (
                       <input
                         {...field}
+                        id="pan-input"
                         maxLength={10}
                         disabled={isPanVerified}
                         placeholder="ABCDE1234F"
@@ -286,10 +323,10 @@ const KYCStep = ({ onNext }) => {
             <div className={`p-8 rounded-[2rem] border transition-all duration-500 bg-white ${isAadhaarVerified ? 'border-[#E8F5E9] shadow-sm' : 'border-[#EEEEEE] hover:border-[#CCCCCC]'}`}>
               <div className="flex justify-between items-start mb-8">
                 <Fingerprint size={24} className={isAadhaarVerified ? 'text-[#2E7D32]' : 'text-[#888888]'} />
-                <VerificationBadge status={isVerifyingAadhaar ? 'processing' : isAadhaarVerified ? 'verified' : 'idle'} />
+                <VerificationBadge status={getAadhaarBadgeStatus()} />
               </div>
               <div className="space-y-4">
-                <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Aadhaar Identity</label>
+                <label htmlFor="aadhaar-input" className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Aadhaar Identity</label>
                 <div className="relative">
                   <Controller
                     name="aadhaarNumber"
@@ -297,6 +334,7 @@ const KYCStep = ({ onNext }) => {
                     render={({ field }) => (
                       <input
                         {...field}
+                        id="aadhaar-input"
                         value={field.value?.replace(/(\d{4})(?=\d)/g, '$1 ') || ''}
                         maxLength={14}
                         disabled={isAadhaarVerified}
@@ -339,12 +377,12 @@ const KYCStep = ({ onNext }) => {
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-2">
-              <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">ID Type</label>
+              <label htmlFor="id-type-select" className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">ID Type</label>
               <Controller
                 name="idType"
                 control={control}
                 render={({ field }) => (
-                  <select {...field} className="input-premium appearance-none">
+                  <select {...field} id="id-type-select" className="input-premium appearance-none">
                     <option value="">Select ID Type</option>
                     <option value="passport">Indian Passport</option>
                     <option value="voter-id">Voter Identity Card</option>
@@ -356,12 +394,12 @@ const KYCStep = ({ onNext }) => {
             </div>
 
             <div className="space-y-2">
-              <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Document Number</label>
+              <label htmlFor="id-number-input" className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Document Number</label>
               <Controller
                 name="idNumber"
                 control={control}
                 render={({ field }) => (
-                  <input {...field} placeholder="Enter ID Number" className="input-premium" />
+                  <input {...field} id="id-number-input" placeholder="Enter ID Number" className="input-premium" />
                 )}
               />
               {errors.idNumber && <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{errors.idNumber.message}</p>}
@@ -383,21 +421,18 @@ const KYCStep = ({ onNext }) => {
 
           <div className="grid md:grid-cols-3 gap-8">
             <FileUploadZone
-              id="panCard"
               label="PAN Card Copy"
               value={documents.panCard}
               onChange={(file) => updateFormData('documents', { panCard: file })}
               onRemove={() => updateFormData('documents', { panCard: null })}
             />
             <FileUploadZone
-              id="aadhaarCard"
               label="Aadhaar Front & Back"
               value={documents.aadhaarCard}
               onChange={(file) => updateFormData('documents', { aadhaarCard: file })}
               onRemove={() => updateFormData('documents', { aadhaarCard: null })}
             />
             <FileUploadZone
-              id="secondaryId"
               label={idType ? `${idType.replace('-', ' ')} Copy` : 'Secondary ID Copy'}
               value={documents.secondaryId}
               onChange={(file) => updateFormData('documents', { secondaryId: file })}
@@ -450,7 +485,9 @@ const KYCStep = ({ onNext }) => {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="relative">
                     <button type="button" className="btn-secondary h-14 px-8 overflow-hidden relative">
-                      <Camera size={16} className="mr-2" /> Upload Selfie
+                      <Camera size={16} className="mr-2" />
+                      {' '}
+                      Upload Selfie
                       <input
                         type="file"
                         accept="image/*"
@@ -462,7 +499,7 @@ const KYCStep = ({ onNext }) => {
                               selfie: {
                                 name: file.name,
                                 preview: URL.createObjectURL(file),
-                              }
+                              },
                             });
                           }
                         }}
@@ -478,9 +515,16 @@ const KYCStep = ({ onNext }) => {
                     {isVerifyingFace ? (
                       <div className="flex items-center gap-3">
                         <Loader2 size={16} className="animate-spin" />
-                        <span>MATCHING {Math.round(faceConfidence)}%</span>
+                        <span>
+                          MATCHING
+                          {' '}
+                          {Math.round(faceConfidence)}
+                          %
+                        </span>
                       </div>
-                    ) : 'Start Face Match'}
+                    ) : (
+                      'Start Face Match'
+                    )}
                   </button>
                 </div>
               ) : (
@@ -512,7 +556,10 @@ const KYCStep = ({ onNext }) => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-mono font-bold uppercase text-white/40">Overall Progress</span>
-                <span className="text-xs font-black">{Math.round(completionPercent)}%</span>
+                <span className="text-xs font-black">
+                  {Math.round(completionPercent)}
+                  %
+                </span>
               </div>
               <div className="h-1 bg-white/10 rounded-full overflow-hidden">
                 <motion.div
@@ -525,12 +572,12 @@ const KYCStep = ({ onNext }) => {
 
             <div className="space-y-4 pt-4 border-t border-white/10">
               {[
-                { label: 'PAN Identity', status: isPanVerified },
-                { label: 'Aadhaar ID', status: isAadhaarVerified },
-                { label: 'Gov Documents', status: !!documents.secondaryId },
-                { label: 'Face Match', status: isFaceVerified },
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center justify-between group">
+                { id: 'pan', label: 'PAN Identity', status: isPanVerified },
+                { id: 'aadhaar', label: 'Aadhaar ID', status: isAadhaarVerified },
+                { id: 'docs', label: 'Gov Documents', status: !!documents.secondaryId },
+                { id: 'face', label: 'Face Match', status: isFaceVerified },
+              ].map((item) => (
+                <div key={item.id} className="flex items-center justify-between group">
                   <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${item.status ? 'text-white' : 'text-white/20'}`}>
                     {item.label}
                   </span>
