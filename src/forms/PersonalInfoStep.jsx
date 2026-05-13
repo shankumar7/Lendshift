@@ -295,26 +295,28 @@ const PersonalInfoStep = ({ onNext }) => {
         <div className="grid md:grid-cols-2 gap-12">
           {/* Mobile Field with OTP Simulation */}
           <div className="space-y-6">
-            <InputWrapper 
-              label="Primary Mobile Number" 
-              id="mobileNumber" 
-              error={errors.mobileNumber} 
+            <InputWrapper
+              label="Primary Mobile Number"
+              id="mobileNumber"
+              error={errors.mobileNumber}
               touched={touchedFields.mobileNumber || isSubmitted}
               verified={isMobileVerified}
             >
               <div className="relative">
-                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[10px] font-black text-[#121212]/20">+91</span>
+                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[10px] font-black text-[#121212]/20">
+                  +91
+                </span>
                 <Controller
                   name="mobileNumber"
                   control={control}
                   render={({ field }) => (
-                    <input 
-                      {...field} 
-                      id="mobileNumber" 
-                      maxLength={10} 
+                    <input
+                      {...field}
+                      id="mobileNumber"
+                      maxLength={10}
                       disabled={isMobileVerified}
-                      placeholder="98765 43210" 
-                      className="input-premium pl-16 pr-32" 
+                      placeholder="98765 43210"
+                      className="input-premium pl-16 pr-32"
                     />
                   )}
                 />
@@ -330,88 +332,103 @@ const PersonalInfoStep = ({ onNext }) => {
                 )}
               </div>
             </InputWrapper>
-
-            <AnimatePresence>
-              {otpSent && !isMobileVerified && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  className="mt-6 p-8 bg-[#F8F9FA] rounded-[2rem] border border-[#EEEEEE] space-y-6"
-                >
-                  <div className="flex justify-between items-center">
-                    <div className="space-y-1">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-[#121212]">
-                        Security Verification
-                      </p>
-                      <p className="text-[10px] font-mono text-[#888888]">
-                        Enter the 6-digit code sent to your device
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white border border-[#EEEEEE] rounded-full">
-                      <div className={`w-1.5 h-1.5 rounded-full ${otpTimer > 0 ? 'bg-[#0065FF] animate-pulse' : 'bg-red-500'}`} />
-                      <span className="text-[10px] font-mono font-bold text-[#121212]">
-                        00:{otpTimer < 10 ? `0${otpTimer}` : otpTimer}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="flex-1 relative">
-                      <input
-                        type="text"
-                        maxLength={6}
-                        value={otpValue}
-                        onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ''))}
-                        placeholder="······"
-                        className="w-full h-16 bg-white border border-[#EEEEEE] rounded-2xl px-6 text-center text-2xl font-mono tracking-[0.5em] focus:border-[#121212] focus:ring-1 focus:ring-[#121212] outline-none transition-all placeholder:text-[#EEEEEE]"
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleVerifyOtp}
-                      disabled={otpValue.length < 6 || otpVerifying}
-                      className="h-16 px-10 rounded-2xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#0065FF] transition-all disabled:opacity-20 flex items-center justify-center gap-3"
-                    >
-                      {otpVerifying ? (
-                        <Loader2 size={16} className="animate-spin" />
-                      ) : (
-                        <>
-                          Verify Code
-                          <CheckCircle2 size={14} />
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-4 border-t border-[#EEEEEE]">
-                    <p className="text-[9px] font-mono text-[#888888] uppercase tracking-widest">
-                      Didn't receive the code?
-                    </p>
-                    <button
-                      type="button"
-                      onClick={handleSendOtp}
-                      disabled={otpTimer > 0 || otpVerifying}
-                      className="text-[10px] font-black uppercase tracking-widest text-[#0065FF] disabled:text-[#888888]/40 transition-colors flex items-center gap-2 group"
-                    >
-                      {otpTimer > 0 ? `Resend in ${otpTimer}s` : 'Resend Code'}
-                      <RefreshCcw size={12} className={`group-hover:rotate-180 transition-transform duration-500 ${otpVerifying ? 'animate-spin' : ''}`} />
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
 
-          <InputWrapper label="Email Address" id="email" error={errors.email} touched={touchedFields.email || isSubmitted}>
+          <InputWrapper
+            label="Email Address"
+            id="email"
+            error={errors.email}
+            touched={touchedFields.email || isSubmitted}
+          >
             <Controller
               name="email"
               control={control}
               render={({ field }) => (
-                <input {...field} id="email" placeholder="name@institutional.com" className="input-premium" />
+                <input
+                  {...field}
+                  id="email"
+                  placeholder="name@institutional.com"
+                  className="input-premium"
+                />
               )}
             />
           </InputWrapper>
+
+          <AnimatePresence>
+            {otpSent && !isMobileVerified && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="md:col-span-2 p-8 bg-[#F8F9FA] rounded-[2rem] border border-[#EEEEEE] space-y-6"
+              >
+                <div className="flex justify-between items-center">
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-[#121212]">
+                      Security Verification
+                    </p>
+                    <p className="text-[10px] font-mono text-[#888888]">
+                      Enter the 6-digit code sent to your device
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white border border-[#EEEEEE] rounded-full">
+                    <div
+                      className={`w-1.5 h-1.5 rounded-full ${otpTimer > 0 ? 'bg-[#0065FF] animate-pulse' : 'bg-red-500'}`}
+                    />
+                    <span className="text-[10px] font-mono font-bold text-[#121212]">
+                      00:{otpTimer < 10 ? `0${otpTimer}` : otpTimer}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={otpValue}
+                      onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ''))}
+                      placeholder="······"
+                      className="w-full h-16 bg-white border border-[#EEEEEE] rounded-2xl px-6 text-center text-2xl font-mono tracking-[0.5em] focus:border-[#121212] focus:ring-1 focus:ring-[#121212] outline-none transition-all placeholder:text-[#EEEEEE]"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleVerifyOtp}
+                    disabled={otpValue.length < 6 || otpVerifying}
+                    className="h-16 px-10 rounded-2xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#0065FF] transition-all disabled:opacity-20 flex items-center justify-center gap-3"
+                  >
+                    {otpVerifying ? (
+                      <Loader2 size={16} className="animate-spin" />
+                    ) : (
+                      <>
+                        Verify Code
+                        <CheckCircle2 size={14} />
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-[#EEEEEE]">
+                  <p className="text-[9px] font-mono text-[#888888] uppercase tracking-widest">
+                    Didn't receive the code?
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    disabled={otpTimer > 0 || otpVerifying}
+                    className="text-[10px] font-black uppercase tracking-widest text-[#0065FF] disabled:text-[#888888]/40 transition-colors flex items-center gap-2 group"
+                  >
+                    {otpTimer > 0 ? `Resend in ${otpTimer}s` : 'Resend Code'}
+                    <RefreshCcw
+                      size={12}
+                      className={`group-hover:rotate-180 transition-transform duration-500 ${otpVerifying ? 'animate-spin' : ''}`}
+                    />
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mt-8">
