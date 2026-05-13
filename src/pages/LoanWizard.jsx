@@ -28,7 +28,6 @@ import DocumentStep from '../forms/DocumentStep';
 import ReviewStep from '../forms/ReviewStep';
 import useUnderwriting from '../hooks/useUnderwriting';
 import useAccessibility from '../hooks/useAccessibility';
-import ResumeModal from '../components/ResumeModal';
 
 const STEPS = [
   { id: 1, title: 'Loan Selection', desc: 'Configure your capital', icon: Home },
@@ -278,17 +277,6 @@ const LoanWizard = () => {
                 {STEPS[currentStep - 1].title}
               </p>
             </div>
-            <div className="hidden lg:flex items-center gap-6 px-6 py-3 bg-[#F8F9FA] rounded-2xl border border-[#EEEEEE]">
-              <div className="flex flex-col items-end">
-                <p className="text-[9px] font-black uppercase tracking-widest text-[#888888]">Institutional Score</p>
-                <p className="text-sm font-bold text-[#121212]">{underwriting.score}</p>
-              </div>
-              <div className="w-px h-8 bg-[#EEEEEE]" />
-              <div className="flex flex-col">
-                <p className="text-[9px] font-black uppercase tracking-widest text-[#888888]">Risk Profile</p>
-                <p className={`text-[10px] font-bold uppercase tracking-widest`} style={{ color: underwriting.color }}>{underwriting.tier}</p>
-              </div>
-            </div>
             {lastSaved && (
               <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-[#F8F9FA] border border-[#EEEEEE] rounded-full">
                 <div className="w-1 h-1 rounded-full bg-[#2E7D32] animate-pulse" />
@@ -408,7 +396,7 @@ const LoanWizard = () => {
               </button>
               <button
                 type="button"
-                onClick={handleNext}
+                onClick={handleContinue}
                 disabled={!isStepComplete()}
                 className="btn-primary h-16 px-12 group disabled:opacity-20 transition-all"
               >

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -22,6 +22,10 @@ import {
   ArrowRight,
   ShieldAlert,
   Info,
+  Banknote,
+  MapPin,
+  Building2,
+  TrendingUp,
 } from 'lucide-react';
 import useLoanStore from '../store/useLoanStore';
 import documentSchema from '../schemas/documentSchema';
