@@ -205,7 +205,7 @@ const LoanWizard = () => {
           </Link>
           <div className="space-y-2">
             <p className="text-meta">Step {currentStep} of 8</p>
-            <h2 className="text-3xl font-serif italic tracking-tight">Onboarding</h2>
+            <h2 className="text-2xl sm:text-3xl font-serif italic tracking-tight">Onboarding</h2>
           </div>
           <nav className="space-y-1">
             {STEPS.map((step) => {
@@ -318,7 +318,7 @@ const LoanWizard = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="space-y-4"
               >
-                <h1 className="text-5xl lg:text-7xl font-serif italic leading-tight tracking-tighter">
+                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-serif italic leading-tight tracking-tighter">
                   {STEPS[currentStep - 1].title}
                 </h1>
                 <p className="text-xl text-[#888888] font-sans leading-relaxed">

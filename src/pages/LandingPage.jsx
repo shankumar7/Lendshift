@@ -20,7 +20,7 @@ const Hero = () => (
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
-          className="text-editorial"
+          className="text-editorial text-4xl sm:text-7xl md:text-8xl lg:text-9xl"
         >
           Capital that <br className="hidden sm:block" />
           breathes{' '}
@@ -226,7 +226,7 @@ const LandingPage = () => {
                 className="space-y-6"
               >
                 <p className="text-meta text-[#0065FF]">Final Step / Onboarding</p>
-                <h2 className="text-6xl sm:text-8xl font-serif italic leading-[0.9] tracking-tighter text-[#121212]">
+                <h2 className="text-5xl sm:text-7xl lg:text-8xl font-serif italic leading-[0.9] tracking-tighter text-[#121212]">
                   The capital <br />
                   you deserve, <br />
                   <span className="text-[#EEEEEE] hover:text-[#121212] transition-colors cursor-default">

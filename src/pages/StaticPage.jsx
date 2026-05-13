@@ -120,7 +120,7 @@ const StaticPage = ({ title, description, category }) => {
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-6xl sm:text-8xl font-serif italic leading-none tracking-tighter"
+                  className="text-5xl sm:text-7xl lg:text-8xl font-serif italic leading-none tracking-tighter"
                 >
                   {title}
                 </motion.h1>

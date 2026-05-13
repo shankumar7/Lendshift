@@ -1,81 +1,106 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, ArrowRight, Download, Share2 } from 'lucide-react';
+import { CheckCircle2, ArrowRight, Download, Share2, ShieldCheck, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Logo from '@/components/Logo';
+import Nav from '@/components/Nav';
+import Footer from '@/components/Footer';
 
 const SuccessPage = () => {
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 flex items-center justify-center p-6">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="max-w-xl w-full text-center space-y-8"
-      >
-        <div className="relative">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: 'spring', damping: 12, stiffness: 200, delay: 0.2 }}
-            className="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 rounded-full flex items-center justify-center mx-auto"
-          >
-            <CheckCircle2 size={48} />
-          </motion.div>
+    <div className="min-h-screen bg-white grain-bg font-sans flex flex-col">
+      <Nav />
+      <main className="flex-1 flex items-center justify-center pt-32 pb-20 px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-4xl w-full grid lg:grid-cols-2 gap-12 lg:gap-20 items-center"
+        >
+          <div className="space-y-10 order-2 lg:order-1">
+            <div className="space-y-6">
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="inline-flex items-center gap-3 px-4 py-2 bg-[#F8F9FA] rounded-full border border-[#EEEEEE]"
+              >
+                <div className="w-2 h-2 rounded-full bg-[#2E7D32]" />
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#121212]">
+                  APPLICATION SECURED
+                </span>
+              </motion.div>
+              <h1 className="text-5xl sm:text-7xl font-serif italic leading-tight tracking-tighter">
+                Capital is on <br />
+                the way.
+              </h1>
+              <p className="text-xl text-[#888888] leading-relaxed max-w-md">
+                Your application **#LS-9402** has been successfully transmitted to our institutional
+                underwriting engine.
+              </p>
+            </div>
 
-          {/* Confetti simulation with motion elements can be added here */}
-        </div>
+            <div className="grid sm:grid-cols-2 gap-6">
+              <div className="p-8 bg-[#F8F9FA] rounded-[2rem] border border-[#EEEEEE] space-y-4">
+                <ShieldCheck size={24} className="text-[#121212]" />
+                <div className="space-y-1">
+                  <p className="text-[10px] font-mono text-[#888888] uppercase tracking-widest">
+                    Security Layer
+                  </p>
+                  <p className="text-sm font-black">ISO 27001 Verified</p>
+                </div>
+              </div>
+              <div className="p-8 bg-[#F8F9FA] rounded-[2rem] border border-[#EEEEEE] space-y-4">
+                <Globe size={24} className="text-[#121212]" />
+                <div className="space-y-1">
+                  <p className="text-[10px] font-mono text-[#888888] uppercase tracking-widest">
+                    Network Status
+                  </p>
+                  <p className="text-sm font-black">Atomic Settlement</p>
+                </div>
+              </div>
+            </div>
 
-        <div className="space-y-4">
-          <h1 className="text-4xl font-black font-display dark:text-white">
-            Application Submitted!
-          </h1>
-          <p className="text-slate-500 leading-relaxed">
-            Congratulations! Your loan application **#LS-9402** has been successfully received. Our
-            team will review your documents and get back to you within 24 hours.
-          </p>
-        </div>
-
-        <div className="p-6 bg-slate-50 dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 space-y-4 text-left">
-          <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-4">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-              Application ID
-            </span>
-            <span className="text-sm font-black dark:text-white">LS-94028472</span>
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <Link to="/" className="btn-primary flex-1 h-16 rounded-xl group">
+                Back to Dashboard
+                <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <button type="button" className="btn-secondary flex-1 h-16 rounded-xl gap-2">
+                <Download size={18} />
+                Technical Summary
+              </button>
+            </div>
           </div>
-          <div className="flex justify-between items-center pt-2">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-              Estimated Approval
-            </span>
-            <span className="text-sm font-black text-emerald-600 italic">Within 24 Hours</span>
+
+          <div className="order-1 lg:order-2">
+            <div className="relative">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="relative z-10 p-12 sm:p-20 bg-[#121212] rounded-[3rem] text-white flex flex-col items-center text-center space-y-8"
+              >
+                <div className="w-20 h-20 bg-[#0065FF] rounded-full flex items-center justify-center mb-4">
+                  <CheckCircle2 size={40} className="text-white" />
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-4xl font-serif italic">Success.</h3>
+                  <p className="text-[10px] font-mono text-white/40 uppercase tracking-[0.3em]">
+                    Institutional Grade Approval
+                  </p>
+                </div>
+                <div className="w-full h-px bg-white/10" />
+                <div className="space-y-1">
+                  <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
+                    Reference ID
+                  </p>
+                  <p className="text-xl font-mono tracking-tighter">LS-9402-8472-X</p>
+                </div>
+              </motion.div>
+              <div className="absolute top-6 left-6 w-full h-full bg-[#F4F5F7] rounded-[3rem] -z-10 border border-[#EEEEEE]" />
+            </div>
           </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4">
-          <button
-            type="button"
-            className="flex-1 btn-secondary h-14 rounded-2xl flex items-center justify-center gap-2 font-bold border-2"
-          >
-            <Download size={18} />
-            Download Summary
-          </button>
-          <Link
-            to="/"
-            className="flex-1 btn-primary h-14 rounded-2xl flex items-center justify-center gap-2 font-bold shadow-xl shadow-primary-600/20"
-          >
-            Back to Home
-            <ArrowRight size={18} />
-          </Link>
-        </div>
-
-        <div className="pt-8 flex justify-center gap-6 text-slate-400">
-          <button
-            type="button"
-            className="hover:text-primary-600 transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest"
-          >
-            <Share2 size={16} />
-            Share Status
-          </button>
-        </div>
-      </motion.div>
+        </motion.div>
+      </main>
+      <Footer />
     </div>
   );
 };
