@@ -61,6 +61,10 @@ const App = () => {
           path="/support" 
           element={<StaticPage title="Support" category="Network" description="Technical and account assistance for the LendSwift ecosystem." />} 
         />
+        <Route 
+          path="/methods" 
+          element={<StaticPage title="Our Methods" category="Strategy" description="Proprietary protocols for institutional capital deployment and risk mitigation." />} 
+        />
       </Routes>
       <Toaster
         position="top-right"

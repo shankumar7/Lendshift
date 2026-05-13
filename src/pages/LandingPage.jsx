@@ -10,8 +10,9 @@ import {
   ArrowDown,
   Award,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from '@/components/Logo';
+import useLoanStore from '@/store/useLoanStore';
 
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
@@ -68,50 +69,68 @@ const Hero = () => (
             Apply Now
             <ArrowUpRight size={16} className="ml-2 group-hover:rotate-45 transition-transform" />
           </Link>
-          <button
-            type="button"
-            className="btn-secondary h-14 sm:h-16 px-10 sm:px-12 text-xs sm:text-sm"
+          <Link
+            to="/methods"
+            className="btn-secondary flex items-center justify-center h-14 sm:h-16 px-10 sm:px-12 text-xs sm:text-sm"
           >
             Our Methods
-          </button>
+          </Link>
         </motion.div>
       </div>
     </div>
   </section>
 );
 
-const ProductLine = ({ title, desc, rate, amount, index }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ delay: index * 0.2 }}
-    viewport={{ once: true }}
-    className="minimal-card flex flex-col justify-between group h-full min-h-[400px]"
-  >
-    <div className="space-y-6">
-      <div className="flex justify-between items-start">
-        <h3 className="text-4xl font-serif italic">{title}</h3>
-        <div className="w-10 h-10 border border-[#EEEEEE] rounded-full flex items-center justify-center group-hover:bg-[#121212] group-hover:text-white transition-all">
-          <ArrowUpRight size={16} />
+const ProductLine = ({ title, desc, rate, amount, index }) => {
+  const navigate = useNavigate();
+  const updateFormData = useLoanStore((state) => state.updateFormData);
+
+  const handleApply = () => {
+    // Map UI title to store loan type key
+    const typeMap = {
+      Personal: 'personal',
+      Enterprise: 'enterprise',
+      Mortgage: 'mortgage',
+    };
+
+    updateFormData('loanSelection', { loanType: typeMap[title] || 'personal' });
+    navigate('/apply/step/1');
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.2 }}
+      viewport={{ once: true }}
+      onClick={handleApply}
+      className="minimal-card flex flex-col justify-between group h-full min-h-[400px] cursor-pointer hover:bg-[#FAFAFA] transition-all"
+    >
+      <div className="space-y-6">
+        <div className="flex justify-between items-start">
+          <h3 className="text-4xl font-serif italic">{title}</h3>
+          <div className="w-10 h-10 border border-[#EEEEEE] rounded-full flex items-center justify-center group-hover:bg-[#121212] group-hover:text-white transition-all">
+            <ArrowUpRight size={16} />
+          </div>
+        </div>
+        <p className="text-sm sm:text-base text-[#888888] font-sans leading-relaxed max-w-[280px]">
+          {desc}
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-8 border-t border-[#EEEEEE] pt-10">
+        <div className="space-y-1">
+          <p className="text-meta">Max Limit</p>
+          <p className="text-xl font-mono tracking-tighter">{amount}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="text-meta">Fixed Rate</p>
+          <p className="text-xl font-mono tracking-tighter">{rate}</p>
         </div>
       </div>
-      <p className="text-sm sm:text-base text-[#888888] font-sans leading-relaxed max-w-[280px]">
-        {desc}
-      </p>
-    </div>
-
-    <div className="grid grid-cols-2 gap-8 border-t border-[#EEEEEE] pt-10">
-      <div className="space-y-1">
-        <p className="text-meta">Max Limit</p>
-        <p className="text-xl font-mono tracking-tighter">{amount}</p>
-      </div>
-      <div className="space-y-1">
-        <p className="text-meta">Fixed Rate</p>
-        <p className="text-xl font-mono tracking-tighter">{rate}</p>
-      </div>
-    </div>
-  </motion.div>
-);
+    </motion.div>
+  );
+};
 
 const FeaturesSection = () => (
   <section className="py-32 sm:py-48 px-6 sm:px-10 border-t border-[#EEEEEE]">
