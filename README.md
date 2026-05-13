@@ -77,7 +77,7 @@ Maintain the production-grade quality of the codebase:
 
 ```text
 src/
-├── forms/        # Feature-rich wizard steps (Loan, Personal, KYC, Address)
+├── forms/        # Feature-rich wizard steps (Loan, Personal, KYC, Address, Employment, Co-Applicant, Documents)
 ├── store/        # Zustand store with persistent middleware
 ├── hooks/        # Custom logic (useAutoSave, useVerify, etc.)
 ├── schemas/      # Zod validation rules per step

@@ -22,6 +22,9 @@ import LoanSelectionStep from '../forms/LoanSelectionStep';
 import PersonalInfoStep from '../forms/PersonalInfoStep';
 import KYCStep from '../forms/KYCStep';
 import AddressStep from '../forms/AddressStep';
+import EmploymentStep from '../forms/EmploymentStep';
+import CoApplicantStep from '../forms/CoApplicantStep';
+import DocumentStep from '../forms/DocumentStep';
 
 const STEPS = [
   { id: 1, title: 'Loan Selection', desc: 'Configure your capital', icon: Home },
@@ -129,6 +132,37 @@ const LoanWizard = () => {
           address.current.residenceType !== '' &&
           address.isGeoVerified &&
           docs.addressProof
+        );
+      case 5:
+        return (
+          formData.employment.type &&
+          (formData.employment.employerName ||
+            formData.employment.businessName ||
+            formData.employment.primarySkill ||
+            formData.employment.pensionAmount) &&
+          formData.employment.ifscCode.length === 11 &&
+          formData.employment.bankName
+        );
+      case 6:
+        // Conditional completeness for Step 6
+        if (!formData.coApplicant.hasCoApplicant) return true;
+        return (
+          formData.coApplicant.fullName &&
+          formData.coApplicant.relation &&
+          formData.coApplicant.isMobileVerified &&
+          formData.coApplicant.isPanVerified &&
+          formData.coApplicant.isAadhaarVerified &&
+          formData.coApplicant.signature &&
+          formData.coApplicant.consent
+        );
+      case 7:
+        return (
+          formData.documents.agreementAccepted &&
+          formData.documents.primarySignature &&
+          // Basic check for mandatory documents
+          formData.documents.panCard &&
+          formData.documents.aadhaarCard &&
+          formData.documents.bankStatements
         );
       default:
         return true;
@@ -296,7 +330,22 @@ const LoanWizard = () => {
                     <AddressStep onNext={onStepSuccess} />
                   </div>
                 )}
-                {currentStep > 4 && (
+                {currentStep === 5 && (
+                  <div ref={formRef}>
+                    <EmploymentStep onNext={onStepSuccess} />
+                  </div>
+                )}
+                {currentStep === 6 && (
+                  <div ref={formRef}>
+                    <CoApplicantStep onNext={onStepSuccess} />
+                  </div>
+                )}
+                {currentStep === 7 && (
+                  <div ref={formRef}>
+                    <DocumentStep onNext={onStepSuccess} />
+                  </div>
+                )}
+                {currentStep > 7 && (
                   <div className="min-h-[400px] p-12 bg-[#F8F9FA] rounded-[3rem] border border-[#EEEEEE] border-dashed flex flex-col items-center justify-center text-center">
                     <p className="text-[#888888] font-mono uppercase tracking-widest text-xs">
                       Step {currentStep} implementation pending
