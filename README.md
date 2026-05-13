@@ -7,6 +7,9 @@ LendSwift is a production-grade, editorial-style fintech platform engineered to 
 ## 💎 Design Philosophy: "Editorial Fintech"
 
 LendSwift departs from traditional "dashboard" aesthetics, opting for an **Editorial Fintech** approach. This philosophy prioritizes:
+- **Session Recovery**: Production-grade draft management with automated session restoration and "Resume" logic.
+- **Institutional Accessibility**: WCAG 2.1 AA compliant engineering with keyboard navigation, focus management, and ARIA-live announcements.
+- **Editorial Design**: Premium, typography-first aesthetic with cinematic transitions.
 - **Premium Typography**: Sophisticated serif and sans-serif pairings for a magazine-like read.
 - **Glassmorphism & Fluidity**: Subtle transparency effects and Framer Motion orchestrations for a "living" interface.
 - **High-Density Clarity**: Complex financial data structured into intuitive, high-contrast layouts that minimize cognitive load.
@@ -77,7 +80,7 @@ Maintain the production-grade quality of the codebase:
 
 ```text
 src/
-├── forms/        # Feature-rich wizard steps (Loan, Personal, KYC, Address, Employment, Co-Applicant, Documents)
+├── forms/        # Complete 8-step institutional wizard flow
 ├── store/        # Zustand store with persistent middleware
 ├── hooks/        # Custom logic (useAutoSave, useVerify, etc.)
 ├── schemas/      # Zod validation rules per step

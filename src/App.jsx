@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import LandingPage from './pages/LandingPage';
 import LoanWizard from './pages/LoanWizard';
 import SuccessPage from './pages/SuccessPage';
+import ValidationOrchestrator from './components/ValidationOrchestrator';
 import './styles/globals.css';
 
 const App = () => {
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/apply/step/:stepId" element={<LoanWizard />} />
         <Route path="/success" element={<SuccessPage />} />
       </Routes>
+      <ValidationOrchestrator />
       <Toaster
         position="top-right"
         toastOptions={{

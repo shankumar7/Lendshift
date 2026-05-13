@@ -25,6 +25,10 @@ import AddressStep from '../forms/AddressStep';
 import EmploymentStep from '../forms/EmploymentStep';
 import CoApplicantStep from '../forms/CoApplicantStep';
 import DocumentStep from '../forms/DocumentStep';
+import ReviewStep from '../forms/ReviewStep';
+import useUnderwriting from '../hooks/useUnderwriting';
+import useAccessibility from '../hooks/useAccessibility';
+import ResumeModal from '../components/ResumeModal';
 
 const STEPS = [
   { id: 1, title: 'Loan Selection', desc: 'Configure your capital', icon: Home },
@@ -42,7 +46,10 @@ const LoanWizard = () => {
   const navigate = useNavigate();
   const formRef = useRef(null);
 
+  const { formData, updateFormData, setResumeModal, isInitialized, setInitialized } = useLoanStore();
+  const underwriting = useUnderwriting();
   const currentStep = useLoanStore((state) => state.currentStep);
+  const { announcementRef } = useAccessibility(currentStep);
   const setStep = useLoanStore((state) => state.setStep);
   const lastSaved = useLoanStore((state) => state.lastSaved);
   const resetApplication = useLoanStore((state) => state.resetApplication);
@@ -84,21 +91,36 @@ const LoanWizard = () => {
     navigate('/apply/step/1');
   };
 
+  // Session Recovery Initialization
+  useEffect(() => {
+    if (!isInitialized && lastSaved && currentStep > 1) {
+      setResumeModal(true);
+    } else {
+      setInitialized(true);
+    }
+  }, []);
+
   const onStepSuccess = () => {
     if (currentStep < STEPS.length) {
       navigate(`/apply/step/${currentStep + 1}`);
     }
   };
 
-  const handleNext = () => {
-    if (formRef.current) {
-      // Trigger the hidden submit button in the form
-      const submitBtn = formRef.current.querySelector('button[type="submit"]');
-      if (submitBtn) submitBtn.click();
-    } else {
-      onStepSuccess();
-    }
+  const handleContinue = () => {
+    const submitBtn = document.getElementById('wizard-submit-btn');
+    if (submitBtn) submitBtn.click();
   };
+
+  // Keyboard navigation: Enter to submit
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter' && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT')) {
+        handleContinue();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handleBack = () => {
     if (currentStep > 1) {
@@ -164,6 +186,8 @@ const LoanWizard = () => {
           formData.documents.aadhaarCard &&
           formData.documents.bankStatements
         );
+      case 8:
+        return formData.submission.status === 'success';
       default:
         return true;
     }
@@ -172,7 +196,9 @@ const LoanWizard = () => {
   const progress = (currentStep / STEPS.length) * 100;
 
   return (
-    <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden font-sans">
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden font-sans" role="main">
+      <ResumeModal />
+      <div ref={announcementRef} className="sr-only" role="status" aria-live="polite" />
       <aside className="w-full lg:w-[400px] bg-[#F8F9FA] border-r border-[#EEEEEE] p-8 lg:p-12 flex flex-col justify-between overflow-y-auto">
         <div className="space-y-12">
           <Link to="/" className="inline-block scale-90 origin-left mb-8">
@@ -251,6 +277,17 @@ const LoanWizard = () => {
               <p className="text-xs font-black uppercase tracking-widest">
                 {STEPS[currentStep - 1].title}
               </p>
+            </div>
+            <div className="hidden lg:flex items-center gap-6 px-6 py-3 bg-[#F8F9FA] rounded-2xl border border-[#EEEEEE]">
+              <div className="flex flex-col items-end">
+                <p className="text-[9px] font-black uppercase tracking-widest text-[#888888]">Institutional Score</p>
+                <p className="text-sm font-bold text-[#121212]">{underwriting.score}</p>
+              </div>
+              <div className="w-px h-8 bg-[#EEEEEE]" />
+              <div className="flex flex-col">
+                <p className="text-[9px] font-black uppercase tracking-widest text-[#888888]">Risk Profile</p>
+                <p className={`text-[10px] font-bold uppercase tracking-widest`} style={{ color: underwriting.color }}>{underwriting.tier}</p>
+              </div>
             </div>
             {lastSaved && (
               <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-[#F8F9FA] border border-[#EEEEEE] rounded-full">
@@ -345,10 +382,15 @@ const LoanWizard = () => {
                     <DocumentStep onNext={onStepSuccess} />
                   </div>
                 )}
-                {currentStep > 7 && (
+                {currentStep === 8 && (
+                  <div ref={formRef}>
+                    <ReviewStep />
+                  </div>
+                )}
+                {currentStep > 8 && (
                   <div className="min-h-[400px] p-12 bg-[#F8F9FA] rounded-[3rem] border border-[#EEEEEE] border-dashed flex flex-col items-center justify-center text-center">
                     <p className="text-[#888888] font-mono uppercase tracking-widest text-xs">
-                      Step {currentStep} implementation pending
+                      Application Submitted Successfully
                     </p>
                   </div>
                 )}

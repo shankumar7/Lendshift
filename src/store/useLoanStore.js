@@ -8,6 +8,7 @@ const useLoanStore = create(
       currentStep: 1,
       lastSaved: null,
       isResumeModalOpen: false,
+      isInitialized: false, // For session recovery lifecycle
 
       // Form Data Structure
       formData: {
@@ -160,13 +161,21 @@ const useLoanStore = create(
           verificationStatus: {}, // { docId: 'pending' | 'processing' | 'verified' }
         },
         submission: {
-          status: 'idle',
+          status: 'idle', // idle | submitting | success | error
+          applicationId: null,
           timestamp: null,
+          tracking: [
+            { stage: 'Submission', status: 'completed', date: null },
+            { stage: 'Verification', status: 'pending', date: null },
+            { stage: 'Underwriting', status: 'pending', date: null },
+            { stage: 'Disbursement', status: 'pending', date: null },
+          ],
         },
       },
 
       // Actions
       setStep: (step) => set({ currentStep: step }),
+      setInitialized: (val) => set({ isInitialized: val }),
 
       updateFormData: (section, data) =>
         set((state) => ({
@@ -179,6 +188,39 @@ const useLoanStore = create(
             },
           },
         })),
+
+      submitApplication: async () => {
+        set((state) => ({
+          formData: {
+            ...state.formData,
+            submission: { ...state.formData.submission, status: 'submitting' },
+          },
+        }));
+
+        // Simulation will be handled in the component for UI feedback
+        // But we update store state here
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            const appId = `LS-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+            const now = new Date().toISOString();
+            set((state) => ({
+              formData: {
+                ...state.formData,
+                submission: {
+                  ...state.formData.submission,
+                  status: 'success',
+                  applicationId: appId,
+                  timestamp: now,
+                  tracking: state.formData.submission.tracking.map((t, i) =>
+                    i === 0 ? { ...t, date: now } : t
+                  ),
+                },
+              },
+            }));
+            resolve(appId);
+          }, 6000);
+        });
+      },
 
       resetApplication: () =>
         set({

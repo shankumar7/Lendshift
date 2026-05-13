@@ -1,67 +1,94 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RotateCcw, Play, Clock } from 'lucide-react';
+import { History, Sparkles, X, ArrowRight } from 'lucide-react';
+import useLoanStore from '../store/useLoanStore';
 
-const ResumeModal = ({ isOpen, onResume, onReset, lastSavedTime }) => {
+const ResumeModal = () => {
+  const { isResumeModalOpen, setResumeModal, resetApplication, setInitialized, lastSaved, currentStep } = useLoanStore();
+  const modalRef = useRef();
+  const resumeBtnRef = useRef();
+
+  useEffect(() => {
+    if (isResumeModalOpen) {
+      resumeBtnRef.current?.focus();
+    }
+  }, [isResumeModalOpen]);
+
+  const handleStartFresh = () => {
+    resetApplication();
+    setInitialized(true);
+    setResumeModal(false);
+  };
+
+  const handleResume = () => {
+    setInitialized(true);
+    setResumeModal(false);
+  };
+
+  if (!isResumeModalOpen) return null;
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-[#121212]/40 backdrop-blur-sm"
-            onClick={onReset}
-          />
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-lg bg-white rounded-[3rem] p-12 shadow-2xl border border-[#EEEEEE] overflow-hidden"
-          >
-            <div className="space-y-8 relative z-10">
-              <div className="space-y-4">
-                <div className="w-12 h-12 bg-[#F8F9FA] rounded-2xl flex items-center justify-center border border-[#EEEEEE]">
-                  <Clock className="text-[#0065FF]" size={24} />
-                </div>
-                <h2 className="text-4xl font-serif italic tracking-tight">Resume Application?</h2>
-                <p className="text-[#888888] leading-relaxed">
-                  We found an incomplete application from{' '}
-                  <strong>{new Date(lastSavedTime).toLocaleString()}</strong>. Would you like to
-                  continue where you left off?
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <button
-                  type="button"
-                  onClick={onReset}
-                  className="flex items-center justify-center gap-3 py-5 px-6 rounded-2xl border border-[#EEEEEE] hover:bg-[#FAFAFA] transition-all font-bold text-xs uppercase tracking-widest"
-                >
-                  <RotateCcw size={16} />
-                  Start Fresh
-                </button>
-                <button
-                  type="button"
-                  onClick={onResume}
-                  className="flex items-center justify-center gap-3 py-5 px-6 rounded-2xl bg-[#121212] text-white hover:bg-black transition-all font-bold text-xs uppercase tracking-widest"
-                >
-                  <Play size={16} />
-                  Resume Now
-                </button>
-              </div>
+    <div 
+      className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-white/80 backdrop-blur-xl"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="resume-title"
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') setResumeModal(false);
+      }}
+    >
+      <motion.div
+        ref={modalRef}
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        className="max-w-lg w-full bg-[#121212] rounded-[3rem] p-10 shadow-2xl border border-white/10 relative overflow-hidden text-white"
+      >
+        {/* Background Effect */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-[#0065FF] opacity-10 blur-3xl" />
+        
+        <div className="relative space-y-8">
+          <div className="flex justify-between items-start">
+            <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-[#0065FF]">
+              <History size={28} />
             </div>
+            <button 
+              onClick={() => setResumeModal(false)}
+              className="p-3 hover:bg-white/5 rounded-full text-white/40 hover:text-white transition-all"
+              aria-label="Close modal"
+            >
+              <X size={20} />
+            </button>
+          </div>
 
-            {/* Decorative background mark */}
-            <div className="absolute -bottom-10 -right-10 opacity-[0.03] pointer-events-none select-none">
-              <h1 className="text-[10rem] font-serif italic">Swift</h1>
-            </div>
-          </motion.div>
+          <div className="space-y-4">
+            <h2 id="resume-title" className="text-3xl font-serif italic tracking-tight">Resume Application?</h2>
+            <p className="text-sm text-white/60 leading-relaxed">
+              We found an incomplete session from <span className="text-white font-mono">{new Date(lastSaved).toLocaleString()}</span>. 
+              You were at <span className="text-[#0065FF] font-bold">Step {currentStep}</span>. Would you like to continue or start fresh?
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 pt-4">
+            <button
+              ref={resumeBtnRef}
+              onClick={handleResume}
+              className="group h-16 rounded-2xl bg-white text-[#121212] text-[10px] font-black uppercase tracking-widest flex items-center justify-between px-8 hover:scale-[1.02] transition-all"
+            >
+              <span>Continue Application</span>
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </button>
+            <button
+              onClick={handleStartFresh}
+              className="h-16 rounded-2xl bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-white/10 transition-all"
+            >
+              <Sparkles size={16} />
+              <span>Start New Application</span>
+            </button>
+          </div>
         </div>
-      )}
-    </AnimatePresence>
+      </motion.div>
+    </div>
   );
 };
 
