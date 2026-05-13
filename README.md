@@ -2,7 +2,7 @@
 
 LendSwift is a production-ready, editorial-style fintech application engineered to redefine the loan application journey. Built for institutional reliability, it combines high-fidelity design with complex financial logic, featuring real-time underwriting, biometric identity verification, and an 8-step cinematic onboarding flow.
 
-![LendSwift Dashboard Showcase](https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1400)
+![LendSwift Dashboard Showcase](./public/hero-banner.png)
 
 ## 💎 Design Philosophy: "Editorial Fintech"
 
@@ -99,3 +99,5 @@ LendSwift is built for inclusivity, adhering to **WCAG 2.1 AA** standards:
   <p>Engineered with precision for the next generation of global fintech.</p>
   <p><strong>LendSwift | Institutional Fintech Engineering</strong></p>
 </div>
+
+![LendSwift Footer Banner](./public/footer-banner.png)
