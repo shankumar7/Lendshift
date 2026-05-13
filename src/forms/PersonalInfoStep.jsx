@@ -337,38 +337,67 @@ const PersonalInfoStep = ({ onNext }) => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="p-6 bg-[#F8F9FA] rounded-2xl border border-[#EEEEEE] space-y-4"
+                  className="mt-6 p-8 bg-[#F8F9FA] rounded-[2rem] border border-[#EEEEEE] space-y-6"
                 >
                   <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#888888]">
-                      Enter 6-digit OTP
-                    </span>
-                    <span className="text-[10px] font-mono font-bold text-[#121212]">
-                      00:{otpTimer < 10 ? `0${otpTimer}` : otpTimer}
-                    </span>
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-[#121212]">
+                        Security Verification
+                      </p>
+                      <p className="text-[10px] font-mono text-[#888888]">
+                        Enter the 6-digit code sent to your device
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white border border-[#EEEEEE] rounded-full">
+                      <div className={`w-1.5 h-1.5 rounded-full ${otpTimer > 0 ? 'bg-[#0065FF] animate-pulse' : 'bg-red-500'}`} />
+                      <span className="text-[10px] font-mono font-bold text-[#121212]">
+                        00:{otpTimer < 10 ? `0${otpTimer}` : otpTimer}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex gap-4">
-                    <input
-                      type="text"
-                      maxLength={6}
-                      value={otpValue}
-                      onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ''))}
-                      className="flex-1 h-14 bg-white border border-[#EEEEEE] rounded-xl px-4 text-center text-xl font-mono tracking-[0.5em] focus:border-[#121212] outline-none"
-                    />
+
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        maxLength={6}
+                        value={otpValue}
+                        onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ''))}
+                        placeholder="······"
+                        className="w-full h-16 bg-white border border-[#EEEEEE] rounded-2xl px-6 text-center text-2xl font-mono tracking-[0.5em] focus:border-[#121212] focus:ring-1 focus:ring-[#121212] outline-none transition-all placeholder:text-[#EEEEEE]"
+                      />
+                    </div>
                     <button
                       type="button"
                       onClick={handleVerifyOtp}
                       disabled={otpValue.length < 6 || otpVerifying}
-                      className="h-14 px-8 rounded-xl bg-[#0065FF] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#121212] transition-colors disabled:opacity-50"
+                      className="h-16 px-10 rounded-2xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#0065FF] transition-all disabled:opacity-20 flex items-center justify-center gap-3"
                     >
-                      {otpVerifying ? <Loader2 size={16} className="animate-spin" /> : 'Verify'}
+                      {otpVerifying ? (
+                        <Loader2 size={16} className="animate-spin" />
+                      ) : (
+                        <>
+                          Verify Code
+                          <CheckCircle2 size={14} />
+                        </>
+                      )}
                     </button>
                   </div>
-                  {otpTimer === 0 && (
-                    <button onClick={handleSendOtp} className="text-[10px] font-black uppercase tracking-widest text-[#0065FF]">
-                      Resend Code
+
+                  <div className="flex items-center justify-between pt-4 border-t border-[#EEEEEE]">
+                    <p className="text-[9px] font-mono text-[#888888] uppercase tracking-widest">
+                      Didn't receive the code?
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handleSendOtp}
+                      disabled={otpTimer > 0 || otpVerifying}
+                      className="text-[10px] font-black uppercase tracking-widest text-[#0065FF] disabled:text-[#888888]/40 transition-colors flex items-center gap-2 group"
+                    >
+                      {otpTimer > 0 ? `Resend in ${otpTimer}s` : 'Resend Code'}
+                      <RefreshCcw size={12} className={`group-hover:rotate-180 transition-transform duration-500 ${otpVerifying ? 'animate-spin' : ''}`} />
                     </button>
-                  )}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -534,13 +563,17 @@ const PersonalInfoStep = ({ onNext }) => {
                   name="annualIncome"
                   control={control}
                   render={({ field }) => (
-                    <input 
-                      {...field} 
-                      id="annualIncome" 
-                      type="number" 
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                      placeholder="0.00" 
-                      className="input-premium pl-12 font-serif italic text-2xl" 
+                    <input
+                      {...field}
+                      id="annualIncome"
+                      type="number"
+                      value={field.value === 0 ? '' : field.value}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        field.onChange(val === '' ? 0 : Number(val));
+                      }}
+                      placeholder="0"
+                      className="input-premium pl-12 font-serif italic text-2xl"
                     />
                   )}
                 />

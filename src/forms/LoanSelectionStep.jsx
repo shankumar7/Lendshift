@@ -320,9 +320,13 @@ const LoanSelectionStep = ({ onNext }) => {
                         id="monthly-income"
                         type="number"
                         {...field}
+                        value={field.value === 0 ? '' : field.value}
                         onBlur={field.onBlur}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                        placeholder="0.00"
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          field.onChange(val === '' ? 0 : Number(val));
+                        }}
+                        placeholder="0"
                         className="w-full h-20 bg-white border border-[#EEEEEE] rounded-[1.25rem] pl-12 pr-6 text-2xl font-serif italic text-[#121212] focus:border-[#121212] outline-none transition-all placeholder:text-[#EEEEEE]"
                       />
                     </div>

@@ -338,7 +338,17 @@ const AddressStep = ({ onNext }) => {
                       name="current.monthlyRent"
                       control={control}
                       render={({ field }) => (
-                        <input {...field} type="number" placeholder="Enter amount" className="input-premium" />
+                        <input
+                          {...field}
+                          type="number"
+                          value={field.value === 0 ? '' : field.value}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === '' ? 0 : Number(val));
+                          }}
+                          placeholder="0"
+                          className="input-premium"
+                        />
                       )}
                     />
                     {errors.current?.monthlyRent && <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{errors.current.monthlyRent.message}</p>}
