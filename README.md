@@ -2,7 +2,7 @@
 
 LendSwift is a production-ready, editorial-style fintech application engineered to redefine the loan application journey. Built for institutional reliability, it combines high-fidelity design with complex financial logic, featuring real-time underwriting, biometric identity verification, and an 8-step cinematic onboarding flow.
 
-![LendSwift Dashboard Showcase](./public/hero-banner.png)
+![LendSwift Hero Banner](./public/hero-banner.png)
 
 ## 💎 Design Philosophy: "Editorial Fintech"
 
@@ -16,51 +16,48 @@ LendSwift departs from generic "SaaS dashboards," opting for an **Editorial Fint
 
 ## 🚀 Core Systems Architecture
 
-### 🧠 Institutional Underwriting Engine
-- **Real-Time Scoring**: A simulated 300-900 risk score that reacts dynamically to income, liabilities, and verification states.
-- **DTI Analytics**: Automatic Debt-to-Income ratio calculation across primary and joint applicants.
-- **Eligibility Tiers**: Categorizes applicants into *Premium*, *Preferred*, or *Standard* profiles based on aggregated risk data.
+### 📋 Multi-Step Wizard Orchestration
+LendSwift utilizes a persistent wizard pattern to manage the complex data requirements of institutional lending. This reduces cognitive load by segmenting the application into 8 distinct, logical phases:
+1. **Loan Selection**: High-velocity tiering and purpose definition.
+2. **Personal Intelligence**: Primary applicant data capture.
+3. **Institutional KYC**: Statutory ID verification and Biometric matching.
+4. **Address Validation**: Geo-referenced residence mapping.
+5. **Employment Analytics**: Dynamic income and professional mapping.
+6. **Co-Applicant Integration**: Joint liability management.
+7. **Document Dossier**: Secure asset and identity repository.
+8. **Final Submission**: Application finalization and tracking.
 
-### 📋 Validation Orchestration Layer
-- **Cross-Step Dependencies**: A centralized Zod-based engine that enforces global rules (e.g., Home Loans requiring mandatory co-applicants).
-- **Application Health Monitor**: A persistent floating UI that surfaces compliance issues and allows for instant, actionable correction.
-- **Identity Integrity**: Multi-step cross-verification between PAN, Aadhaar, and Biometric inputs to prevent data mismatches.
+### 🧠 Decision Architecture
 
-### 📁 Dynamic Document Dossier
-- **Adaptive Requirements**: Automatically generates a document checklist based on loan type and employment category.
-- **OCR Simulation**: Real-time "Intelligence Extraction" that verifies statutory numbers (PAN/Aadhaar) from uploaded images.
-- **Secure E-Signature**: A touch-optimized digital signature canvas for joint-liability authorization.
-
-### 🔄 Session Recovery & Resiliency
-- **Automated Autosave**: Debounced synchronization with a persistent global store, ensuring zero data loss.
-- **Draft Management**: Intelligent "Resume Application" system that restores all form states, documents, and verification markers.
+| Decision | Choice | Rationale |
+| :--- | :--- | :--- |
+| **Form Management** | **React Hook Form** | **Performance & Predictability**. Unlike Formik, RHF utilizes uncontrolled inputs, minimizing re-renders and ensuring the UI remains fluid even with hundreds of form fields. |
+| **Validation** | **Zod** | **Type Integrity**. Zod provides a first-class developer experience with React 19, offering seamless TypeScript integration and a more declarative API than Yup for complex financial cross-field validation. |
+| **State Management** | **Zustand** | **Lightweight Persistence**. Zustand handles the global application state with zero boilerplate, facilitating instant session recovery via `localStorage` persistence. |
 
 ---
 
 ## 🛠️ Technical Engineering Stack
 
-| Technology | Purpose |
-| :--- | :--- |
-| **React 19** | Core UI framework with Concurrent Mode support. |
-| **Zustand** | Centralized state management with persistent storage middleware. |
-| **Framer Motion** | Physics-based animations and cinematic layout transitions. |
-| **Zod** | Schema-first validation orchestration for complex financial rules. |
-| **React Hook Form** | High-performance, uncontrolled form management. |
-| **Cypress** | Production-grade E2E testing for the entire onboarding funnel. |
-| **Tailwind CSS** | Utility-first styling for a high-fidelity custom design system. |
-| **WCAG 2.1 AA** | Institutional-grade accessibility with keyboard and screen reader support. |
+- **React 19**: Core UI framework with Concurrent Mode support.
+- **Framer Motion**: Physics-based animations and cinematic transitions.
+- **Tailwind CSS**: Utility-first styling for high-fidelity custom design systems.
+- **Zustand**: Centralized state management with persistence middleware.
+- **Lucide React**: Premium institutional iconography.
 
 ---
 
-## 🏁 Development & Testing
+## 🏁 Getting Started
 
 ### 📦 Installation
 ```bash
-# Clone and install
+# Clone the repository
 git clone [repository-url]
+
+# Install dependencies
 npm install
 
-# Launch development server
+# Launch high-velocity development server
 npm run dev
 ```
 
@@ -72,26 +69,18 @@ Maintain institutional standards with our automated suite:
 
 ---
 
-## 📂 Project Structure
-
-```text
-src/
-├── components/   # Atomic UI elements (Validation Orchestrator, Modals, Logo)
-├── forms/        # Complete 8-step institutional wizard flow (KYC, Employment, etc.)
-├── hooks/        # Financial logic (useUnderwriting, useAccessibility, useAutoSave)
-├── schemas/      # Zod validation orchestration (Global & Step-level)
-├── store/        # Zustand persistence layer and submission actions
-├── styles/       # Design system tokens and global typography
-└── pages/        # High-level route containers (LoanWizard)
-```
+## 📁 Document Dossier & KYC
+LendSwift features a state-of-the-art KYC module:
+- **Real-time OCR Simulation**: Extracts and validates PAN/Aadhaar formats instantly.
+- **Biometric Matching**: AI-driven face matching with confidence scoring.
+- **Secure Vaults**: AES-256 encryption simulation for all identity assets.
 
 ---
 
-## ♿ Accessibility Engineering
-LendSwift is built for inclusivity, adhering to **WCAG 2.1 AA** standards:
-- **Keyboard Navigation**: Full Tab/Shift+Tab and Enter support for all interactive elements.
-- **ARIA Orchestration**: `aria-live` announcements for step transitions and validation errors.
-- **Focus Management**: Automated focus trapping for modals and section headers.
+## ⚠️ Known Limitations
+- **Backend Integration**: Currently utilizes a high-fidelity simulation layer for underwriting and submission. Production API endpoints require configuration in `useLoanStore`.
+- **Browser Compatibility**: Optimized for modern evergreen browsers (Chrome, Safari, Edge). Legacy IE support is not included.
+- **Mobile Camera**: Facial verification requires a secure HTTPS context for native camera access in production.
 
 ---
 
