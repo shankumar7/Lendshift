@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, ShieldCheck, Award, Zap } from 'lucide-react';
+import Logo from './Logo';
 
 const Footer = () => (
   <footer className="bg-[#121212] text-white pt-32 pb-12 px-6 sm:px-10 overflow-hidden relative">
@@ -9,12 +10,9 @@ const Footer = () => (
     <div className="max-w-[1600px] mx-auto space-y-20 relative z-10">
       <div className="grid lg:grid-cols-12 gap-24 items-start">
         <div className="lg:col-span-5 space-y-12">
-          <div className="flex items-center gap-4 group">
-            <div className="w-10 h-10 border-2 border-white flex items-center justify-center transition-all duration-700 group-hover:rotate-45">
-              <div className="w-3 h-3 bg-white" />
-            </div>
-            <span className="font-serif italic text-3xl tracking-tighter">LendSwift</span>
-          </div>
+          <Link to="/">
+            <Logo theme="light" />
+          </Link>
           <h2 className="text-5xl sm:text-6xl font-serif italic leading-[1.1] text-white/90">
             Building the architecture <br />
             of modern liquidity.

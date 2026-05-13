@@ -2,10 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
 
-export const LogoMark = ({ className, dotClassName }) => (
+export const LogoMark = ({ className, dotClassName, theme = 'dark' }) => (
   <div
     className={cn(
-      'w-7 h-7 sm:w-8 sm:h-8 border-2 border-[#121212] flex items-center justify-center relative overflow-hidden',
+      'w-7 h-7 sm:w-8 sm:h-8 border-2 flex items-center justify-center relative overflow-hidden',
+      theme === 'dark' ? 'border-[#121212]' : 'border-white',
       className
     )}
   >
@@ -13,12 +14,16 @@ export const LogoMark = ({ className, dotClassName }) => (
       variants={{
         hover: { scale: 1.2, rotate: -45 },
       }}
-      className={cn('w-2.5 h-2.5 sm:w-3 h-3 bg-[#121212]', dotClassName)}
+      className={cn(
+        'w-2.5 h-2.5 sm:w-3 h-3',
+        theme === 'dark' ? 'bg-[#121212]' : 'bg-white',
+        dotClassName
+      )}
     />
   </div>
 );
 
-const Logo = ({ withBackground = false }) => (
+const Logo = ({ withBackground = false, theme = 'dark' }) => (
   <motion.div whileHover="hover" className="flex items-center gap-3 sm:gap-4 group cursor-pointer">
     <div
       className={cn(
@@ -27,11 +32,20 @@ const Logo = ({ withBackground = false }) => (
       )}
     >
       <LogoMark
-        className={cn('transition-all duration-700 group-hover:bg-[#121212] group-hover:rotate-45')}
-        dotClassName="group-hover:bg-white"
+        theme={theme}
+        className={cn(
+          'transition-all duration-700 group-hover:rotate-45',
+          theme === 'dark' ? 'group-hover:bg-[#121212]' : 'group-hover:bg-white'
+        )}
+        dotClassName={theme === 'dark' ? 'group-hover:bg-white' : 'group-hover:bg-[#121212]'}
       />
     </div>
-    <span className="font-serif italic text-xl sm:text-2xl tracking-tighter text-[#121212]">
+    <span
+      className={cn(
+        'font-serif italic text-xl sm:text-2xl tracking-tighter transition-colors',
+        theme === 'dark' ? 'text-[#121212]' : 'text-white'
+      )}
+    >
       LendSwift
     </span>
   </motion.div>
