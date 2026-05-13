@@ -21,6 +21,7 @@ import ResumeModal from '../components/ResumeModal';
 import LoanSelectionStep from '../forms/LoanSelectionStep';
 import PersonalInfoStep from '../forms/PersonalInfoStep';
 import KYCStep from '../forms/KYCStep';
+import AddressStep from '../forms/AddressStep';
 
 const STEPS = [
   { id: 1, title: 'Loan Selection', desc: 'Configure your capital', icon: Home },
@@ -44,6 +45,7 @@ const LoanWizard = () => {
   const resetApplication = useLoanStore((state) => state.resetApplication);
   const personalInfo = useLoanStore((state) => state.formData.personalInfo);
   const kyc = useLoanStore((state) => state.formData.kyc);
+  const address = useLoanStore((state) => state.formData.address);
   const docs = useLoanStore((state) => state.formData.documents);
   const [showResume, setShowResume] = useState(false);
 
@@ -98,6 +100,38 @@ const LoanWizard = () => {
   const handleBack = () => {
     if (currentStep > 1) {
       navigate(`/apply/step/${currentStep - 1}`);
+    }
+  };
+
+  const isStepComplete = () => {
+    switch (currentStep) {
+      case 2:
+        return (
+          personalInfo.isMobileVerified &&
+          personalInfo.isPanVerified &&
+          personalInfo.isAadhaarVerified
+        );
+      case 3:
+        return (
+          kyc.isPanVerified &&
+          kyc.isAadhaarVerified &&
+          kyc.isFaceVerified &&
+          docs.panCard &&
+          docs.aadhaarCard &&
+          docs.secondaryId
+        );
+      case 4:
+        return (
+          address.current.addressLine1 &&
+          address.current.city &&
+          address.current.state &&
+          address.current.pincode.length === 6 &&
+          address.current.residenceType !== '' &&
+          address.isGeoVerified &&
+          docs.addressProof
+        );
+      default:
+        return true;
     }
   };
 
@@ -247,7 +281,12 @@ const LoanWizard = () => {
                     <KYCStep onNext={onStepSuccess} />
                   </div>
                 )}
-                {currentStep > 3 && (
+                {currentStep === 4 && (
+                  <div ref={formRef}>
+                    <AddressStep onNext={onStepSuccess} />
+                  </div>
+                )}
+                {currentStep > 4 && (
                   <div className="min-h-[400px] p-12 bg-[#F8F9FA] rounded-[3rem] border border-[#EEEEEE] border-dashed flex flex-col items-center justify-center text-center">
                     <p className="text-[#888888] font-mono uppercase tracking-widest text-xs">
                       Step {currentStep} implementation pending
@@ -269,19 +308,7 @@ const LoanWizard = () => {
               <button
                 type="button"
                 onClick={handleNext}
-                disabled={
-                  (currentStep === 2 &&
-                    (!personalInfo.isMobileVerified ||
-                      !personalInfo.isPanVerified ||
-                      !personalInfo.isAadhaarVerified)) ||
-                  (currentStep === 3 &&
-                    (!kyc.isPanVerified ||
-                      !kyc.isAadhaarVerified ||
-                      !kyc.isFaceVerified ||
-                      !docs.panCard ||
-                      !docs.aadhaarCard ||
-                      !docs.secondaryId))
-                }
+                disabled={!isStepComplete()}
                 className="btn-primary h-16 px-12 group disabled:opacity-20 transition-all"
               >
                 {currentStep === 8 ? 'Submit' : 'Continue'}

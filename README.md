@@ -7,6 +7,7 @@ LendSwift is a production-grade, editorial-style fintech platform designed to pr
 ## 💎 Core Features
 
 - **Institutional KYC System**: A banking-grade verification engine featuring PAN/Aadhaar validation, biometric face matching (AI simulation), and a secure document repository.
+- **Institutional Address Verification**: Intelligent residency handling with PIN-code auto-lookup, GPS-based geo-spatial validation, and complex conditional address management.
 - **Biometric Identity Matching**: Real-time facial verification simulation with animated scanning effects and confidence score metrics.
 - **Data Synchronization**: Intelligently pre-fills information (e.g., Occupation) across steps to minimize friction and improve the onboarding experience.
 - **Zero-Friction Design**: Premium UI/UX featuring uniform grid arrangements, glassmorphism, and fluid animations (Framer Motion).
@@ -33,7 +34,7 @@ src/
 ├── pages/          # Main application screens (Landing, Wizard, Success)
 ├── schemas/        # Zod validation schemas
 ├── store/          # Zustand state definitions
-└── styles/         # Global styles and Tailwind configurations
+├── styles/         # Global styles and Tailwind configurations
 ```
 
 ## 🏁 Getting Started
