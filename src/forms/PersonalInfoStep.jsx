@@ -113,6 +113,15 @@ const PersonalInfoStep = ({ onNext }) => {
     return () => clearInterval(timer);
   }, [otpTimer]);
 
+  // AUTO-SAVE LOGIC: Sync form values to global store on change
+  const allValues = useWatch({ control });
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      updateFormData('personalInfo', allValues);
+    }, 1000); // 1 second debounce
+    return () => clearTimeout(timer);
+  }, [allValues, updateFormData]);
+
   const handleSendOtp = async () => {
     setOtpVerifying(true);
     await new Promise(r => setTimeout(r, 1500)); // Simulate API

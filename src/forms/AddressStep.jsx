@@ -139,6 +139,15 @@ const AddressStep = ({ onNext }) => {
   const isGeoVerified = watch('isGeoVerified');
   const pincode = watch('current.pincode');
 
+  // AUTO-SAVE LOGIC: Sync form values to global store on change
+  const allValues = watch();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      updateFormData('address', allValues);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [allValues, updateFormData]);
+
   // PIN Lookup Effect
   useEffect(() => {
     const lookupPin = async () => {

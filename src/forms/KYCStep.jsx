@@ -199,6 +199,15 @@ const KYCStep = ({ onNext }) => {
 
   const { documents } = formData;
 
+  // AUTO-SAVE LOGIC: Sync form values to global store on change
+  const allValues = useWatch({ control });
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      updateFormData('kyc', allValues);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [allValues, updateFormData]);
+
   const handleVerifyPan = async () => {
     if (panNumber.length < 10) return;
     setIsVerifyingPan(true);

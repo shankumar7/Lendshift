@@ -113,6 +113,7 @@ const useLoanStore = create(
 
       updateFormData: (section, data) =>
         set((state) => ({
+          lastSaved: new Date().toISOString(),
           formData: {
             ...state.formData,
             [section]: {

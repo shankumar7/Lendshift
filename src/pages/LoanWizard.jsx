@@ -204,18 +204,28 @@ const LoanWizard = () => {
 
       <main className="flex-1 bg-white relative flex flex-col">
         <header className="h-20 border-b border-[#EEEEEE] px-8 lg:px-20 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20">
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              onClick={handleBack}
-              className="p-2 hover:bg-[#FAFAFA] rounded-full transition-colors opacity-40 hover:opacity-100"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <span className="text-[10px] font-mono text-[#EEEEEE]">/</span>
-            <p className="text-xs font-black uppercase tracking-widest">
-              {STEPS[currentStep - 1].title}
-            </p>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={handleBack}
+                className="p-2 hover:bg-[#FAFAFA] rounded-full transition-colors opacity-40 hover:opacity-100"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <span className="text-[10px] font-mono text-[#EEEEEE]">/</span>
+              <p className="text-xs font-black uppercase tracking-widest">
+                {STEPS[currentStep - 1].title}
+              </p>
+            </div>
+            {lastSaved && (
+              <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-[#F8F9FA] border border-[#EEEEEE] rounded-full">
+                <div className="w-1 h-1 rounded-full bg-[#2E7D32] animate-pulse" />
+                <span className="text-[9px] font-mono text-[#888888] uppercase tracking-widest">
+                  Saved {new Date(lastSaved).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </div>
+            )}
           </div>
           <button
             type="button"

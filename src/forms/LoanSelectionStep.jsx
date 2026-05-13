@@ -90,6 +90,15 @@ const LoanSelectionStep = ({ onNext }) => {
     mode: 'onBlur',
   });
 
+  // AUTO-SAVE LOGIC: Sync form values to global store on change
+  const allValues = useWatch({ control });
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      updateFormData('loanSelection', allValues);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [allValues, updateFormData]);
+
   const selectedLoanType = useWatch({ control, name: 'loanType' });
   const amount = useWatch({ control, name: 'amount' });
   const tenure = useWatch({ control, name: 'tenure' });
