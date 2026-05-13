@@ -4,8 +4,8 @@ const addressSchema = z.object({
   current: z
     .object({
       addressLine1: z.string().min(5, 'Address Line 1 must be at least 5 characters').trim(),
-      addressLine2: z.string().optional().trim(),
-      landmark: z.string().optional().trim(),
+      addressLine2: z.string().trim().optional(),
+      landmark: z.string().trim().optional(),
       city: z.string().min(2, 'City is required').trim(),
       state: z.string().min(2, 'State is required').trim(),
       country: z.string().min(2, 'Country is required').trim(),
