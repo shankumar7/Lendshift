@@ -1,78 +1,94 @@
-# LendSwift — Premium Fintech Loan Platform
+# LendSwift — Institutional-Grade Fintech Onboarding
 
-LendSwift is a production-grade, editorial-style fintech platform designed to provide a seamless and premium loan application experience. Built with a focus on visual excellence and technical robustness, it features a comprehensive multi-step wizard, real-time financial feedback, and intelligent state persistence.
+LendSwift is a production-grade, editorial-style fintech platform engineered to redefine the loan application experience. It combines high-fidelity design with institutional-grade technical standards, featuring a comprehensive multi-step wizard, biometric identity simulations, and resilient state persistence.
 
 ![LendSwift Banner](https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=1200)
 
-## 💎 Core Features
+## 💎 Design Philosophy: "Editorial Fintech"
 
-- **Institutional KYC System**: A banking-grade verification engine featuring PAN/Aadhaar validation, biometric face matching (AI simulation), and a secure document repository.
-- **Institutional Address Verification**: Intelligent residency handling with PIN-code auto-lookup, GPS-based geo-spatial validation, and complex conditional address management.
-- **Biometric Identity Matching**: Real-time facial verification simulation with animated scanning effects and confidence score metrics.
-- **Data Synchronization**: Intelligently pre-fills information (e.g., Occupation) across steps to minimize friction and improve the onboarding experience.
-- **Zero-Friction Design**: Premium UI/UX featuring uniform grid arrangements, glassmorphism, and fluid animations (Framer Motion).
-- **Production-Ready**: 100% compliant with strict ESLint and React Compiler rules, ensuring high performance and maintainability.
-
-## 🚀 Tech Stack
-
-- **Framework**: [React 19](https://reactjs.org/)
-- **Build Tool**: [Vite](https://vitejs.dev/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
-- **Form Handling**: [React Hook Form](https://react-hook-form.com/)
-- **Validation**: [Zod](https://zod.dev/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-
-## 🛠️ Project Structure
-
-```text
-src/
-├── components/     # Reusable UI components (EMI Panel, Logo, Modals)
-├── forms/          # Wizard step implementations
-├── hooks/          # Custom hooks (useAutoSave, etc.)
-├── pages/          # Main application screens (Landing, Wizard, Success)
-├── schemas/        # Zod validation schemas
-├── store/          # Zustand state definitions
-├── styles/         # Global styles and Tailwind configurations
-```
-
-## 🏁 Getting Started
-
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
-
-### Installation
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-### Development
-Start the local development server:
-```bash
-npm run dev
-```
-
-### Quality Assurance
-Run the production linting check:
-```bash
-npm run lint
-```
-
-Format the codebase:
-```bash
-npm run format
-```
-
-## 🎨 Design Philosophy
-LendSwift follows an **Editorial Fintech** philosophy. We move away from generic "dashboard" aesthetics towards a more premium, magazine-like experience. This involves:
-- **Bold Typography**: Using high-contrast serif and sans-serif pairings.
-- **Fluidity**: Every interaction is backed by subtle, non-intrusive animations.
-- **Clarity**: High-density information is presented in a way that minimizes cognitive load.
+LendSwift departs from traditional "dashboard" aesthetics, opting for an **Editorial Fintech** approach. This philosophy prioritizes:
+- **Premium Typography**: Sophisticated serif and sans-serif pairings for a magazine-like read.
+- **Glassmorphism & Fluidity**: Subtle transparency effects and Framer Motion orchestrations for a "living" interface.
+- **High-Density Clarity**: Complex financial data structured into intuitive, high-contrast layouts that minimize cognitive load.
 
 ---
 
-Built with precision by the LendSwift Team.
+## 🚀 Key Features
+
+### 🏦 Institutional Verification Suite
+- **Biometric Face Match**: Real-time facial identity validation simulation with animated scanning and confidence scoring.
+- **Statutory Identity Engine**: Robust PAN and Aadhaar verification simulation with automatic format enforcement and input masking.
+- **Security Verification (OTP)**: Enhanced 6-digit OTP UI with persistent resend logic and dynamic countdown timers.
+
+### 📍 Intelligent Address Handling
+- **Smart PIN Lookup**: Indian PIN-code auto-detection that instantaneously populates city and state data.
+- **Geo-Spatial Verification**: Simulated GPS-based location validation to ensure residency accuracy.
+- **Conditional Logic**: Adaptive form engineering that handles rented properties, landlord details, and duration-based residency proofs.
+
+### 💾 Engineering Excellence
+- **Real-Time Auto-Save**: Debounced synchronization between the form state and a persistent global store, ensuring zero data loss on refreshes.
+- **Resume Application Flow**: An intelligent entry system that detects existing progress and offers a seamless "Pick up where you left off" experience.
+- **State Persistence**: Powered by Zustand with local storage middleware for resilient cross-session performance.
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+| :--- | :--- |
+| **React 19** | Core UI framework with Concurrent Mode support. |
+| **Zustand** | Centralized state management with persistent storage. |
+| **Framer Motion** | Physics-based animations and layout transitions. |
+| **Tailwind CSS** | Utility-first styling for high-fidelity custom design systems. |
+| **Zod** | Schema-first validation ensuring 100% data integrity. |
+| **React Hook Form** | High-performance, uncontrolled form management. |
+| **Lucide React** | Consistent, high-quality iconography. |
+
+---
+
+## 🏁 Development Setup
+
+### 📦 Prerequisites
+- **Node.js**: v18.0.0+
+- **npm**: v9.0.0+
+
+### 🛠️ Installation & Launch
+1. **Clone the repository:**
+   ```bash
+   git clone [repository-url]
+   ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+
+### 🧹 Quality Standards
+Maintain the production-grade quality of the codebase:
+- **Linting Check**: `npm run lint`
+- **Prettier Format**: `npm run format`
+
+---
+
+## 📂 Architecture
+
+```text
+src/
+├── forms/        # Feature-rich wizard steps (Loan, Personal, KYC, Address)
+├── store/        # Zustand store with persistent middleware
+├── hooks/        # Custom logic (useAutoSave, useVerify, etc.)
+├── schemas/      # Zod validation rules per step
+├── layouts/      # High-level UI shells and navigation
+├── components/   # Atomic & Molecular UI elements (Logo, EMI Panel, Modals)
+└── styles/       # Design system tokens and global CSS utilities
+```
+
+---
+
+<div align="center">
+  <p>Built with precision for the next generation of digital banking.</p>
+  <p><strong>LendSwift Engineering Team</strong></p>
+</div>
