@@ -149,7 +149,7 @@ const LoanSelectionStep = ({ onNext }) => {
                 onClick={() => field.onChange('personal')}
               />
               <LoanTypeCard
-                title="Property"
+                title="Mortgage"
                 desc="Institutional backing for your estate journey."
                 icon={Home}
                 selected={field.value === 'home'}
@@ -265,6 +265,7 @@ const LoanSelectionStep = ({ onNext }) => {
                       >
                         <option value="">Select Purpose</option>
                         {selectedLoanType &&
+                          purposeOptions[selectedLoanType] &&
                           purposeOptions[selectedLoanType].map((opt) => (
                             <option key={opt} value={opt}>
                               {opt}

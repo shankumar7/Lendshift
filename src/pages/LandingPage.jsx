@@ -1,15 +1,6 @@
-import React, { useState } from 'react';
-import { motion, useScroll, useSpring } from 'framer-motion';
-import {
-  Zap,
-  ShieldCheck,
-  TrendingUp,
-  ArrowUpRight,
-  Menu,
-  X,
-  ArrowDown,
-  Award,
-} from 'lucide-react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Zap, ShieldCheck, TrendingUp, ArrowUpRight, ArrowDown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '@/components/Logo';
 import useLoanStore from '@/store/useLoanStore';
@@ -89,8 +80,8 @@ const ProductLine = ({ title, desc, rate, amount, index }) => {
     // Map UI title to store loan type key
     const typeMap = {
       Personal: 'personal',
-      Enterprise: 'enterprise',
-      Mortgage: 'mortgage',
+      Enterprise: 'business',
+      Mortgage: 'home',
     };
 
     updateFormData('loanSelection', { loanType: typeMap[title] || 'personal' });
@@ -190,7 +181,6 @@ const FeaturesSection = () => (
     </div>
   </section>
 );
-
 
 const LandingPage = () => {
   return (
