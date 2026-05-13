@@ -50,7 +50,7 @@ const ReviewSection = ({ title, icon: Icon, data, onEdit, isComplete }) => (
       </button>
     </div>
 
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
       {Object.entries(data).map(([key, value]) => (
         <div key={key} className="space-y-1">
           <p className="text-[9px] font-black uppercase tracking-widest text-[#888888]">{key.replace(/([A-Z])/g, ' $1')}</p>
@@ -138,7 +138,7 @@ const ReviewStep = () => {
 
         <div className="space-y-4 max-w-xl">
           <p className="text-meta text-[#0065FF]">Application Successful</p>
-          <h2 className="text-5xl lg:text-7xl font-serif italic tracking-tighter">Underwriting Initiated</h2>
+          <h2 className="text-4xl sm:text-5xl lg:text-7xl font-serif italic tracking-tighter">Underwriting Initiated</h2>
           <p className="text-lg text-[#888888] leading-relaxed">
             Your application <strong>{formData.submission.applicationId}</strong> has been transmitted to our institutional vault. A confirmation email has been dispatched to <strong>{formData.personalInfo.email}</strong>.
           </p>
@@ -168,11 +168,11 @@ const ReviewStep = () => {
           </div>
         </div>
 
-        <div className="flex gap-4">
-          <button className="h-16 px-12 rounded-2xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest flex items-center gap-4 group">
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <button className="h-16 px-12 rounded-2xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-4 group">
             Download Summary <Download size={16} className="group-hover:translate-y-1 transition-transform" />
           </button>
-          <button onClick={() => window.location.href = '/'} className="h-16 px-12 rounded-2xl bg-white border border-[#EEEEEE] text-[10px] font-black uppercase tracking-widest">
+          <button onClick={() => window.location.href = '/'} className="h-16 px-12 rounded-2xl bg-white border border-[#EEEEEE] text-[10px] font-black uppercase tracking-widest flex items-center justify-center">
             Back to Home
           </button>
         </div>
@@ -209,12 +209,12 @@ const ReviewStep = () => {
         {/* Animated Background Gradients */}
         <motion.div animate={{ scale: [1, 1.5, 1], rotate: [0, 90, 0] }} transition={{ duration: 10, repeat: Infinity }} className="absolute -top-1/2 -right-1/2 w-full h-full bg-[#0065FF]/10 rounded-full blur-[120px]" />
         
-        <div className="relative z-10 space-y-8 text-center max-w-2xl">
-          <div className="w-24 h-24 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-12">
-            <Loader2 size={40} className="animate-spin text-[#0065FF]" />
+        <div className="relative z-10 space-y-6 sm:y-8 text-center max-w-2xl">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-8 sm:mb-12">
+            <Loader2 size={32} sm:size={40} className="animate-spin text-[#0065FF]" />
           </div>
-          <h2 className="text-4xl lg:text-6xl font-serif italic">Transmitting Application</h2>
-          <p className="text-lg text-white/40 leading-relaxed uppercase tracking-widest font-mono text-sm">Do not close this window. Your data is being encrypted and packaged for underwriting review.</p>
+          <h2 className="text-3xl sm:text-4xl lg:text-6xl font-serif italic">Transmitting Application</h2>
+          <p className="text-sm sm:text-lg text-white/40 leading-relaxed uppercase tracking-widest font-mono">Do not close this window. Your data is being encrypted and packaged for underwriting review.</p>
         </div>
 
         <div className="w-full max-w-md space-y-4 relative z-10">

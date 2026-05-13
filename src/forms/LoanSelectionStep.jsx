@@ -27,7 +27,7 @@ const LoanTypeCard = ({ icon: Icon, title, desc, selected, onClick }) => (
   <button
     type="button"
     onClick={onClick}
-    className={`relative p-8 rounded-[2.5rem] border transition-all duration-700 text-left flex flex-col gap-8 group ${
+    className={`relative p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border transition-all duration-700 text-left flex flex-col gap-6 sm:gap-8 group ${
       selected
         ? 'border-[#121212] bg-[#121212] text-white shadow-2xl shadow-black/10'
         : 'border-[#EEEEEE] bg-white hover:border-[#121212]/20'
@@ -45,7 +45,7 @@ const LoanTypeCard = ({ icon: Icon, title, desc, selected, onClick }) => (
 
     <div className="space-y-3">
       <h3
-        className={`text-3xl font-serif italic leading-none transition-colors ${selected ? 'text-white' : 'text-[#121212]'}`}
+        className={`text-2xl sm:text-3xl font-serif italic leading-none transition-colors ${selected ? 'text-white' : 'text-[#121212]'}`}
       >
         {title}
       </h3>
@@ -175,8 +175,8 @@ const LoanSelectionStep = ({ onNext }) => {
           <div className="space-y-6">
             <label htmlFor="amount-slider" className="block space-y-6 cursor-pointer">
               <div className="flex justify-between items-end">
-                <span className="text-xs font-black uppercase tracking-widest">Loan Amount</span>
-                <div className="text-2xl font-serif italic text-[#121212]">
+                <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest">Loan Amount</span>
+                <div className="text-xl sm:text-2xl font-serif italic text-[#121212]">
                   ₹{(amount || 0).toLocaleString('en-IN')}
                 </div>
               </div>
@@ -211,10 +211,10 @@ const LoanSelectionStep = ({ onNext }) => {
           <div className="space-y-6">
             <label htmlFor="tenure-slider" className="block space-y-6 cursor-pointer">
               <div className="flex justify-between items-end">
-                <span className="text-xs font-black uppercase tracking-widest">Tenure</span>
-                <div className="text-2xl font-serif italic text-[#121212]">
+                <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest">Tenure</span>
+                <div className="text-xl sm:text-2xl font-serif italic text-[#121212]">
                   {tenure}{' '}
-                  <span className="text-xs font-sans not-italic text-[#888888]">Months</span>
+                  <span className="text-[10px] sm:text-xs font-sans not-italic text-[#888888]">Months</span>
                 </div>
               </div>
 

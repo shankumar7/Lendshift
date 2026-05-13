@@ -194,14 +194,14 @@ const AddressStep = ({ onNext }) => {
               <MapPin size={20} strokeWidth={1.5} />
             </div>
             <div>
-              <h3 className="text-2xl font-serif italic text-[#121212]">Current Residence</h3>
-              <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">Primary Contact Address</p>
+              <h3 className="text-xl sm:text-2xl font-serif italic text-[#121212]">Current Residence</h3>
+              <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">Primary Contact Address</p>
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="md:col-span-2 space-y-2">
-              <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Address Line 1</label>
+              <label className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Address Line 1</label>
               <Controller
                 name="current.addressLine1"
                 control={control}
@@ -209,11 +209,11 @@ const AddressStep = ({ onNext }) => {
                   <input {...field} placeholder="House / Flat No, Building Name" className="input-premium" />
                 )}
               />
-              {errors.current?.addressLine1 && <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{errors.current.addressLine1.message}</p>}
+              {errors.current?.addressLine1 && <p className="text-[9px] sm:text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{errors.current.addressLine1.message}</p>}
             </div>
 
             <div className="space-y-2">
-              <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Address Line 2 (Optional)</label>
+              <label className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Address Line 2 (Optional)</label>
               <Controller
                 name="current.addressLine2"
                 control={control}
@@ -563,12 +563,12 @@ const AddressStep = ({ onNext }) => {
             </div>
           </div>
 
-          <div className="p-12 rounded-[3rem] border border-[#EEEEEE] bg-[#FAFAFA] flex flex-col md:flex-row items-center gap-12">
-            <div className="w-32 h-32 rounded-full bg-white shadow-2xl flex items-center justify-center relative overflow-hidden">
-              <Globe size={48} className={isGeoVerifying ? 'text-[#0065FF] animate-pulse' : 'text-[#EEEEEE]'} />
+          <div className="p-8 sm:p-12 rounded-[2rem] sm:rounded-[3rem] border border-[#EEEEEE] bg-[#FAFAFA] flex flex-col md:flex-row items-center gap-8 sm:gap-12">
+            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white shadow-2xl flex items-center justify-center relative overflow-hidden shrink-0">
+              <Globe size={32} className={isGeoVerifying ? 'text-[#0065FF] animate-pulse' : 'text-[#EEEEEE]'} />
               {isGeoVerified && (
                 <div className="absolute inset-0 bg-[#E8F5E9] flex items-center justify-center">
-                  <CheckCircle2 size={48} className="text-[#2E7D32]" />
+                  <CheckCircle2 size={32} className="text-[#2E7D32]" />
                 </div>
               )}
               {isGeoVerifying && (

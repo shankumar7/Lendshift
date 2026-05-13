@@ -178,21 +178,21 @@ const EmploymentStep = ({ onNext }) => {
     <div className="flex flex-col xl:flex-row gap-12 items-start">
       <form onSubmit={handleSubmit(onSubmit)} className="flex-1 space-y-12">
         {/* Employment Type Header (Read Only) */}
-        <div className="p-8 rounded-[2rem] bg-[#121212] text-white flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center">
-              {employmentType === 'salaried' && <Building2 size={24} />}
-              {employmentType === 'business' && <Gem size={24} />}
-              {employmentType === 'self-employed' && <TrendingUp size={24} />}
-              {employmentType === 'freelancer' && <Coffee size={24} />}
-              {employmentType === 'retired' && <Heart size={24} />}
+        <div className="p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] bg-[#121212] text-white flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-4 sm:gap-6">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/10 flex items-center justify-center">
+              {employmentType === 'salaried' && <Building2 size={20} sm:size={24} />}
+              {employmentType === 'business' && <Gem size={20} sm:size={24} />}
+              {employmentType === 'self-employed' && <TrendingUp size={20} sm:size={24} />}
+              {employmentType === 'freelancer' && <Coffee size={20} sm:size={24} />}
+              {employmentType === 'retired' && <Heart size={20} sm:size={24} />}
             </div>
             <div>
-              <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/40">Verified Profile</p>
-              <h3 className="text-2xl font-serif italic capitalize">{employmentType} Underwriting</h3>
+              <p className="text-[9px] font-mono uppercase tracking-[0.3em] text-white/40">Verified Profile</p>
+              <h3 className="text-xl sm:text-2xl font-serif italic capitalize">{employmentType} Underwriting</h3>
             </div>
           </div>
-          <div className="flex flex-col items-end">
+          <div className="flex flex-col items-center sm:items-end w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-t-0 border-white/10">
             <p className="text-[10px] font-black uppercase tracking-widest text-[#0065FF]">Financial Category</p>
             <p className="text-xs font-mono opacity-60">CAT-A Approved</p>
           </div>
@@ -416,12 +416,12 @@ const EmploymentStep = ({ onNext }) => {
           <div className="absolute top-0 right-0 w-32 h-32 bg-[#0065FF] opacity-10 blur-3xl" />
           
           <div className="relative space-y-8">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <p className="text-meta text-white/40">Risk Assessment</p>
-                <h4 className="text-2xl font-serif italic">Underwriting</h4>
+                <h4 className="text-xl sm:text-2xl font-serif italic">Underwriting</h4>
               </div>
-              <div className={`px-4 py-2 rounded-full border text-[10px] font-black uppercase tracking-widest ${
+              <div className={`px-4 py-2 rounded-full border text-[9px] sm:text-[10px] font-black uppercase tracking-widest ${
                 metrics.riskStatus === 'success' ? 'border-[#2E7D32] text-[#4CAF50]' :
                 metrics.riskStatus === 'warning' ? 'border-[#FF8F00] text-[#FFB300]' :
                 'border-[#C62828] text-[#FF5252]'

@@ -26,23 +26,20 @@ const ErrorField = ({ error, touched }) => (
   </AnimatePresence>
 );
 
-const SectionHeader = ({ icon: Icon, title, desc }) => (
-  <div className="space-y-4 mb-10">
-    <div className="flex items-center gap-4">
-      <div className="w-10 h-10 rounded-2xl bg-[#F8F9FA] flex items-center justify-center text-[#121212]">
-        <Icon size={18} strokeWidth={1.5} />
+  <div className="space-y-4 mb-8 sm:mb-10">
+    <div className="flex items-center gap-3 sm:gap-4">
+      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-[#F8F9FA] flex items-center justify-center text-[#121212]">
+        <Icon size={16} sm:size={18} strokeWidth={1.5} />
       </div>
       <div>
-        <h3 className="text-xl font-serif italic text-[#121212]">{title}</h3>
-        <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">{desc}</p>
+        <h3 className="text-lg sm:text-xl font-serif italic text-[#121212]">{title}</h3>
+        <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">{desc}</p>
       </div>
     </div>
   </div>
-);
 
-const InputWrapper = ({ label, id, error, touched, children, verified = false, isLoading = false }) => (
   <div className="space-y-2 group">
-    <label htmlFor={id} className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40 group-focus-within:text-[#121212] transition-colors">
+    <label htmlFor={id} className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40 group-focus-within:text-[#121212] transition-colors">
       {label}
     </label>
     <div className="relative">
@@ -217,18 +214,18 @@ const PersonalInfoStep = ({ onNext }) => {
           </div>
 
           <div className="md:col-span-7 space-y-2">
-            <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Gender</label>
+            <label className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Gender</label>
             <Controller
               name="gender"
               control={control}
               render={({ field }) => (
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
                   {['male', 'female', 'non-binary', 'prefer-not-to-say'].map((g) => (
                     <button
                       key={g}
                       type="button"
                       onClick={() => field.onChange(g)}
-                      className={`h-16 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 border px-2 ${
+                      className={`h-14 sm:h-16 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all duration-300 border px-1 sm:px-2 ${
                         field.value === g 
                         ? 'bg-[#121212] border-[#121212] text-white shadow-lg' 
                         : 'bg-white border-[#EEEEEE] text-[#121212]/40 hover:border-[#121212]/20'
@@ -250,18 +247,18 @@ const PersonalInfoStep = ({ onNext }) => {
         <SectionHeader icon={Heart} title="Social Context" desc="Marital status & family details" />
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-2">
-            <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Marital Status</label>
+            <label className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Marital Status</label>
             <Controller
               name="maritalStatus"
               control={control}
               render={({ field }) => (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
                   {['single', 'married', 'divorced', 'widowed'].map((m) => (
                     <button
                       key={m}
                       type="button"
                       onClick={() => field.onChange(m)}
-                      className={`h-16 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
+                      className={`h-14 sm:h-16 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
                         field.value === m 
                         ? 'bg-[#121212] border-[#121212] text-white shadow-lg' 
                         : 'bg-white border-[#EEEEEE] text-[#121212]/40 hover:border-[#121212]/20'

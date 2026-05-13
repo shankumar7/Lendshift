@@ -10,7 +10,7 @@ const SuccessPage = () => {
   return (
     <div className="min-h-screen bg-white grain-bg font-sans flex flex-col">
       <Nav />
-      <main className="flex-1 flex items-center justify-center pt-32 pb-20 px-6">
+      <main className="flex-1 flex items-center justify-center pt-24 sm:pt-32 pb-20 px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -28,7 +28,7 @@ const SuccessPage = () => {
                   APPLICATION SECURED
                 </span>
               </motion.div>
-              <h1 className="text-5xl sm:text-7xl font-serif italic leading-tight tracking-tighter">
+              <h1 className="text-4xl sm:text-7xl font-serif italic leading-[1.1] sm:leading-tight tracking-tighter">
                 Capital is on <br />
                 the way.
               </h1>
@@ -38,20 +38,20 @@ const SuccessPage = () => {
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-6">
-              <div className="p-8 bg-[#F8F9FA] rounded-[2rem] border border-[#EEEEEE] space-y-4">
-                <ShieldCheck size={24} className="text-[#121212]" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="p-6 sm:p-8 bg-[#F8F9FA] rounded-[1.5rem] sm:rounded-[2rem] border border-[#EEEEEE] space-y-4">
+                <ShieldCheck size={20} sm:size={24} className="text-[#121212]" />
                 <div className="space-y-1">
-                  <p className="text-[10px] font-mono text-[#888888] uppercase tracking-widest">
+                  <p className="text-[9px] sm:text-[10px] font-mono text-[#888888] uppercase tracking-widest">
                     Security Layer
                   </p>
                   <p className="text-sm font-black">ISO 27001 Verified</p>
                 </div>
               </div>
-              <div className="p-8 bg-[#F8F9FA] rounded-[2rem] border border-[#EEEEEE] space-y-4">
-                <Globe size={24} className="text-[#121212]" />
+              <div className="p-6 sm:p-8 bg-[#F8F9FA] rounded-[1.5rem] sm:rounded-[2rem] border border-[#EEEEEE] space-y-4">
+                <Globe size={20} sm:size={24} className="text-[#121212]" />
                 <div className="space-y-1">
-                  <p className="text-[10px] font-mono text-[#888888] uppercase tracking-widest">
+                  <p className="text-[9px] sm:text-[10px] font-mono text-[#888888] uppercase tracking-widest">
                     Network Status
                   </p>
                   <p className="text-sm font-black">Atomic Settlement</p>
@@ -76,7 +76,7 @@ const SuccessPage = () => {
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="relative z-10 p-12 sm:p-20 bg-[#121212] rounded-[3rem] text-white flex flex-col items-center text-center space-y-8"
+                className="relative z-10 p-10 sm:p-20 bg-[#121212] rounded-[2rem] sm:rounded-[3rem] text-white flex flex-col items-center text-center space-y-8"
               >
                 <div className="w-20 h-20 bg-[#0065FF] rounded-full flex items-center justify-center mb-4">
                   <CheckCircle2 size={40} className="text-white" />

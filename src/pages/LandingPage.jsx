@@ -20,7 +20,7 @@ const Hero = () => (
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
-          className="text-editorial text-4xl sm:text-7xl md:text-8xl lg:text-9xl"
+          className="text-editorial text-3xl sm:text-7xl md:text-8xl lg:text-9xl leading-[1.1] sm:leading-tight"
         >
           Capital that <br className="hidden sm:block" />
           breathes{' '}
@@ -137,7 +137,7 @@ const FeaturesSection = () => (
         </p>
       </div>
 
-      <div className="lg:col-span-8 space-y-32 sm:space-y-48">
+      <div className="lg:col-span-8 space-y-16 sm:space-y-48">
         {[
           {
             num: '01',
@@ -217,7 +217,7 @@ const LandingPage = () => {
 
         <FeaturesSection />
 
-        <section className="py-64 px-6 sm:px-10 bg-white border-t border-[#EEEEEE] relative overflow-hidden">
+        <section className="py-24 sm:py-64 px-6 sm:px-10 bg-white border-t border-[#EEEEEE] relative overflow-hidden">
           <div className="max-w-[1600px] mx-auto grid lg:grid-cols-2 gap-24 items-center">
             <div className="space-y-12">
               <motion.div
@@ -250,7 +250,7 @@ const LandingPage = () => {
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                className="relative z-10 p-12 sm:p-20 bg-[#F4F5F7] rounded-[3rem] border border-[#EEEEEE] flex flex-col items-center text-center space-y-12"
+                className="relative z-10 p-8 sm:p-20 bg-[#F4F5F7] rounded-[2rem] sm:rounded-[3rem] border border-[#EEEEEE] flex flex-col items-center text-center space-y-8 sm:space-y-12"
               >
                 <Logo withBackground />
 

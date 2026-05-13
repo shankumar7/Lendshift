@@ -277,7 +277,7 @@ const KYCStep = ({ onNext }) => {
             <h4 className="text-3xl font-serif italic">KYC Summary</h4>
           </div>
 
-          <div className="flex-1 w-full grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-12">
+          <div className="flex-1 w-full grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 lg:gap-12">
             {[
               { id: 'pan', label: 'PAN Identity', status: isPanVerified },
               { id: 'aadhaar', label: 'Aadhaar ID', status: isAadhaarVerified },
@@ -308,10 +308,10 @@ const KYCStep = ({ onNext }) => {
             ))}
           </div>
 
-          <div className="flex-shrink-0 flex items-center gap-6 border-l border-white/10 pl-16 hidden xl:flex">
+          <div className="flex-shrink-0 flex items-center gap-6 border-l border-white/10 pl-8 sm:pl-16 hidden lg:flex">
             <div className="text-right space-y-1">
-              <p className="text-[10px] font-mono text-white/40 uppercase">Completion</p>
-              <p className="text-3xl font-serif italic">{Math.round(completionPercent)}%</p>
+              <p className="text-[9px] sm:text-[10px] font-mono text-white/40 uppercase">Completion</p>
+              <p className="text-2xl sm:text-3xl font-serif italic">{Math.round(completionPercent)}%</p>
             </div>
             <div className="w-16 h-16 rounded-full border-4 border-white/5 flex items-center justify-center relative">
               <svg className="w-full h-full -rotate-90">
@@ -392,7 +392,7 @@ const KYCStep = ({ onNext }) => {
                             onChange={(e) =>
                               field.onChange(e.target.value.toUpperCase())
                             }
-                            className="w-full h-16 bg-[#F8F9FA] border-0 rounded-2xl px-6 font-mono tracking-[0.4em] text-xl focus:ring-2 focus:ring-[#121212] transition-all"
+                            className="w-full h-14 sm:h-16 bg-[#F8F9FA] border-0 rounded-xl sm:rounded-2xl px-4 sm:px-6 font-mono tracking-[0.2em] sm:tracking-[0.4em] text-lg sm:text-xl focus:ring-2 focus:ring-[#121212] transition-all"
                           />
                         )}
                       />
@@ -458,7 +458,7 @@ const KYCStep = ({ onNext }) => {
                             onChange={(e) =>
                               field.onChange(e.target.value.replace(/\D/g, ''))
                             }
-                            className={`w-full h-16 bg-[#F8F9FA] border-0 rounded-2xl px-6 font-mono tracking-[0.4em] text-xl focus:ring-2 focus:ring-[#121212] transition-all ${isAadhaarVerified ? 'blur-[2px] opacity-40' : ''}`}
+                            className={`w-full h-14 sm:h-16 bg-[#F8F9FA] border-0 rounded-xl sm:rounded-2xl px-4 sm:px-6 font-mono tracking-[0.2em] sm:tracking-[0.4em] text-lg sm:text-xl focus:ring-2 focus:ring-[#121212] transition-all ${isAadhaarVerified ? 'blur-[2px] opacity-40' : ''}`}
                           />
                         )}
                       />
@@ -607,7 +607,7 @@ const KYCStep = ({ onNext }) => {
               </div>
             </div>
 
-            <div className="p-10 rounded-[3rem] border border-[#EEEEEE] bg-[#FAFAFA] flex flex-col md:flex-row items-center gap-12">
+            <div className="p-6 sm:p-10 rounded-[2rem] sm:rounded-[3rem] border border-[#EEEEEE] bg-[#FAFAFA] flex flex-col md:flex-row items-center gap-8 sm:gap-12">
               <div className="relative w-40 h-40 rounded-full border-4 border-white shadow-2xl overflow-hidden bg-white">
                 {documents.selfie ? (
                   <img
@@ -719,12 +719,12 @@ const KYCStep = ({ onNext }) => {
             AES-256 Encrypted Vaults
           </p>
         </div>
-        <div className="flex gap-8 text-[#888888]">
-          <span className="text-[8px] font-mono uppercase tracking-widest">
+        <div className="flex flex-wrap justify-center sm:justify-end gap-4 sm:gap-8 text-[#888888]">
+          <span className="text-[8px] font-mono uppercase tracking-widest whitespace-nowrap">
             ISO 27001 Certified
           </span>
-          <span className="text-[8px] font-mono uppercase tracking-widest">GDPR Compliant</span>
-          <span className="text-[8px] font-mono uppercase tracking-widest">
+          <span className="text-[8px] font-mono uppercase tracking-widest whitespace-nowrap">GDPR Compliant</span>
+          <span className="text-[8px] font-mono uppercase tracking-widest whitespace-nowrap">
             Real-time Biometric Match
           </span>
         </div>

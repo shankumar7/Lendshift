@@ -214,17 +214,17 @@ const CoApplicantStep = ({ onNext }) => {
     <div className="flex flex-col xl:flex-row gap-12 items-start">
       <form onSubmit={handleSubmit(onSubmit)} className="flex-1 space-y-12">
         {/* Profile Header */}
-        <div className="p-8 rounded-[2rem] bg-[#F8F9FA] border border-[#EEEEEE] flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <div className="w-14 h-14 rounded-2xl bg-[#121212] text-white flex items-center justify-center">
-              <Users size={24} />
+        <div className="p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] bg-[#F8F9FA] border border-[#EEEEEE] flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-4 sm:gap-6">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-[#121212] text-white flex items-center justify-center">
+              <Users size={20} sm:size={24} />
             </div>
             <div>
-              <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#888888]">Joint Liability</p>
-              <h3 className="text-2xl font-serif italic">Co-Borrower Details</h3>
+              <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.3em] text-[#888888]">Joint Liability</p>
+              <h3 className="text-xl sm:text-2xl font-serif italic">Co-Borrower Details</h3>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full sm:w-auto justify-center sm:justify-end pt-4 sm:pt-0 border-t sm:border-t-0 border-[#EEEEEE]">
             <VerificationBadge status={verifications.pan} label="PAN" />
             <VerificationBadge status={verifications.aadhaar} label="KYC" />
           </div>
@@ -236,8 +236,8 @@ const CoApplicantStep = ({ onNext }) => {
             <div className="w-1.5 h-1.5 rounded-full bg-[#0065FF]" />
             <h4 className="text-[10px] font-black uppercase tracking-widest text-[#121212]">Relationship to Applicant</h4>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {['Spouse', 'Parent', 'Sibling', 'Business Partner', 'Guarantor', 'Other'].map((rel) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+            {['Spouse', 'Parent', 'Sibling', 'Partner', 'Guarantor', 'Other'].map((rel) => (
               <label key={rel} className="relative cursor-pointer group">
                 <Controller
                   name="relation"
@@ -251,8 +251,8 @@ const CoApplicantStep = ({ onNext }) => {
                     />
                   )}
                 />
-                <div className="p-4 rounded-2xl border border-[#EEEEEE] bg-white transition-all group-hover:border-[#0065FF]/30 peer-checked:border-[#121212] peer-checked:bg-[#121212] peer-checked:text-white">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-center">{rel}</p>
+                <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-[#EEEEEE] bg-white transition-all group-hover:border-[#0065FF]/30 peer-checked:border-[#121212] peer-checked:bg-[#121212] peer-checked:text-white">
+                  <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-center">{rel}</p>
                 </div>
               </label>
             ))}
@@ -276,13 +276,13 @@ const CoApplicantStep = ({ onNext }) => {
               <Controller name="dob" control={control} render={({ field }) => <input {...field} type="date" className="input-premium" />} />
             </InputWrapper>
             <InputWrapper label="Mobile Number" error={errors.mobile} touched={touchedFields.mobile || isSubmitted} icon={Smartphone}>
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Controller name="mobile" control={control} render={({ field }) => <input {...field} placeholder="9876543210" maxLength={10} className="input-premium flex-1 font-mono" />} />
                 <button
                   type="button"
                   onClick={handleSendOtp}
                   disabled={otpTimer > 0 || !watch('mobile')}
-                  className="px-6 rounded-2xl bg-[#121212] text-white text-[9px] font-black uppercase tracking-widest disabled:opacity-20"
+                  className="px-6 h-14 sm:h-auto rounded-xl sm:rounded-2xl bg-[#121212] text-white text-[9px] font-black uppercase tracking-widest disabled:opacity-20"
                 >
                   {otpTimer > 0 ? `${otpTimer}s` : 'Verify'}
                 </button>

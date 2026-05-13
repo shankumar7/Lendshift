@@ -198,9 +198,9 @@ const LoanWizard = () => {
     <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden font-sans" role="main">
       <ResumeModal />
       <div ref={announcementRef} className="sr-only" role="status" aria-live="polite" />
-      <aside className="w-full lg:w-[400px] bg-[#F8F9FA] border-r border-[#EEEEEE] p-8 lg:p-12 flex flex-col justify-between overflow-y-auto">
-        <div className="space-y-12">
-          <Link to="/" className="inline-block scale-90 origin-left mb-8">
+      <aside className="w-full lg:w-[400px] bg-[#F8F9FA] border-r border-[#EEEEEE] p-6 sm:p-8 lg:p-12 flex flex-col justify-between overflow-y-auto">
+        <div className="space-y-8 sm:space-y-12">
+          <Link to="/" className="inline-block scale-75 sm:scale-90 origin-left mb-4 sm:mb-8">
             <Logo />
           </Link>
           <div className="space-y-2">
@@ -222,7 +222,7 @@ const LoanWizard = () => {
               return (
                 <div
                   key={step.id}
-                  className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-500 ${isActive ? 'bg-white shadow-sm ring-1 ring-[#EEEEEE]' : 'opacity-40'}`}
+                  className={`flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-500 ${isActive ? 'bg-white shadow-sm ring-1 ring-[#EEEEEE]' : 'opacity-40'}`}
                 >
                   <div
                     className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${getStepStyles()}`}
@@ -263,17 +263,17 @@ const LoanWizard = () => {
 
       <main className="flex-1 bg-white relative flex flex-col">
         <header className="h-20 border-b border-[#EEEEEE] px-8 lg:px-20 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 sm:gap-6">
+            <div className="flex items-center gap-3 sm:gap-4">
               <button
                 type="button"
                 onClick={handleBack}
-                className="p-2 hover:bg-[#FAFAFA] rounded-full transition-colors opacity-40 hover:opacity-100"
+                className="p-1.5 sm:p-2 hover:bg-[#FAFAFA] rounded-full transition-colors opacity-40 hover:opacity-100"
               >
-                <ChevronLeft size={20} />
+                <ChevronLeft size={18} sm:size={20} />
               </button>
               <span className="text-[10px] font-mono text-[#EEEEEE]">/</span>
-              <p className="text-xs font-black uppercase tracking-widest">
+              <p className="text-[9px] sm:text-xs font-black uppercase tracking-widest truncate max-w-[100px] sm:max-w-none">
                 {STEPS[currentStep - 1].title}
               </p>
             </div>
@@ -299,7 +299,7 @@ const LoanWizard = () => {
         </header>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar">
-          <div className="max-w-4xl mx-auto py-24 px-8 lg:px-20 space-y-16">
+          <div className="max-w-4xl mx-auto py-12 sm:py-24 px-6 sm:px-8 lg:px-20 space-y-12 sm:space-y-16">
             <div className="space-y-6">
               <motion.div
                 key={`${currentStep}badge`}
@@ -318,10 +318,10 @@ const LoanWizard = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="space-y-4"
               >
-                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-serif italic leading-tight tracking-tighter">
+                <h1 className="text-3xl sm:text-5xl lg:text-7xl font-serif italic leading-tight tracking-tighter">
                   {STEPS[currentStep - 1].title}
                 </h1>
-                <p className="text-xl text-[#888888] font-sans leading-relaxed">
+                <p className="text-base sm:text-xl text-[#888888] font-sans leading-relaxed">
                   {STEPS[currentStep - 1].desc}
                 </p>
               </motion.div>
@@ -398,12 +398,12 @@ const LoanWizard = () => {
                 type="button"
                 onClick={handleContinue}
                 disabled={!isStepComplete()}
-                className="btn-primary h-16 px-12 group disabled:opacity-20 transition-all"
+                className="btn-primary h-14 sm:h-16 px-8 sm:px-12 group disabled:opacity-20 transition-all"
               >
                 {currentStep === 8 ? 'Submit' : 'Continue'}
                 <ChevronRight
-                  size={20}
-                  className="ml-3 group-hover:translate-x-1 transition-transform"
+                  size={18} sm:size={20}
+                  className="ml-2 sm:ml-3 group-hover:translate-x-1 transition-transform"
                 />
               </button>
             </div>
