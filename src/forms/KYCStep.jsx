@@ -14,7 +14,6 @@ import {
   AlertCircle,
   Loader2,
   ScanFace,
-  ShieldAlert,
 } from 'lucide-react';
 import useLoanStore from '../store/useLoanStore';
 import kycSchema from '../schemas/kycSchema';
@@ -115,9 +114,7 @@ const FileUploadZone = ({ label, value, onChange, onRemove, error }) => {
             <div className="flex-1 min-w-0">
               <p className="text-xs font-bold truncate">{value.name}</p>
               <p className="text-[10px] text-[#888888] font-mono">
-                {(value.size / 1024).toFixed(0)}
-                {' '}
-                KB
+                {(value.size / 1024).toFixed(0)} KB
               </p>
             </div>
             <button
@@ -129,27 +126,22 @@ const FileUploadZone = ({ label, value, onChange, onRemove, error }) => {
             </button>
           </div>
         ) : (
-          <>
+          <div className="w-full flex flex-col items-center justify-center">
             {progress > 0 && progress < 100 ? (
               <div className="w-full px-8 space-y-2">
                 <div className="flex justify-between text-[10px] font-mono font-bold">
                   <span>UPLOADING</span>
-                  <span>
-                    {progress}
-                    %
-                  </span>
+                  <span>{progress}%</span>
                 </div>
                 <div className="h-1 bg-[#EEEEEE] rounded-full overflow-hidden">
                   <div className="h-full bg-[#0065FF]" style={{ width: `${progress}%` }} />
                 </div>
               </div>
             ) : (
-              <>
+              <div className="flex flex-col items-center justify-center gap-2">
                 <UploadCloud size={24} className="text-[#888888]" />
                 <p className="text-[10px] font-black uppercase tracking-widest text-[#888888]">
-                  Drag & drop or
-                  {' '}
-                  <span className="text-[#0065FF] cursor-pointer">browse</span>
+                  Drag & drop or <span className="text-[#0065FF] cursor-pointer">browse</span>
                 </p>
                 <input
                   type="file"
@@ -158,9 +150,9 @@ const FileUploadZone = ({ label, value, onChange, onRemove, error }) => {
                   className="absolute inset-0 opacity-0 cursor-pointer"
                   onChange={(e) => handleFile(e.target.files[0])}
                 />
-              </>
+              </div>
             )}
-          </>
+          </div>
         )}
       </div>
       {error && (
@@ -250,14 +242,16 @@ const KYCStep = ({ onNext }) => {
     onNext();
   };
 
-  const completionPercent = [
-    isPanVerified,
-    isAadhaarVerified,
-    isFaceVerified,
-    !!documents.panCard,
-    !!documents.aadhaarCard,
-    !!documents.secondaryId,
-  ].filter(Boolean).length * (100 / 6);
+  const completionPercent =
+    [
+      isPanVerified,
+      isAadhaarVerified,
+      isFaceVerified,
+      !!documents.panCard,
+      !!documents.aadhaarCard,
+      !!documents.secondaryId,
+    ].filter(Boolean).length *
+    (100 / 6);
 
   const getPanBadgeStatus = () => {
     if (isVerifyingPan) return 'processing';
@@ -276,7 +270,7 @@ const KYCStep = ({ onNext }) => {
       {/* Horizontal Verification Summary */}
       <div className="bg-[#121212] rounded-[2.5rem] p-8 sm:p-10 text-white shadow-2xl shadow-[#121212]/10 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-[400px] h-full bg-[#0065FF]/10 rounded-full blur-[100px] pointer-events-none" />
-        
+
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 md:gap-16">
           <div className="flex-shrink-0 space-y-1">
             <p className="text-meta text-white/40">Compliance Status</p>
@@ -292,7 +286,9 @@ const KYCStep = ({ onNext }) => {
             ].map((item) => (
               <div key={item.id} className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className={`text-[9px] font-black uppercase tracking-widest transition-colors ${item.status ? 'text-white' : 'text-white/20'}`}>
+                  <span
+                    className={`text-[9px] font-black uppercase tracking-widest transition-colors ${item.status ? 'text-white' : 'text-white/20'}`}
+                  >
                     {item.label}
                   </span>
                   {item.status ? (
@@ -315,10 +311,7 @@ const KYCStep = ({ onNext }) => {
           <div className="flex-shrink-0 flex items-center gap-6 border-l border-white/10 pl-16 hidden xl:flex">
             <div className="text-right space-y-1">
               <p className="text-[10px] font-mono text-white/40 uppercase">Completion</p>
-              <p className="text-3xl font-serif italic">
-                {Math.round(completionPercent)}
-                %
-              </p>
+              <p className="text-3xl font-serif italic">{Math.round(completionPercent)}%</p>
             </div>
             <div className="w-16 h-16 rounded-full border-4 border-white/5 flex items-center justify-center relative">
               <svg className="w-full h-full -rotate-90">
@@ -359,95 +352,141 @@ const KYCStep = ({ onNext }) => {
               </div>
               <div>
                 <h3 className="text-2xl font-serif italic text-[#121212]">Institutional KYC</h3>
-                <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">Biometric & Statutory Validation</p>
+                <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">
+                  Biometric & Statutory Validation
+                </p>
               </div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8">
               {/* PAN Card Verification */}
-              <div className={`p-10 rounded-[2.5rem] border transition-all duration-500 bg-white ${isPanVerified ? 'border-[#E8F5E9] shadow-sm' : 'border-[#EEEEEE] hover:border-[#CCCCCC]'}`}>
+              <div
+                className={`p-10 rounded-[2.5rem] border transition-all duration-500 bg-white ${isPanVerified ? 'border-[#E8F5E9] shadow-sm' : 'border-[#EEEEEE] hover:border-[#CCCCCC]'}`}
+              >
                 <div className="flex justify-between items-start mb-10">
                   <div className="p-4 bg-[#F8F9FA] rounded-2xl">
-                    <CreditCard size={28} className={isPanVerified ? 'text-[#2E7D32]' : 'text-[#121212]'} />
+                    <CreditCard
+                      size={28}
+                      className={isPanVerified ? 'text-[#2E7D32]' : 'text-[#121212]'}
+                    />
                   </div>
                   <VerificationBadge status={getPanBadgeStatus()} />
                 </div>
                 <div className="space-y-5">
-                  <label htmlFor="pan-input" className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Permanent Account Number</label>
-                  <div className="relative">
-                    <Controller
-                      name="panNumber"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          value={field.value || ''}
-                          id="pan-input"
-                          maxLength={10}
-                          disabled={isPanVerified}
-                          placeholder="ABCDE1234F"
-                          onChange={(e) => field.onChange(e.target.value.toUpperCase())}
-                          className="w-full h-16 bg-[#F8F9FA] border-0 rounded-2xl px-6 font-mono tracking-[0.4em] text-xl focus:ring-2 focus:ring-[#121212] transition-all"
-                        />
+                  <label className="block space-y-5 cursor-pointer">
+                    <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
+                      Permanent Account Number
+                    </span>
+                    <div className="relative">
+                      <Controller
+                        name="panNumber"
+                        control={control}
+                        render={({ field }) => (
+                          <input
+                            {...field}
+                            value={field.value || ''}
+                            id="pan-input"
+                            maxLength={10}
+                            disabled={isPanVerified}
+                            placeholder="ABCDE1234F"
+                            onChange={(e) =>
+                              field.onChange(e.target.value.toUpperCase())
+                            }
+                            className="w-full h-16 bg-[#F8F9FA] border-0 rounded-2xl px-6 font-mono tracking-[0.4em] text-xl focus:ring-2 focus:ring-[#121212] transition-all"
+                          />
+                        )}
+                      />
+                      {!isPanVerified && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleVerifyPan();
+                          }}
+                          disabled={isVerifyingPan || panNumber?.length < 10}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 h-10 px-8 rounded-xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#0065FF] transition-colors disabled:opacity-50"
+                        >
+                          {isVerifyingPan ? (
+                            <Loader2 size={14} className="animate-spin" />
+                          ) : (
+                            'Verify'
+                          )}
+                        </button>
                       )}
-                    />
-                    {!isPanVerified && (
-                      <button
-                        type="button"
-                        onClick={handleVerifyPan}
-                        disabled={isVerifyingPan || panNumber?.length < 10}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 h-10 px-8 rounded-xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#0065FF] transition-colors disabled:opacity-50"
-                      >
-                        {isVerifyingPan ? <Loader2 size={14} className="animate-spin" /> : 'Verify'}
-                      </button>
-                    )}
-                  </div>
+                    </div>
+                  </label>
                   {errors.panNumber && (
-                    <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{errors.panNumber.message}</p>
+                    <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
+                      {errors.panNumber.message}
+                    </p>
                   )}
                 </div>
               </div>
 
               {/* Aadhaar Verification */}
-              <div className={`p-10 rounded-[2.5rem] border transition-all duration-500 bg-white ${isAadhaarVerified ? 'border-[#E8F5E9] shadow-sm' : 'border-[#EEEEEE] hover:border-[#CCCCCC]'}`}>
+              <div
+                className={`p-10 rounded-[2.5rem] border transition-all duration-500 bg-white ${isAadhaarVerified ? 'border-[#E8F5E9] shadow-sm' : 'border-[#EEEEEE] hover:border-[#CCCCCC]'}`}
+              >
                 <div className="flex justify-between items-start mb-10">
                   <div className="p-4 bg-[#F8F9FA] rounded-2xl">
-                    <Fingerprint size={28} className={isAadhaarVerified ? 'text-[#2E7D32]' : 'text-[#121212]'} />
+                    <Fingerprint
+                      size={28}
+                      className={isAadhaarVerified ? 'text-[#2E7D32]' : 'text-[#121212]'}
+                    />
                   </div>
                   <VerificationBadge status={getAadhaarBadgeStatus()} />
                 </div>
                 <div className="space-y-5">
-                  <label htmlFor="aadhaar-input" className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Aadhaar Identity</label>
-                  <div className="relative">
-                    <Controller
-                      name="aadhaarNumber"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          id="aadhaar-input"
-                          value={field.value?.replace(/(\d{4})(?=\d)/g, '$1 ') || ''}
-                          maxLength={14}
-                          disabled={isAadhaarVerified}
-                          placeholder="XXXX XXXX XXXX"
-                          onChange={(e) => field.onChange(e.target.value.replace(/\D/g, ''))}
-                          className={`w-full h-16 bg-[#F8F9FA] border-0 rounded-2xl px-6 font-mono tracking-[0.4em] text-xl focus:ring-2 focus:ring-[#121212] transition-all ${isAadhaarVerified ? 'blur-[2px] opacity-40' : ''}`}
-                        />
+                  <label className="block space-y-5 cursor-pointer">
+                    <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
+                      Aadhaar Identity
+                    </span>
+                    <div className="relative">
+                      <Controller
+                        name="aadhaarNumber"
+                        control={control}
+                        render={({ field }) => (
+                          <input
+                            {...field}
+                            id="aadhaar-input"
+                            value={
+                              field.value?.replace(/(\d{4})(?=\d)/g, '$1 ') || ''
+                            }
+                            maxLength={14}
+                            disabled={isAadhaarVerified}
+                            placeholder="XXXX XXXX XXXX"
+                            onChange={(e) =>
+                              field.onChange(e.target.value.replace(/\D/g, ''))
+                            }
+                            className={`w-full h-16 bg-[#F8F9FA] border-0 rounded-2xl px-6 font-mono tracking-[0.4em] text-xl focus:ring-2 focus:ring-[#121212] transition-all ${isAadhaarVerified ? 'blur-[2px] opacity-40' : ''}`}
+                          />
+                        )}
+                      />
+                      {!isAadhaarVerified && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleVerifyAadhaar();
+                          }}
+                          disabled={
+                            isVerifyingAadhaar || aadhaarNumber?.length < 12
+                          }
+                          className="absolute right-3 top-1/2 -translate-y-1/2 h-10 px-8 rounded-xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#0065FF] transition-colors disabled:opacity-50"
+                        >
+                          {isVerifyingAadhaar ? (
+                            <Loader2 size={14} className="animate-spin" />
+                          ) : (
+                            'Verify'
+                          )}
+                        </button>
                       )}
-                    />
-                    {!isAadhaarVerified && (
-                      <button
-                        type="button"
-                        onClick={handleVerifyAadhaar}
-                        disabled={isVerifyingAadhaar || aadhaarNumber?.length < 12}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 h-10 px-8 rounded-xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#0065FF] transition-colors disabled:opacity-50"
-                      >
-                        {isVerifyingAadhaar ? <Loader2 size={14} className="animate-spin" /> : 'Verify'}
-                      </button>
-                    )}
-                  </div>
+                    </div>
+                  </label>
                   {errors.aadhaarNumber && (
-                    <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{errors.aadhaarNumber.message}</p>
+                    <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
+                      {errors.aadhaarNumber.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -463,46 +502,62 @@ const KYCStep = ({ onNext }) => {
                 </div>
                 <h3 className="text-xl font-serif italic text-[#121212]">Secondary Proof</h3>
               </div>
-              
+
               <div className="space-y-8">
                 <div className="space-y-3">
-                  <label htmlFor="id-type-select" className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">ID Type</label>
-                  <Controller
-                    name="idType"
-                    control={control}
-                    render={({ field }) => (
-                      <select
-                        {...field}
-                        value={field.value || ''}
-                        id="id-type-select"
-                        className="input-premium h-14 rounded-xl"
-                      >
-                        <option value="">Select ID Type</option>
-                        <option value="passport">Indian Passport</option>
-                        <option value="voter-id">Voter Identity Card</option>
-                        <option value="driving-license">Driving License</option>
-                      </select>
-                    )}
-                  />
-                  {errors.idType && <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{errors.idType.message}</p>}
+                  <label className="block space-y-3 cursor-pointer">
+                    <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
+                      ID Type
+                    </span>
+                    <Controller
+                      name="idType"
+                      control={control}
+                      render={({ field }) => (
+                        <select
+                          {...field}
+                          value={field.value || ''}
+                          id="id-type-select"
+                          className="input-premium h-14 rounded-xl"
+                        >
+                          <option value="">Select ID Type</option>
+                          <option value="passport">Indian Passport</option>
+                          <option value="voter-id">Voter Identity Card</option>
+                          <option value="driving-license">Driving License</option>
+                        </select>
+                      )}
+                    />
+                  </label>
+                  {errors.idType && (
+                    <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
+                      {errors.idType.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-3">
-                  <label htmlFor="id-number-input" className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Document Number</label>
-                  <Controller
-                    name="idNumber"
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        value={field.value || ''}
-                        id="id-number-input"
-                        placeholder="Enter ID Number"
-                        className="input-premium h-14 rounded-xl"
-                      />
-                    )}
-                  />
-                  {errors.idNumber && <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{errors.idNumber.message}</p>}
+                  <label className="block space-y-3 cursor-pointer">
+                    <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
+                      Document Number
+                    </span>
+                    <Controller
+                      name="idNumber"
+                      control={control}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          value={field.value || ''}
+                          id="id-number-input"
+                          placeholder="Enter ID Number"
+                          className="input-premium h-14 rounded-xl"
+                        />
+                      )}
+                    />
+                  </label>
+                  {errors.idNumber && (
+                    <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
+                      {errors.idNumber.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -546,18 +601,26 @@ const KYCStep = ({ onNext }) => {
               </div>
               <div>
                 <h3 className="text-xl font-serif italic text-[#121212]">Biometric Matching</h3>
-                <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">Real-time facial identity match</p>
+                <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">
+                  Real-time facial identity match
+                </p>
               </div>
             </div>
 
             <div className="p-10 rounded-[3rem] border border-[#EEEEEE] bg-[#FAFAFA] flex flex-col md:flex-row items-center gap-12">
               <div className="relative w-40 h-40 rounded-full border-4 border-white shadow-2xl overflow-hidden bg-white">
                 {documents.selfie ? (
-                  <img src={documents.selfie.preview} alt="selfie" className="w-full h-full object-cover" />
+                  <img
+                    src={documents.selfie.preview}
+                    alt="selfie"
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center text-[#888888] gap-2">
                     <Camera size={28} />
-                    <span className="text-[8px] font-black uppercase tracking-widest text-center px-4">Biometric Scan Required</span>
+                    <span className="text-[8px] font-black uppercase tracking-widest text-center px-4">
+                      Biometric Scan Required
+                    </span>
                   </div>
                 )}
                 {isVerifyingFace && (
@@ -574,15 +637,18 @@ const KYCStep = ({ onNext }) => {
                 <div className="space-y-2">
                   <h4 className="text-lg font-bold">Institutional Face Match</h4>
                   <p className="text-xs text-[#888888] leading-relaxed max-w-xl">
-                    Our proprietary AI protocols verify your live identity against institutional government databases. 
-                    Absolute privacy is maintained through 256-bit encryption.
+                    Our proprietary AI protocols verify your live identity against institutional
+                    government databases. Absolute privacy is maintained through 256-bit encryption.
                   </p>
                 </div>
 
                 {!isFaceVerified ? (
                   <div className="flex flex-col sm:flex-row gap-4">
                     <div className="relative">
-                      <button type="button" className="btn-secondary h-14 px-10 overflow-hidden relative border border-[#EEEEEE]">
+                      <button
+                        type="button"
+                        className="btn-secondary h-14 px-10 overflow-hidden relative border border-[#EEEEEE]"
+                      >
                         <Camera size={16} className="mr-2" />
                         Capture Selfie
                         <input
@@ -612,12 +678,7 @@ const KYCStep = ({ onNext }) => {
                       {isVerifyingFace ? (
                         <div className="flex items-center gap-3">
                           <Loader2 size={16} className="animate-spin" />
-                          <span>
-                            MATCHING
-                            {' '}
-                            {Math.round(faceConfidence)}
-                            %
-                          </span>
+                          <span>MATCHING {Math.round(faceConfidence)}%</span>
                         </div>
                       ) : (
                         'Initialize Match'
@@ -630,8 +691,12 @@ const KYCStep = ({ onNext }) => {
                       <CheckCircle2 size={24} />
                     </div>
                     <div>
-                      <p className="text-xs font-black uppercase tracking-widest">Verification Successful</p>
-                      <p className="text-[10px] font-mono font-bold uppercase tracking-widest opacity-60">Identity Match Score: 98.4%</p>
+                      <p className="text-xs font-black uppercase tracking-widest">
+                        Verification Successful
+                      </p>
+                      <p className="text-[10px] font-mono font-bold uppercase tracking-widest opacity-60">
+                        Identity Match Score: 98.4%
+                      </p>
                     </div>
                   </div>
                 )}
@@ -640,7 +705,9 @@ const KYCStep = ({ onNext }) => {
           </section>
 
           {/* Hidden Submit */}
-          <button type="submit" id="wizard-submit-btn" className="hidden">Submit</button>
+          <button type="submit" id="wizard-submit-btn" className="hidden">
+            Submit
+          </button>
         </form>
       </div>
 
@@ -648,12 +715,18 @@ const KYCStep = ({ onNext }) => {
       <div className="pt-12 border-t border-[#EEEEEE] flex flex-col sm:flex-row justify-between items-center gap-8">
         <div className="flex items-center gap-3 text-[#121212]">
           <ShieldCheck size={16} className="text-[#0065FF]" />
-          <p className="text-[10px] font-black uppercase tracking-widest">AES-256 Encrypted Vaults</p>
+          <p className="text-[10px] font-black uppercase tracking-widest">
+            AES-256 Encrypted Vaults
+          </p>
         </div>
         <div className="flex gap-8 text-[#888888]">
-           <span className="text-[8px] font-mono uppercase tracking-widest">ISO 27001 Certified</span>
-           <span className="text-[8px] font-mono uppercase tracking-widest">GDPR Compliant</span>
-           <span className="text-[8px] font-mono uppercase tracking-widest">Real-time Biometric Match</span>
+          <span className="text-[8px] font-mono uppercase tracking-widest">
+            ISO 27001 Certified
+          </span>
+          <span className="text-[8px] font-mono uppercase tracking-widest">GDPR Compliant</span>
+          <span className="text-[8px] font-mono uppercase tracking-widest">
+            Real-time Biometric Match
+          </span>
         </div>
       </div>
     </div>
