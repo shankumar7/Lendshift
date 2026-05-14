@@ -26,6 +26,7 @@ const ErrorField = ({ error, touched }) => (
   </AnimatePresence>
 );
 
+const SectionHeader = ({ icon: Icon, title, desc }) => (
   <div className="space-y-4 mb-8 sm:mb-10">
     <div className="flex items-center gap-3 sm:gap-4">
       <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-[#F8F9FA] flex items-center justify-center text-[#121212]">
@@ -37,7 +38,9 @@ const ErrorField = ({ error, touched }) => (
       </div>
     </div>
   </div>
+);
 
+const InputWrapper = ({ label, id, children, error, touched, verified, isLoading }) => (
   <div className="space-y-2 group">
     <label htmlFor={id} className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40 group-focus-within:text-[#121212] transition-colors">
       {label}
@@ -321,7 +324,8 @@ const PersonalInfoStep = ({ onNext }) => {
                       id="mobileNumber"
                       maxLength={10}
                       disabled={isMobileVerified}
-                      placeholder="98765 43210"
+                      onChange={(e) => field.onChange(e.target.value.replace(/\D/g, ''))}
+                      placeholder="9876543210"
                       className="input-premium pl-16 pr-32"
                     />
                   )}
