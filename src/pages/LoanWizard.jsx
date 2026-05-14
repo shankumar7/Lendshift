@@ -69,11 +69,11 @@ const LoanWizard = () => {
   const visibleSteps = useMemo(() => {
     return STEPS.filter((step) => {
       if (step.id === 6) {
-        // Step 6 (Co-Applicant) is only required if amount > 300,000 for Personal Loan
+        // Step 6 (Co-Applicant) is only required if amount > 500,000 for Personal Loan
         // OR if it's a Home Loan (handled in schema, but we show it here)
         if (
           formData.loanSelection.loanType === 'personal' &&
-          formData.loanSelection.amount <= 300000
+          formData.loanSelection.amount <= 500000
         ) {
           return false;
         }

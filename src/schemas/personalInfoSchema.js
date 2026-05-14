@@ -22,15 +22,25 @@ const personalInfoSchema = z
       .string()
       .min(1, 'Date of birth is required')
       .refine((val) => {
-        const date = new Date(val);
+        const [year, month, day] = val.split('-').map(Number);
         const now = new Date();
-        let age = now.getFullYear() - date.getFullYear();
-        const m = now.getMonth() - date.getMonth();
-        if (m < 0 || (m === 0 && now.getDate() < date.getDate())) {
+        let age = now.getFullYear() - year;
+        const m = now.getMonth() + 1 - month;
+        if (m < 0 || (m === 0 && now.getDate() < day)) {
           age -= 1;
         }
-        return age >= 21 && age <= 65;
-      }, 'Age must be between 21 and 65 years'),
+        return age >= 21;
+      }, 'Applicant must be at least 21 years old')
+      .refine((val) => {
+        const [year, month, day] = val.split('-').map(Number);
+        const now = new Date();
+        let age = now.getFullYear() - year;
+        const m = now.getMonth() + 1 - month;
+        if (m < 0 || (m === 0 && now.getDate() < day)) {
+          age -= 1;
+        }
+        return age <= 65;
+      }, 'Applicant cannot be older than 65 years'),
     gender: z.enum(['male', 'female', 'non-binary', 'prefer-not-to-say'], {
       errorMap: () => ({ message: 'Please select your gender' }),
     }),
@@ -53,7 +63,12 @@ const personalInfoSchema = z
       .string()
       .trim()
       .length(10, 'PAN card must be 10 characters')
-      .regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN card format (e.g., ABCDE1234F)')
+      .regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i, 'Invalid PAN card format (e.g., ABCDE1234F)')
+      .refine((val) => {
+        if (val.length !== 10) return true; // Handled by length/regex
+        const validEntityTypes = ['C', 'P', 'H', 'F', 'A', 'T', 'B', 'L', 'J', 'G'];
+        return validEntityTypes.includes(val[3].toUpperCase());
+      }, 'PAN 4th character must indicate entity type (P for Individual, C for Company, etc.)')
       .transform((val) => val.toUpperCase()),
     aadhaar: z
       .string()

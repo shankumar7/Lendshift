@@ -230,8 +230,8 @@ const EmploymentStep = ({ onNext }) => {
             <button
               type="button"
               onClick={() => {
-                // eslint-disable-next-line no-alert
                 if (
+                  // eslint-disable-next-line no-alert
                   window.confirm('Switching profiles will clear current employment data. Proceed?')
                 ) {
                   const types = ['salaried', 'self-employed', 'business', 'freelancer', 'retired'];
