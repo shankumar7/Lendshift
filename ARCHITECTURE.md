@@ -101,6 +101,6 @@ Modals (Resume Application) utilize focus trapping to ensure that keyboard users
 ---
 
 <div align="center">
-  <p><strong>LendSwift | Institutional Engineering Division</strong></p>
+  <p><strong>Zetheta Algorithms Private Limited | Institutional Engineering Division</strong></p>
   <p>Revision: 2026.05.13 | Lead Architect: Antigravity</p>
 </div>

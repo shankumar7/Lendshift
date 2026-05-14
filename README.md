@@ -4,6 +4,12 @@ LendSwift is a production-ready, editorial-style fintech application engineered 
 
 ![LendSwift Hero Banner](./public/hero-banner.png)
 
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Zustand](https://img.shields.io/badge/Zustand-orange?style=for-the-badge)](https://github.com/pmndrs/zustand)
+[![Cypress](https://img.shields.io/badge/Cypress-17202C?style=for-the-badge&logo=cypress&logoColor=white)](https://www.cypress.io/)
+
 ---
 
 ## 💎 1. Design Philosophy: "Editorial Fintech"
@@ -11,7 +17,6 @@ LendSwift is a production-ready, editorial-style fintech application engineered 
 LendSwift departs from generic "SaaS dashboards," opting for a high-concept **Editorial Fintech** approach. This philosophy prioritizes the user as an institutional partner, not just a customer.
 
 ### Core Visual Pillars:
-
 - **Cinematic Experience**: Every transition is governed by physics-based Framer Motion orchestrations (spring stiffness: 100, damping: 30) to create a "living" interface.
 - **Premium Typography**:
   - _Serif_: **Instrument Serif** for display titles, conveying authority and history.
@@ -22,131 +27,118 @@ LendSwift departs from generic "SaaS dashboards," opting for a high-concept **Ed
 
 ---
 
-## 📱 2. Responsive Engineering Dossier (320px - 1920px)
+## 🚀 2. Quick Start
+
+Get LendSwift running locally in less than 2 minutes.
+
+### Prerequisites
+- **Node.js** (v18.0.0 or higher)
+- **npm** or **yarn**
+
+### Installation Steps
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/your-repo/lendswift.git
+   cd lendswift
+   ```
+
+2. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Launch Development Server**
+   ```bash
+   npm run dev
+   ```
+   The application will be available at `http://localhost:5173`.
+
+4. **Run Tests**
+   ```bash
+   # Open Cypress Dashboard
+   npm run cypress:open
+
+   # Run Headless Tests
+   npm run cypress:run
+   ```
+
+---
+
+## 📱 3. Responsive Engineering Dossier (320px - 1920px)
 
 LendSwift is engineered with a **Viewport-Specific UI Strategy**, ensuring that the high-fidelity aesthetic is never compromised regardless of device form factor.
 
-### 2.1 The Breakpoint Matrix:
-
-- **320px - 414px (Ultra-Mobile)**:
-  - _Strategy_: Vertical stacking of all dual-column components.
-  - _Typography_: Fluid scaling of `text-editorial` from `4xl` to `text-2xl`.
-  - _Ergonomics_: Expanded touch targets for all action buttons (minimum 56px height).
-- **768px (Tablet)**:
-  - _Strategy_: Intelligent side-by-side layouts for summary sidebars.
-  - _Navigation_: Wizard navigation shifts to a compact icon-based indicator to preserve vertical space.
-- **1024px - 1440px (Desktop)**:
-  - _Strategy_: Full dual-pane orchestration.
-  - _Grid_: 12-column institutional grid system with 2rem guttering.
-- **1920px+ (Ultra-Wide)**:
-  - _Strategy_: Content-centering with fixed-width containers (`max-w-7xl`) to prevent line-length readability degradation.
-
-### 2.2 Fluid Layout Logic:
-
-We utilize a combination of Tailwind's container queries and custom CSS variables to handle "Deceptively Simple" responsive challenges, such as the **Loan Selection Grid** which transitions from a 1-column stack to a 3-column high-density array without layout shift.
+### 3.1 The Breakpoint Matrix:
+- **320px - 414px (Ultra-Mobile)**: Vertical stacking, fluid scaling of `text-editorial` from `4xl` to `text-2xl`, and expanded touch targets (min 56px).
+- **768px (Tablet)**: Side-by-side layouts for summary sidebars, compact icon-based wizard indicators.
+- **1024px - 1440px (Desktop)**: Full dual-pane orchestration with a 12-column institutional grid.
+- **1920px+ (Ultra-Wide)**: Content-centering with `max-w-7xl` containers to maintain optimal line-length readability.
 
 ---
 
-## 🚀 3. Systems Architecture & Engineering Decisions
+## 🧠 4. Systems Architecture
 
-### 🧠 3.1 State Orchestration (Zustand)
-
+### 4.1 State Orchestration (Zustand)
 We utilize **Zustand** with the `persist` middleware for zero-boilerplate, high-performance state management.
-
-- **Atomic Updates**: State is segmented by section (`kyc`, `address`, `employment`), preventing global re-renders.
+- **Atomic Updates**: State is segmented by section to prevent global re-renders.
 - **Session Recovery**: LocalStorage persistence allows for instant "Resume Application" capability.
-- **Hydration Lifecycle**: Managed transition from local storage to UI rendering to prevent hydration mismatches.
 
-### 📋 3.2 Form Layer (React Hook Form)
+### 4.2 Form Layer (React Hook Form & Zod)
+- **React Hook Form**: Handles complex input validation using uncontrolled inputs for maximum performance.
+- **Zod**: Our primary source of truth for statutory data integrity. Features strict pattern matching for PAN/Aadhaar and cross-field dependencies.
 
-LendSwift uses **React Hook Form (RHF)** to handle complex input validation without performance bottlenecks.
-
-- **Uncontrolled Inputs**: Eliminates keystroke lag by bypassing the React render cycle for every character.
-- **Validation-on-Blur**: Enhances UX by only displaying errors after the user has finished interacting with a field.
-
-### 🛡️ 3.3 Validation Orchestration (Zod)
-
-**Zod** is our primary source of truth for statutory data integrity.
-
-- **Strict Pattern Matching**: Institutional-grade regex for PAN and Aadhaar validation.
-- **Cross-Field Dependencies**: Complex logic to ensure co-applicant details are only requested when loan tiers exceed ₹50L.
+### 4.3 Underwriting Engine
+The `useUnderwriting` hook calculates real-time **Debt-to-Income (DTI)** ratios and **Confidence Scores** based on user inputs, providing immediate eligibility feedback.
 
 ---
 
-## 🛡️ 4. Institutional Security & Compliance
-
-Security is not a feature; it is the foundation. LendSwift simulates high-level security protocols:
-
-- **AES-256 Simulation**: All data transmission phases include an encryption simulation layer.
-- **Biometric Matching**: AI-driven face match simulation with confidence interval scoring.
-- **GDPR & ISO Compliance**: UI-level compliance markers and disclosure modals for data privacy transparency.
-- **Statutory Vaults**: Verification badges confirm data matching against (simulated) government databases.
-
----
-
-## 📂 5. Technical Walkthrough: The 8-Step Wizard
-
-### Step 01: Loan Selection
-
-- **Logic**: Tiered financial configuration (₹25L to ₹5Cr).
-- **Feature**: Real-time EMI & Interest projection.
-
-### Step 02: Personal Intelligence
-
-- **Logic**: Primary identity capture with mobile verification simulation.
-
-### Step 03: Institutional KYC
-
-- **Logic**: Biometric & Statutory validation (PAN/Aadhaar matching).
-
-### Step 04: Address Validation
-
-- **Logic**: Dual-address management with GPS-based geo-spatial verification.
-
-### Step 05: Employment Analytics
-
-- **Logic**: Dynamic form branching based on profile type (Salaried, Business, etc.).
-
-### Step 06: Co-Applicant Integration
-
-- **Logic**: Joint-liability modeling with digital signature capture.
-
-### Step 07: Document Dossier
-
-- **Logic**: Multi-file repository with institutional-grade upload progress.
-
-### Step 08: Final Review & Submission
-
-- **Logic**: Global application audit and institutional transmission pulse.
-
----
-
-## 🧪 6. Quality Assurance & Production Roadmap
-
-### 6.1 Testing Suite
-
-- **Cypress E2E**: Automated journeys across all 8 steps.
-- **Viewport Auditing**: Visual regression checks for all 7 target breakpoints.
-- **A11y**: WCAG 2.1 AA compliance verified via `eslint-plugin-jsx-a11y`.
-
-### 6.2 Directory Structure
+## 📂 5. Project Structure
 
 ```text
 src/
-├── components/       # Atomic UI elements
-├── forms/            # The 8 core wizard steps
+├── components/       # Atomic UI elements (Buttons, Inputs, Cards)
+├── forms/            # The 8 core wizard steps (KYC, Employment, etc.)
 ├── hooks/            # Business logic (Underwriting, AutoSave, A11y)
 ├── pages/            # Route containers (Wizard, Landing, Success)
-├── schemas/          # Zod validation schemas
-├── store/            # Zustand state engine
-└── styles/           # Global design tokens
+├── schemas/          # Zod validation schemas for every form step
+├── store/            # Zustand state engine & persistence logic
+├── styles/           # Global design tokens & Tailwind extensions
+├── utils/            # Formatting, encryption, and math helpers
+└── tests/            # Component and integration tests
 ```
+
+---
+
+## 🛠️ 6. Development Scripts
+
+- `npm run dev`: Starts the Vite development server.
+- `npm run build`: Generates the production-ready bundle.
+- `npm run lint`: Runs ESLint to check for code quality and accessibility violations.
+- `npm run lint:fix`: Automatically fixes linting issues where possible.
+- `npm run format`: Formats code using Prettier.
+- `npm run cypress:open`: Launches the interactive Cypress test runner.
+- `npm run cypress:run`: Executes E2E tests in headless mode.
+
+---
+
+## 🧪 7. Quality & Compliance
+
+- **Accessibility**: WCAG 2.1 AA compliance verified via `eslint-plugin-jsx-a11y`.
+- **E2E Testing**: Full coverage for the 8-step journey via Cypress.
+- **Statutory Security**: Simulated AES-256 encryption and biometric face-matching protocols.
+
+---
+
+## 📄 8. License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
 <div align="center">
   <p>Engineered with precision for the next generation of global fintech.</p>
-  <p><strong>LendSwift | Institutional Fintech Engineering Division</strong></p>
+  <p><strong>Zetheta Algorithms Private Limited | Institutional Fintech Engineering Division</strong></p>
 </div>
 
 ![LendSwift Footer Banner](./public/footer-banner.png)
