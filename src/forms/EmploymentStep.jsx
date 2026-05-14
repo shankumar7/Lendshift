@@ -3,21 +3,17 @@ import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Briefcase,
   Building2,
   Gem,
   Coffee,
   Heart,
   TrendingUp,
   ShieldCheck,
-  Banknote,
-  PieChart,
   Target,
   FileCheck,
   AlertCircle,
   Loader2,
   CheckCircle2,
-  ArrowUpRight,
   Info,
 } from 'lucide-react';
 import useLoanStore from '../store/useLoanStore';
@@ -65,7 +61,6 @@ const EmploymentStep = ({ onNext }) => {
     control,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors, touchedFields, isSubmitted },
   } = useForm({
     resolver: zodResolver(employmentSchema),
@@ -85,7 +80,7 @@ const EmploymentStep = ({ onNext }) => {
   const ifsc = useWatch({ control, name: 'ifscCode' });
 
   // AUTO-SAVE LOGIC
-  const allValues = watch();
+  const allValues = useWatch({ control });
   useEffect(() => {
     const timer = setTimeout(() => {
       updateFormData('employment', allValues);
@@ -140,8 +135,8 @@ const EmploymentStep = ({ onNext }) => {
   // IFSC Mock Lookup
   useEffect(() => {
     if (ifsc?.length === 11) {
-      setIsIfscVerifying(true);
-      setTimeout(() => {
+      const timer = setTimeout(() => setIsIfscVerifying(true), 0);
+      const lookupTimer = setTimeout(() => {
         setBankInfo({
           name: 'HDFC BANK LIMITED',
           branch: 'CENTRAL AVENUE, MUMBAI',
@@ -151,9 +146,12 @@ const EmploymentStep = ({ onNext }) => {
         setValue('bankName', 'HDFC BANK LIMITED');
         setIsIfscVerifying(false);
       }, 1500);
-    } else {
-      setBankInfo(null);
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(lookupTimer);
+      };
     }
+    return undefined;
   }, [ifsc, setValue]);
 
   const onSubmit = (data) => {
@@ -178,6 +176,31 @@ const EmploymentStep = ({ onNext }) => {
     }
   };
 
+  const getRiskStatusStyles = () => {
+    switch (metrics.riskStatus) {
+      case 'success':
+        return 'border-[#2E7D32] text-[#4CAF50]';
+      case 'warning':
+        return 'border-[#FF8F00] text-[#FFB300]';
+      default:
+        return 'border-[#C62828] text-[#FF5252]';
+    }
+  };
+
+  const getDtiProgressColor = () => {
+    switch (metrics.riskStatus) {
+      case 'success':
+        return 'bg-[#4CAF50]';
+      case 'warning':
+        return 'bg-[#FFB300]';
+      default:
+        return 'bg-[#FF5252]';
+    }
+  };
+
+  const riskStatusStyles = getRiskStatusStyles();
+  const dtiProgressColor = getDtiProgressColor();
+
   return (
     <div className="flex flex-col xl:flex-row gap-12 items-start">
       <form onSubmit={handleSubmit(onSubmit)} className="flex-1 space-y-12">
@@ -200,11 +223,29 @@ const EmploymentStep = ({ onNext }) => {
               </h3>
             </div>
           </div>
-          <div className="flex flex-col items-center sm:items-end w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-t-0 border-white/10">
+          <div className="flex flex-col items-center sm:items-end w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-t-0 border-white/10 gap-2">
             <p className="text-[10px] font-black uppercase tracking-widest text-[#0065FF]">
               Financial Category
             </p>
-            <p className="text-xs font-mono opacity-60">CAT-A Approved</p>
+            <button
+              type="button"
+              onClick={() => {
+                // eslint-disable-next-line no-alert
+                if (
+                  window.confirm('Switching profiles will clear current employment data. Proceed?')
+                ) {
+                  const types = ['salaried', 'self-employed', 'business', 'freelancer', 'retired'];
+                  const currentIndex = types.indexOf(employmentType);
+                  const nextType = types[(currentIndex + 1) % types.length];
+                  useLoanStore.getState().clearEmploymentData();
+                  setValue('type', nextType);
+                  updateFormData('loanSelection', { employmentType: nextType });
+                }
+              }}
+              className="text-[9px] font-mono text-white/40 hover:text-white transition-colors underline underline-offset-4 uppercase tracking-widest"
+            >
+              Switch Profile
+            </button>
           </div>
         </div>
 
@@ -671,13 +712,7 @@ const EmploymentStep = ({ onNext }) => {
                 <h4 className="text-xl sm:text-2xl font-serif italic">Underwriting</h4>
               </div>
               <div
-                className={`px-4 py-2 rounded-full border text-[9px] sm:text-[10px] font-black uppercase tracking-widest ${
-                  metrics.riskStatus === 'success'
-                    ? 'border-[#2E7D32] text-[#4CAF50]'
-                    : metrics.riskStatus === 'warning'
-                      ? 'border-[#FF8F00] text-[#FFB300]'
-                      : 'border-[#C62828] text-[#FF5252]'
-                }`}
+                className={`px-4 py-2 rounded-full border text-[9px] sm:text-[10px] font-black uppercase tracking-widest ${riskStatusStyles}`}
               >
                 {metrics.risk} Risk
               </div>
@@ -693,13 +728,7 @@ const EmploymentStep = ({ onNext }) => {
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${Math.min(100, metrics.dti)}%` }}
-                    className={`h-full ${
-                      metrics.riskStatus === 'success'
-                        ? 'bg-[#4CAF50]'
-                        : metrics.riskStatus === 'warning'
-                          ? 'bg-[#FFB300]'
-                          : 'bg-[#FF5252]'
-                    }`}
+                    className={`h-full ${dtiProgressColor}`}
                   />
                 </div>
               </div>

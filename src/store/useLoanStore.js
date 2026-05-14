@@ -8,6 +8,7 @@ const useLoanStore = create(
       currentStep: 1,
       lastSaved: null,
       isResumeModalOpen: false,
+      isCorrupted: false,
       isInitialized: false, // For session recovery lifecycle
 
       // Form Data Structure
@@ -189,6 +190,41 @@ const useLoanStore = create(
           },
         })),
 
+      clearEmploymentData: () =>
+        set((state) => ({
+          formData: {
+            ...state.formData,
+            employment: {
+              ...state.formData.employment,
+              employerName: '',
+              designation: '',
+              industryType: '',
+              workExp: '',
+              monthlyIncome: 0,
+              salaryCreditBank: '',
+              salaryCreditDate: '',
+              employmentStatus: '',
+              professionType: '',
+              yearsInPractice: '',
+              annualRevenue: 0,
+              isGstRegistered: false,
+              gstNumber: '',
+              businessCategory: '',
+              businessName: '',
+              businessType: '',
+              annualTurnover: 0,
+              employeeCount: '',
+              yearsInOperation: '',
+              primarySkill: '',
+              platformsUsed: '',
+              clientBaseType: '',
+              pensionAmount: 0,
+              retirementYear: '',
+              previousProfession: '',
+            },
+          },
+        })),
+
       submitApplication: async () => {
         set((state) => ({
           formData: {
@@ -225,6 +261,7 @@ const useLoanStore = create(
       resetApplication: () =>
         set({
           currentStep: 1,
+          isCorrupted: false,
           formData: {
             loanSelection: {
               loanType: 'personal',
@@ -299,7 +336,17 @@ const useLoanStore = create(
               geoCoords: null,
               addressProofType: '',
             },
-            employment: { type: '', employerName: '', monthlyIncome: '', workExp: '' },
+            employment: {
+              type: '',
+              employerName: '',
+              monthlyIncome: 0,
+              workExp: '',
+              ifscCode: '',
+              bankName: '',
+              accountType: '',
+              monthlyObligations: 0,
+              existingEmis: 0,
+            },
             coApplicant: {
               hasCoApplicant: false,
               relation: '',
@@ -326,6 +373,14 @@ const useLoanStore = create(
               secondaryId: null,
               selfie: null,
               addressProof: null,
+              incomeProof: null,
+              bankStatements: null,
+              propertyPapers: null,
+              gstCertificate: null,
+              itrDocs: null,
+              primarySignature: null,
+              agreementAccepted: false,
+              verificationStatus: {},
             },
             submission: { status: 'idle', timestamp: null },
           },
@@ -338,6 +393,13 @@ const useLoanStore = create(
     {
       name: 'lendswift-loan-app',
       storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: () => {
+        return (rehydratedState, error) => {
+          if (error || !rehydratedState) {
+            useLoanStore.setState({ isCorrupted: true });
+          }
+        };
+      },
     }
   )
 );

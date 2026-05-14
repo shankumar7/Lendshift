@@ -17,6 +17,7 @@ LendSwift is a production-ready, editorial-style fintech application engineered 
 LendSwift departs from generic "SaaS dashboards," opting for a high-concept **Editorial Fintech** approach. This philosophy prioritizes the user as an institutional partner, not just a customer.
 
 ### Core Visual Pillars:
+
 - **Cinematic Experience**: Every transition is governed by physics-based Framer Motion orchestrations (spring stiffness: 100, damping: 30) to create a "living" interface.
 - **Premium Typography**:
   - _Serif_: **Instrument Serif** for display titles, conveying authority and history.
@@ -32,29 +33,35 @@ LendSwift departs from generic "SaaS dashboards," opting for a high-concept **Ed
 Get LendSwift running locally in less than 2 minutes.
 
 ### Prerequisites
+
 - **Node.js** (v18.0.0 or higher)
 - **npm** or **yarn**
 
 ### Installation Steps
 
 1. **Clone the Repository**
+
    ```bash
    git clone https://github.com/your-repo/lendswift.git
    cd lendswift
    ```
 
 2. **Install Dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Launch Development Server**
+
    ```bash
    npm run dev
    ```
+
    The application will be available at `http://localhost:5173`.
 
 4. **Run Tests**
+
    ```bash
    # Open Cypress Dashboard
    npm run cypress:open
@@ -70,6 +77,7 @@ Get LendSwift running locally in less than 2 minutes.
 LendSwift is engineered with a **Viewport-Specific UI Strategy**, ensuring that the high-fidelity aesthetic is never compromised regardless of device form factor.
 
 ### 3.1 The Breakpoint Matrix:
+
 - **320px - 414px (Ultra-Mobile)**: Vertical stacking, fluid scaling of `text-editorial` from `4xl` to `text-2xl`, and expanded touch targets (min 56px).
 - **768px (Tablet)**: Side-by-side layouts for summary sidebars, compact icon-based wizard indicators.
 - **1024px - 1440px (Desktop)**: Full dual-pane orchestration with a 12-column institutional grid.
@@ -80,15 +88,19 @@ LendSwift is engineered with a **Viewport-Specific UI Strategy**, ensuring that 
 ## 🧠 4. Systems Architecture
 
 ### 4.1 State Orchestration (Zustand)
+
 We utilize **Zustand** with the `persist` middleware for zero-boilerplate, high-performance state management.
+
 - **Atomic Updates**: State is segmented by section to prevent global re-renders.
 - **Session Recovery**: LocalStorage persistence allows for instant "Resume Application" capability.
 
 ### 4.2 Form Layer (React Hook Form & Zod)
+
 - **React Hook Form**: Handles complex input validation using uncontrolled inputs for maximum performance.
 - **Zod**: Our primary source of truth for statutory data integrity. Features strict pattern matching for PAN/Aadhaar and cross-field dependencies.
 
 ### 4.3 Underwriting Engine
+
 The `useUnderwriting` hook calculates real-time **Debt-to-Income (DTI)** ratios and **Confidence Scores** based on user inputs, providing immediate eligibility feedback.
 
 ---

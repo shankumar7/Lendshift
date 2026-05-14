@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDropzone } from 'react-dropzone';
@@ -130,7 +130,6 @@ const DocumentStep = ({ onNext }) => {
     control,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(documentSchema),
@@ -140,8 +139,8 @@ const DocumentStep = ({ onNext }) => {
     },
   });
 
-  const agreementAccepted = watch('agreementAccepted');
-  const primarySignature = watch('primarySignature');
+  const agreementAccepted = useWatch({ control, name: 'agreementAccepted' });
+  const primarySignature = useWatch({ control, name: 'primarySignature' });
 
   // Dynamic Requirements Calculation
   const requiredDocs = useMemo(() => {
@@ -153,10 +152,51 @@ const DocumentStep = ({ onNext }) => {
     return list;
   }, [formData.loanSelection]);
 
+  const compressImage = (file) => {
+    return new Promise((resolve) => {
+      if (file.type === 'application/pdf' || file.size < 1024 * 1024) {
+        resolve(file);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 1200;
+          const scaleSize = MAX_WIDTH / img.width;
+          canvas.width = MAX_WIDTH;
+          canvas.height = img.height * scaleSize;
+
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          canvas.toBlob(
+            (blob) => {
+              const compressedFile = new File([blob], file.name, {
+                type: 'image/jpeg',
+                lastModified: Date.now(),
+              });
+              resolve(compressedFile);
+            },
+            'image/jpeg',
+            0.7
+          );
+        };
+      };
+    });
+  };
+
   const handleUpload = useCallback(
-    (id, file) => {
-      updateFormData('documents', { [id]: file });
+    async (id, file) => {
       setProcessingDocs((prev) => ({ ...prev, [id]: 'processing' }));
+
+      // Performance Attack Guard: Compression
+      const processedFile = await compressImage(file);
+      updateFormData('documents', { [id]: processedFile });
 
       // Simulate OCR & Validation
       setTimeout(() => {

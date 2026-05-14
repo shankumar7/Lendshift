@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -92,7 +92,7 @@ const LoanSelectionStep = ({ onNext }) => {
 
   // AUTO-SAVE LOGIC: Sync form values to global store on change
   const allValues = useWatch({ control });
-  React.useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {
       updateFormData('loanSelection', allValues);
     }, 1000);

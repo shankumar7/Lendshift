@@ -1,6 +1,6 @@
 // Refreshed: 2026-05-14T13:33:40Z
 import React, { useState, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -163,7 +163,6 @@ const AddressStep = ({ onNext }) => {
     control,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors, isValid },
   } = useForm({
     resolver: zodResolver(addressSchema),
@@ -171,15 +170,15 @@ const AddressStep = ({ onNext }) => {
     mode: 'onBlur',
   });
 
-  const currentAddress = watch('current');
-  const isPermanentSameAsCurrent = watch('isPermanentSameAsCurrent');
-  const residenceType = watch('current.residenceType');
-  const durationAtAddress = watch('current.durationAtAddress');
-  const isGeoVerified = watch('isGeoVerified');
-  const pincode = watch('current.pincode');
+  const currentAddress = useWatch({ control, name: 'current' });
+  const isPermanentSameAsCurrent = useWatch({ control, name: 'isPermanentSameAsCurrent' });
+  const residenceType = useWatch({ control, name: 'current.residenceType' });
+  const durationAtAddress = useWatch({ control, name: 'current.durationAtAddress' });
+  const isGeoVerified = useWatch({ control, name: 'isGeoVerified' });
+  const pincode = useWatch({ control, name: 'current.pincode' });
 
   // AUTO-SAVE LOGIC: Sync form values to global store on change
-  const allValues = watch();
+  const allValues = useWatch({ control });
   useEffect(() => {
     const timer = setTimeout(() => {
       updateFormData('address', allValues);

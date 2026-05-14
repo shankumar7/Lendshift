@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { History, Sparkles, X, ArrowRight } from 'lucide-react';
 import useLoanStore from '../store/useLoanStore';
 
@@ -100,10 +100,7 @@ const ResumeModal = () => {
               className="group h-16 rounded-2xl bg-white text-[#121212] text-[10px] font-black uppercase tracking-widest flex items-center justify-between px-8 hover:scale-[1.02] transition-all"
             >
               <span>Continue Application</span>
-              <ArrowRight
-                size={16}
-                className="group-hover:translate-x-1 transition-transform"
-              />
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </button>
             <button
               type="button"

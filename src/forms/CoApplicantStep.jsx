@@ -1,25 +1,21 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import SignatureCanvas from 'react-signature-canvas';
 import {
   Users,
-  ShieldCheck,
   Fingerprint,
   Smartphone,
   Mail,
-  Briefcase,
   TrendingUp,
-  AlertCircle,
   CheckCircle2,
   Loader2,
   Trash2,
   PenTool,
   Lock,
-  ArrowRight,
-  Info,
   Scale,
+  Briefcase,
 } from 'lucide-react';
 import useLoanStore from '../store/useLoanStore';
 import coApplicantSchema from '../schemas/coApplicantSchema';
@@ -76,7 +72,6 @@ const CoApplicantStep = ({ onNext }) => {
     aadhaar: formData.coApplicant.isAadhaarVerified ? 'success' : 'idle',
   });
 
-  const [otpSent, setOtpSent] = useState(false);
   const [otpTimer, setOtpTimer] = useState(0);
 
   // Gating Logic
@@ -92,7 +87,6 @@ const CoApplicantStep = ({ onNext }) => {
     control,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors, touchedFields, isSubmitted },
   } = useForm({
     resolver: zodResolver(coApplicantSchema),
@@ -103,14 +97,16 @@ const CoApplicantStep = ({ onNext }) => {
     mode: 'onBlur',
   });
 
-  const hasCoApplicant = watch('hasCoApplicant');
-  const coIncome = watch('monthlyIncome') || 0;
-  const coEmis = watch('existingEmis') || 0;
-  const pan = watch('pan');
-  const aadhaar = watch('aadhaar');
+  const hasCoApplicant = useWatch({ control, name: 'hasCoApplicant' });
+  const coIncome = useWatch({ control, name: 'monthlyIncome' }) || 0;
+  const coEmis = useWatch({ control, name: 'existingEmis' }) || 0;
+  const pan = useWatch({ control, name: 'pan' });
+  const aadhaar = useWatch({ control, name: 'aadhaar' });
+
+  const mobile = useWatch({ control, name: 'mobile' });
 
   // Auto-save
-  const allValues = watch();
+  const allValues = useWatch({ control });
   useEffect(() => {
     const timer = setTimeout(() => {
       updateFormData('coApplicant', allValues);
@@ -163,7 +159,6 @@ const CoApplicantStep = ({ onNext }) => {
   };
 
   const handleSendOtp = () => {
-    setOtpSent(true);
     setOtpTimer(30);
     simulateVerification('mobile');
   };
@@ -191,6 +186,18 @@ const CoApplicantStep = ({ onNext }) => {
     updateFormData('coApplicant', data);
     onNext();
   };
+
+  const getStatusBadgeStyles = () => {
+    switch (metrics.status) {
+      case 'Strong':
+        return 'border-[#2E7D32] text-[#4CAF50]';
+      case 'Stable':
+        return 'border-[#FF8F00] text-[#FFB300]';
+      default:
+        return 'border-[#C62828] text-[#FF5252]';
+    }
+  };
+  const statusBadgeStyles = getStatusBadgeStyles();
 
   if (!hasCoApplicant && !isRequired) {
     return (
@@ -356,7 +363,7 @@ const CoApplicantStep = ({ onNext }) => {
                 <button
                   type="button"
                   onClick={handleSendOtp}
-                  disabled={otpTimer > 0 || !watch('mobile')}
+                  disabled={otpTimer > 0 || !mobile}
                   className="px-6 h-14 sm:h-auto rounded-xl sm:rounded-2xl bg-[#121212] text-white text-[9px] font-black uppercase tracking-widest disabled:opacity-20"
                 >
                   {otpTimer > 0 ? `${otpTimer}s` : 'Verify'}
@@ -623,13 +630,7 @@ const CoApplicantStep = ({ onNext }) => {
                 <h4 className="text-2xl font-serif italic">Liability Score</h4>
               </div>
               <div
-                className={`px-4 py-2 rounded-full border text-[10px] font-black uppercase tracking-widest ${
-                  metrics.status === 'Strong'
-                    ? 'border-[#2E7D32] text-[#4CAF50]'
-                    : metrics.status === 'Stable'
-                      ? 'border-[#FF8F00] text-[#FFB300]'
-                      : 'border-[#C62828] text-[#FF5252]'
-                }`}
+                className={`px-4 py-2 rounded-full border text-[10px] font-black uppercase tracking-widest ${statusBadgeStyles}`}
               >
                 {metrics.status}
               </div>

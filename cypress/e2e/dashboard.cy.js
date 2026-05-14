@@ -1,23 +1,18 @@
-describe('LendSwift Dashboard', () => {
+describe('LendSwift Landing Page', () => {
   beforeEach(() => {
     cy.visit('/');
   });
 
-  it('should display the welcome message', () => {
-    cy.get('h1').should('contain', 'Welcome back, Alex!');
+  it('should display the main headline', () => {
+    cy.get('h1').should('contain', 'Capital that');
   });
 
-  it('should navigate to the loan application wizard', () => {
-    cy.contains('New Application').click();
+  it('should navigate to the loan application wizard via Apply link', () => {
+    cy.get('nav').contains(/Apply/i).click();
     cy.url().should('include', '/apply');
-    cy.get('h1').should('contain', 'Loan Application');
   });
 
-  it('should toggle dark mode', () => {
-    cy.get('html').should('not.have.class', 'dark');
-    cy.contains('Dark Mode').click();
-    cy.get('html').should('have.class', 'dark');
-    cy.contains('Light Mode').click();
-    cy.get('html').should('not.have.class', 'dark');
+  it('should display the footer with company name', () => {
+    cy.get('footer').should('contain', 'Zetheta Algorithms Private Limited');
   });
 });

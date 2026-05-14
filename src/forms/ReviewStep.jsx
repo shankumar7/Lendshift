@@ -6,22 +6,17 @@ import {
   Edit3,
   CheckCircle2,
   Lock,
-  FileText,
   User,
   MapPin,
   Briefcase,
   Users,
-  PenTool,
   Loader2,
   Scan,
-  Database,
-  Shield,
   FileCheck,
   Download,
   PartyPopper,
   Clock,
   ArrowRight,
-  Info,
   X,
   CreditCard,
 } from 'lucide-react';
@@ -54,20 +49,20 @@ const ReviewSection = ({ title, icon: Icon, data, onEdit, isComplete }) => (
     </div>
 
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-      {Object.entries(data).map(([key, value]) => (
-        <div key={key} className="space-y-1">
-          <p className="text-[9px] font-black uppercase tracking-widest text-[#888888]">
-            {key.replace(/([A-Z])/g, ' $1')}
-          </p>
-          <p className="text-xs font-bold text-[#121212] truncate">
-            {typeof value === 'boolean'
-              ? value
-                ? 'Yes'
-                : 'No'
-              : value || '—'}
-          </p>
-        </div>
-      ))}
+      {Object.entries(data).map(([key, value]) => {
+        let displayValue = value || '—';
+        if (typeof value === 'boolean') {
+          displayValue = value ? 'Yes' : 'No';
+        }
+        return (
+          <div key={key} className="space-y-1">
+            <p className="text-[9px] font-black uppercase tracking-widest text-[#888888]">
+              {key.replace(/([A-Z])/g, ' $1')}
+            </p>
+            <p className="text-xs font-bold text-[#121212] truncate">{displayValue}</p>
+          </div>
+        );
+      })}
     </div>
   </div>
 );
@@ -204,10 +199,7 @@ const ReviewStep = () => {
             className="h-16 px-12 rounded-2xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-4 group"
           >
             Download Summary{' '}
-            <Download
-              size={16}
-              className="group-hover:translate-y-1 transition-transform"
-            />
+            <Download size={16} className="group-hover:translate-y-1 transition-transform" />
           </button>
           <button
             type="button"
@@ -232,8 +224,8 @@ const ReviewStep = () => {
           <div className="relative">
             <div className="absolute top-0 left-[15px] bottom-0 w-0.5 bg-[#EEEEEE]" />
             <div className="space-y-10 relative">
-              {formData.submission.tracking.map((t, i) => (
-                <div key={i} className="flex gap-6 items-start">
+              {formData.submission.tracking.map((t) => (
+                <div key={t.stage} className="flex gap-6 items-start">
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center relative z-10 ${t.status === 'completed' ? 'bg-[#121212] text-white' : 'bg-white border-2 border-[#EEEEEE] text-[#888888]'}`}
                   >
@@ -290,7 +282,7 @@ const ReviewStep = () => {
         <div className="w-full max-w-md space-y-4 relative z-10">
           {stages.map((label, i) => (
             <SubmissionStep
-              key={i}
+              key={label}
               label={label}
               status={i < submissionStage ? 'complete' : 'loading'}
             />

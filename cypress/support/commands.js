@@ -2,76 +2,91 @@
 // Custom Commands for LendSwift Onboarding
 // ***********************************************
 
-Cypress.Commands.add('fillLoanSelection', (type = 'personal', amount = '500000') => {
-  cy.get('input[type="radio"]').each(($el) => {
-    if ($el.val() === type) cy.wrap($el).click({ force: true });
-  });
-  cy.get('input[type="range"]').invoke('val', amount).trigger('change');
-  cy.get('button')
-    .contains(/continue/i)
-    .click();
+Cypress.Commands.add('fillLoanSelection', (title = 'Personal', amount = '500000') => {
+  cy.contains(title, { timeout: 10000 }).click({ force: true });
+  cy.get('input#amount-slider').invoke('val', amount).trigger('input').trigger('change');
+  cy.get('input#tenure-slider').invoke('val', 12).trigger('input').trigger('change');
+  cy.get('select#loan-purpose').select(1);
+  cy.get('select#employment-type').select(1);
+  cy.get('input#monthly-income').clear().type('100000');
+  cy.get('#wizard-submit-btn').click({ force: true });
 });
 
 Cypress.Commands.add('fillPersonalInfo', () => {
-  cy.get('input[placeholder*="First Name"]').type('John');
-  cy.get('input[placeholder*="Last Name"]').type('Doe');
-  cy.get('input[type="date"]').type('1990-01-01');
-  cy.get('select').first().select('Male');
-  cy.get('input[placeholder*="Mobile Number"]').type('9876543210');
-  cy.get('input[placeholder*="Email Address"]').type('john.doe@example.com');
-  cy.get('input[placeholder*="PAN Number"]').type('ABCDE1234F');
-  cy.get('button')
-    .contains(/verify/i)
-    .click();
-  cy.get('button')
-    .contains(/continue/i)
-    .click();
+  cy.get('input#firstName', { timeout: 10000 }).type('John');
+  cy.get('input#lastName').type('Doe');
+  cy.get('input#dob').type('1990-01-01');
+  cy.contains('button', /male/i).click({ force: true });
+  cy.contains('button', /single/i).click({ force: true });
+  cy.get('input#mobileNumber').type('9876543210');
+  cy.contains('button', /send otp/i).click({ force: true });
+  cy.get('input[placeholder="······"]').type('123456');
+  cy.contains('button', /verify code/i).click({ force: true });
+  cy.get('input#email').type('john.doe@example.com');
+  cy.get('input#panCard').type('ABCDE1234F');
+  cy.contains('button', /verify/i)
+    .first()
+    .click({ force: true });
+  cy.get('input#aadhaar').type('123456789012');
+  cy.contains('button', /verify/i)
+    .last()
+    .click({ force: true });
+  cy.get('select#occupation').select('salaried');
+  cy.get('select#education').select('graduate');
+  cy.get('input#annualIncome').type('1200000');
+  cy.get('#wizard-submit-btn').click({ force: true });
 });
 
 Cypress.Commands.add('completeKYC', () => {
+  cy.get('input#pan-input', { timeout: 10000 }).type('ABCDE1234F');
   cy.get('button')
-    .contains(/start biometric/i)
-    .click();
-  // Simulate face verification delay
-  cy.wait(3500);
+    .contains(/verify/i)
+    .first()
+    .click({ force: true });
+  cy.get('input#aadhaar-input').type('123456789012');
   cy.get('button')
-    .contains(/continue/i)
-    .click();
+    .contains(/verify/i)
+    .last()
+    .click({ force: true });
+  cy.get('select#id-type-select').select('Indian Passport');
+  cy.get('input#id-number-input').type('Z1234567');
+  cy.get('input[type="file"]').eq(0).attachFile('test.jpg');
+  cy.get('input[type="file"]').eq(1).attachFile('test.jpg');
+  cy.get('input[type="file"]').eq(2).attachFile('test.jpg');
+  cy.get('button')
+    .contains(/capture selfie/i)
+    .parent()
+    .find('input[type="file"]')
+    .attachFile('test.jpg');
+  cy.contains('button', /initialize match/i).click({ force: true });
+  cy.wait(5000);
+  cy.get('#wizard-submit-btn').click({ force: true });
 });
 
 Cypress.Commands.add('fillAddress', () => {
-  cy.get('input[placeholder*="Address Line 1"]').type('123 Fintech Street');
-  cy.get('input[placeholder*="City"]').type('Mumbai');
-  cy.get('input[placeholder*="Pincode"]').type('400001');
-  cy.get('select').select('Owned');
-  cy.get('button')
-    .contains(/verify location/i)
-    .click();
-  cy.wait(2000);
-  cy.get('button')
-    .contains(/continue/i)
-    .click();
+  cy.get('input#current-address1', { timeout: 10000 }).type('123 Fintech Street');
+  cy.get('input#current-pincode').type('400001');
+  cy.wait(3000);
+  cy.get('select#residence-type').select('Owned');
+  cy.get('select#duration-at-address').select('5+ years');
+  cy.get('select#address-proof-type').select('Passport');
+  cy.get('input[type="file"]').attachFile('test.jpg');
+  cy.get('#wizard-submit-btn').click({ force: true });
 });
 
 Cypress.Commands.add('fillEmployment', (type = 'salaried') => {
-  cy.get('select').first().select(type);
-  cy.get('input[placeholder*="Employer"]').type('Google Cloud');
-  cy.get('input[placeholder*="Net Income"]').type('150000');
-  cy.get('input[placeholder*="IFSC"]').type('SBIN0001234');
-  cy.wait(2000); // Bank lookup
-  cy.get('button')
-    .contains(/continue/i)
-    .click();
+  cy.get('select#emp-type-select', { timeout: 10000 }).select(type);
+  cy.get('input#employer-input').type('Google Cloud');
+  cy.get('input#income-input').type('150000');
+  cy.get('input#ifsc-input').type('SBIN0001234');
+  cy.wait(3000);
+  cy.get('#wizard-submit-btn').click({ force: true });
 });
 
 Cypress.Commands.add('handleCoApplicant', (skip = true) => {
   if (skip) {
-    cy.get('button').contains(/skip/i).click();
+    cy.contains('button', /skip/i, { timeout: 10000 }).click({ force: true });
   } else {
-    cy.get('button')
-      .contains(/add co-applicant/i)
-      .click();
-    cy.get('input[placeholder*="Full Name"]').type('Jane Doe');
-    // ... fill more if needed
+    cy.contains('button', /add co-applicant/i, { timeout: 10000 }).click({ force: true });
   }
 });

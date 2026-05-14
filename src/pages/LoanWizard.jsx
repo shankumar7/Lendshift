@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronRight,
@@ -12,8 +12,10 @@ import {
   Users,
   FileText,
   Send,
+  ShieldAlert,
 } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import useLoanStore from '../store/useLoanStore';
 import useAutoSave from '../hooks/useAutoSave';
 import Logo from '../components/Logo';
@@ -27,6 +29,7 @@ import CoApplicantStep from '../forms/CoApplicantStep';
 import DocumentStep from '../forms/DocumentStep';
 import ReviewStep from '../forms/ReviewStep';
 import useAccessibility from '../hooks/useAccessibility';
+import globalLoanSchema from '../schemas/globalLoanSchema';
 
 const STEPS = [
   { id: 1, title: 'Loan Selection', desc: 'Configure your capital', icon: Home },
@@ -53,41 +56,85 @@ const LoanWizard = () => {
     isInitialized,
     setInitialized,
     setResumeModal,
+    isCorrupted,
   } = useLoanStore();
 
   const { personalInfo, kyc, address, documents: docs } = formData;
   const { announcementRef } = useAccessibility(currentStep);
-  const [showResume, setShowResume] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   useAutoSave(30000);
+
+  // Dynamic Step Filtering
+  const visibleSteps = useMemo(() => {
+    return STEPS.filter((step) => {
+      if (step.id === 6) {
+        // Step 6 (Co-Applicant) is only required if amount > 300,000 for Personal Loan
+        // OR if it's a Home Loan (handled in schema, but we show it here)
+        if (
+          formData.loanSelection.loanType === 'personal' &&
+          formData.loanSelection.amount <= 300000
+        ) {
+          return false;
+        }
+      }
+      return true;
+    });
+  }, [formData.loanSelection.amount, formData.loanSelection.loanType]);
+
+  // Corruption Detection on Hydration
+  useEffect(() => {
+    if (lastSaved && !isCorrupted) {
+      try {
+        // Partial validation of critical fields
+        globalLoanSchema.partial().parse(formData);
+      } catch (e) {
+        useLoanStore.setState({ isCorrupted: true });
+        toast.error('Application data seems corrupted. Please reset.');
+      }
+    }
+  }, [formData, isCorrupted, lastSaved]);
+
+  // Multi-tab Conflict Detection
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'lendswift-loan-app') {
+        toast.error('Data updated in another tab. Please reload to sync.', {
+          duration: 6000,
+          icon: '⚠️',
+        });
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   useEffect(() => {
     if (!stepId && lastSaved) {
       // Use a timeout to avoid synchronous setState in effect
-      const timer = setTimeout(() => setShowResume(true), 0);
+      const timer = setTimeout(() => setResumeModal(true), 0);
       return () => clearTimeout(timer);
     }
     if (!stepId) {
       navigate('/apply/step/1', { replace: true });
     }
     return undefined;
-  }, [stepId, lastSaved, navigate]);
+  }, [stepId, lastSaved, navigate, setResumeModal]);
 
   useEffect(() => {
     if (stepId) {
       const id = parseInt(stepId, 10);
+      // Guard: Redirect to step 1 if trying to access deep steps without initial selection
+      if (id > 1 && !formData.loanSelection.loanType) {
+        navigate('/apply/step/1', { replace: true });
+        return;
+      }
       if (id !== currentStep) setStep(id);
     }
-  }, [stepId, setStep, currentStep]);
-
-  const handleResume = () => {
-    setShowResume(false);
-    navigate(`/apply/step/${currentStep}`);
-  };
+  }, [stepId, setStep, currentStep, formData.loanSelection.loanType, navigate]);
 
   const handleStartFresh = () => {
     resetApplication();
-    setShowResume(false);
     navigate('/apply/step/1');
   };
 
@@ -98,18 +145,23 @@ const LoanWizard = () => {
     } else {
       setInitialized(true);
     }
-  }, []);
+  }, [isInitialized, lastSaved, currentStep, setResumeModal, setInitialized]);
 
   const onStepSuccess = () => {
-    if (currentStep < STEPS.length) {
-      navigate(`/apply/step/${currentStep + 1}`);
+    const currentIndexInVisible = visibleSteps.findIndex((s) => s.id === currentStep);
+    if (currentIndexInVisible !== -1 && currentIndexInVisible < visibleSteps.length - 1) {
+      const nextStep = visibleSteps[currentIndexInVisible + 1];
+      navigate(`/apply/step/${nextStep.id}`);
     }
   };
 
-  const handleContinue = () => {
+  const handleContinue = useCallback(() => {
+    if (isNavigating) return;
+    setIsNavigating(true);
     const submitBtn = document.getElementById('wizard-submit-btn');
     if (submitBtn) submitBtn.click();
-  };
+    setTimeout(() => setIsNavigating(false), 500); // 500ms debounce
+  }, [isNavigating]);
 
   // Keyboard navigation: Enter to submit
   useEffect(() => {
@@ -120,11 +172,13 @@ const LoanWizard = () => {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [handleContinue]);
 
   const handleBack = () => {
-    if (currentStep > 1) {
-      navigate(`/apply/step/${currentStep - 1}`);
+    const currentIndexInVisible = visibleSteps.findIndex((s) => s.id === currentStep);
+    if (currentIndexInVisible > 0) {
+      const prevStep = visibleSteps[currentIndexInVisible - 1];
+      navigate(`/apply/step/${prevStep.id}`);
     }
   };
 
@@ -193,7 +247,8 @@ const LoanWizard = () => {
     }
   };
 
-  const progress = (currentStep / STEPS.length) * 100;
+  const currentIndex = visibleSteps.findIndex((s) => s.id === currentStep);
+  const progress = ((currentIndex + 1) / visibleSteps.length) * 100;
 
   return (
     <div
@@ -212,7 +267,7 @@ const LoanWizard = () => {
             <h2 className="text-2xl sm:text-3xl font-serif italic tracking-tight">Onboarding</h2>
           </div>
           <nav className="space-y-1">
-            {STEPS.map((step) => {
+            {visibleSteps.map((step) => {
               const isActive = step.id === currentStep;
               const isCompleted = step.id < currentStep;
               const Icon = step.icon;
@@ -278,7 +333,7 @@ const LoanWizard = () => {
               </button>
               <span className="text-[10px] font-mono text-[#EEEEEE]">/</span>
               <p className="text-[9px] sm:text-xs font-black uppercase tracking-widest truncate max-w-[100px] sm:max-w-none">
-                {STEPS[currentStep - 1].title}
+                {visibleSteps.find((s) => s.id === currentStep)?.title || '...'}
               </p>
             </div>
             {lastSaved && (
@@ -327,70 +382,96 @@ const LoanWizard = () => {
                 className="space-y-4"
               >
                 <h1 className="text-3xl sm:text-5xl lg:text-7xl font-serif italic leading-tight tracking-tighter">
-                  {STEPS[currentStep - 1].title}
+                  {visibleSteps.find((s) => s.id === currentStep)?.title || '...'}
                 </h1>
                 <p className="text-base sm:text-xl text-[#888888] font-sans leading-relaxed">
-                  {STEPS[currentStep - 1].desc}
+                  {visibleSteps.find((s) => s.id === currentStep)?.desc || '...'}
                 </p>
               </motion.div>
             </div>
 
             <AnimatePresence mode="wait">
-              <motion.div
-                key={currentStep}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.4 }}
-              >
-                {currentStep === 1 && (
-                  <div ref={formRef}>
-                    <LoanSelectionStep onNext={onStepSuccess} />
-                  </div>
-                )}
-                {currentStep === 2 && (
-                  <div ref={formRef}>
-                    <PersonalInfoStep onNext={onStepSuccess} />
-                  </div>
-                )}
-                {currentStep === 3 && (
-                  <div ref={formRef}>
-                    <KYCStep onNext={onStepSuccess} />
-                  </div>
-                )}
-                {currentStep === 4 && (
-                  <div ref={formRef}>
-                    <AddressStep onNext={onStepSuccess} />
-                  </div>
-                )}
-                {currentStep === 5 && (
-                  <div ref={formRef}>
-                    <EmploymentStep onNext={onStepSuccess} />
-                  </div>
-                )}
-                {currentStep === 6 && (
-                  <div ref={formRef}>
-                    <CoApplicantStep onNext={onStepSuccess} />
-                  </div>
-                )}
-                {currentStep === 7 && (
-                  <div ref={formRef}>
-                    <DocumentStep onNext={onStepSuccess} />
-                  </div>
-                )}
-                {currentStep === 8 && (
-                  <div ref={formRef}>
-                    <ReviewStep />
-                  </div>
-                )}
-                {currentStep > 8 && (
-                  <div className="min-h-[400px] p-12 bg-[#F8F9FA] rounded-[3rem] border border-[#EEEEEE] border-dashed flex flex-col items-center justify-center text-center">
-                    <p className="text-[#888888] font-mono uppercase tracking-widest text-xs">
-                      Application Submitted Successfully
+              {isCorrupted ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="min-h-[400px] p-12 bg-red-50 rounded-[3rem] border border-red-200 flex flex-col items-center justify-center text-center space-y-6"
+                >
+                  <ShieldAlert size={48} className="text-red-500" />
+                  <div className="space-y-2">
+                    <h2 className="text-2xl font-serif italic text-red-900">
+                      Data Corruption Detected
+                    </h2>
+                    <p className="text-sm text-red-700 max-w-md">
+                      We&apos;ve detected that your saved application data has been tampered with or
+                      is incompatible. For your security, we must reset the application.
                     </p>
                   </div>
-                )}
-              </motion.div>
+                  <button
+                    type="button"
+                    onClick={handleStartFresh}
+                    className="px-8 h-14 rounded-2xl bg-red-600 text-white text-[10px] font-black uppercase tracking-widest shadow-lg shadow-red-200"
+                  >
+                    Start Fresh Application
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key={currentStep}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  {currentStep === 1 && (
+                    <div ref={formRef}>
+                      <LoanSelectionStep onNext={onStepSuccess} />
+                    </div>
+                  )}
+                  {currentStep === 2 && (
+                    <div ref={formRef}>
+                      <PersonalInfoStep onNext={onStepSuccess} />
+                    </div>
+                  )}
+                  {currentStep === 3 && (
+                    <div ref={formRef}>
+                      <KYCStep onNext={onStepSuccess} />
+                    </div>
+                  )}
+                  {currentStep === 4 && (
+                    <div ref={formRef}>
+                      <AddressStep onNext={onStepSuccess} />
+                    </div>
+                  )}
+                  {currentStep === 5 && (
+                    <div ref={formRef}>
+                      <EmploymentStep onNext={onStepSuccess} />
+                    </div>
+                  )}
+                  {currentStep === 6 && (
+                    <div ref={formRef}>
+                      <CoApplicantStep onNext={onStepSuccess} />
+                    </div>
+                  )}
+                  {currentStep === 7 && (
+                    <div ref={formRef}>
+                      <DocumentStep onNext={onStepSuccess} />
+                    </div>
+                  )}
+                  {currentStep === 8 && (
+                    <div ref={formRef}>
+                      <ReviewStep />
+                    </div>
+                  )}
+                  {currentStep > 8 && (
+                    <div className="min-h-[400px] p-12 bg-[#F8F9FA] rounded-[3rem] border border-[#EEEEEE] border-dashed flex flex-col items-center justify-center text-center">
+                      <p className="text-[#888888] font-mono uppercase tracking-widest text-xs">
+                        Application Submitted Successfully
+                      </p>
+                    </div>
+                  )}
+                </motion.div>
+              )}
             </AnimatePresence>
 
             <div className="pt-12 border-t border-[#EEEEEE] flex justify-between items-center">
@@ -420,7 +501,6 @@ const LoanWizard = () => {
         </div>
       </main>
 
-      <ResumeModal />
       <style>{`.custom-scrollbar::-webkit-scrollbar { width: 6px; } .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } .custom-scrollbar::-webkit-scrollbar-thumb { background: #EEEEEE; border-radius: 10px; } .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #DDDDDD; }`}</style>
     </div>
   );

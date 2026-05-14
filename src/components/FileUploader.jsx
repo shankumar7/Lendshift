@@ -96,9 +96,9 @@ const FileUploader = ({
             exit={{ opacity: 0, height: 0 }}
             className="p-4 bg-rose-50 dark:bg-rose-900/10 rounded-xl space-y-2 border border-rose-100 dark:border-rose-900/20"
           >
-            {errors.map((err, i) => (
+            {errors.map((err) => (
               <div
-                key={i}
+                key={`${err.name}-${err.message}`}
                 className="flex items-center gap-2 text-xs text-rose-600 dark:text-rose-400 font-medium"
               >
                 <AlertCircle size={14} />
@@ -149,6 +149,7 @@ const FileUploader = ({
               )}
             </div>
             <button
+              type="button"
               onClick={() => removeFile(fileObj.id)}
               className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors"
             >
