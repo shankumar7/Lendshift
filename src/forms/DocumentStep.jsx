@@ -208,7 +208,7 @@ const DocumentStep = ({ onNext }) => {
               exit={{ opacity: 0, x: 20 }}
               className="space-y-12"
             >
-              <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 {requiredDocs.map(id => (
                   <DocumentCard
                     key={id}
