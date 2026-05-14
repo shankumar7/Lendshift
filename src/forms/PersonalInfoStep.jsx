@@ -2,10 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  User, Mail, Phone, Calendar, Heart, Shield, 
-  BookOpen, Briefcase, IndianRupee, AlertCircle, 
-  CheckCircle2, RefreshCcw, Loader2
+import {
+  User,
+  Heart,
+  Shield,
+  Briefcase,
+  AlertCircle,
+  CheckCircle2,
+  RefreshCcw,
+  Loader2,
 } from 'lucide-react';
 import personalInfoSchema from '../schemas/personalInfoSchema';
 import useLoanStore from '../store/useLoanStore';
@@ -34,7 +39,9 @@ const SectionHeader = ({ icon: Icon, title, desc }) => (
       </div>
       <div>
         <h3 className="text-lg sm:text-xl font-serif italic text-[#121212]">{title}</h3>
-        <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">{desc}</p>
+        <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">
+          {desc}
+        </p>
       </div>
     </div>
   </div>
@@ -42,7 +49,10 @@ const SectionHeader = ({ icon: Icon, title, desc }) => (
 
 const InputWrapper = ({ label, id, children, error, touched, verified, isLoading }) => (
   <div className="space-y-2 group">
-    <label htmlFor={id} className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40 group-focus-within:text-[#121212] transition-colors">
+    <label
+      htmlFor={id}
+      className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40 group-focus-within:text-[#121212] transition-colors"
+    >
       {label}
     </label>
     <div className="relative">
@@ -124,7 +134,9 @@ const PersonalInfoStep = ({ onNext }) => {
 
   const handleSendOtp = async () => {
     setOtpVerifying(true);
-    await new Promise(r => setTimeout(r, 1500)); // Simulate API
+    await new Promise((r) => {
+      setTimeout(r, 1500);
+    }); // Simulate API
     setOtpSent(true);
     setOtpTimer(60);
     setOtpVerifying(false);
@@ -132,7 +144,9 @@ const PersonalInfoStep = ({ onNext }) => {
 
   const handleVerifyOtp = async () => {
     setOtpVerifying(true);
-    await new Promise(r => setTimeout(r, 1500)); // Simulate API
+    await new Promise((r) => {
+      setTimeout(r, 1500);
+    }); // Simulate API
     setValue('isMobileVerified', true);
     setOtpSent(false);
     setOtpVerifying(false);
@@ -141,7 +155,9 @@ const PersonalInfoStep = ({ onNext }) => {
   const handleVerifyPan = async () => {
     if (!panCard || panCard.length < 10) return;
     setIsVerifyingPan(true);
-    await new Promise(r => setTimeout(r, 2000)); // Simulate API
+    await new Promise((r) => {
+      setTimeout(r, 2000);
+    }); // Simulate API
     setValue('isPanVerified', true);
     setIsVerifyingPan(false);
   };
@@ -149,7 +165,9 @@ const PersonalInfoStep = ({ onNext }) => {
   const handleVerifyAadhaar = async () => {
     if (!aadhaar || aadhaar.length < 12) return;
     setIsVerifyingAadhaar(true);
-    await new Promise(r => setTimeout(r, 2000)); // Simulate API
+    await new Promise((r) => {
+      setTimeout(r, 2000);
+    }); // Simulate API
     setValue('isAadhaarVerified', true);
     setIsVerifyingAadhaar(false);
   };
@@ -163,9 +181,18 @@ const PersonalInfoStep = ({ onNext }) => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-20">
       {/* 1. Identity Basics */}
       <section>
-        <SectionHeader icon={User} title="Identity Foundation" desc="Your legal name & birth records" />
+        <SectionHeader
+          icon={User}
+          title="Identity Foundation"
+          desc="Your legal name & birth records"
+        />
         <div className="grid md:grid-cols-3 gap-6">
-          <InputWrapper label="First Name" id="firstName" error={errors.firstName} touched={touchedFields.firstName || isSubmitted}>
+          <InputWrapper
+            label="First Name"
+            id="firstName"
+            error={errors.firstName}
+            touched={touchedFields.firstName || isSubmitted}
+          >
             <Controller
               name="firstName"
               control={control}
@@ -175,7 +202,12 @@ const PersonalInfoStep = ({ onNext }) => {
             />
           </InputWrapper>
 
-          <InputWrapper label="Middle Name" id="middleName" error={errors.middleName} touched={touchedFields.middleName || isSubmitted}>
+          <InputWrapper
+            label="Middle Name"
+            id="middleName"
+            error={errors.middleName}
+            touched={touchedFields.middleName || isSubmitted}
+          >
             <Controller
               name="middleName"
               control={control}
@@ -185,7 +217,12 @@ const PersonalInfoStep = ({ onNext }) => {
             />
           </InputWrapper>
 
-          <InputWrapper label="Last Name" id="lastName" error={errors.lastName} touched={touchedFields.lastName || isSubmitted}>
+          <InputWrapper
+            label="Last Name"
+            id="lastName"
+            error={errors.lastName}
+            touched={touchedFields.lastName || isSubmitted}
+          >
             <Controller
               name="lastName"
               control={control}
@@ -198,7 +235,12 @@ const PersonalInfoStep = ({ onNext }) => {
 
         <div className="grid md:grid-cols-12 gap-8 mt-10">
           <div className="md:col-span-5">
-            <InputWrapper label="Date of Birth" id="dob" error={errors.dob} touched={touchedFields.dob || isSubmitted}>
+            <InputWrapper
+              label="Date of Birth"
+              id="dob"
+              error={errors.dob}
+              touched={touchedFields.dob || isSubmitted}
+            >
               <div className="relative">
                 <Controller
                   name="dob"
@@ -217,7 +259,9 @@ const PersonalInfoStep = ({ onNext }) => {
           </div>
 
           <div className="md:col-span-7 space-y-2">
-            <label className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Gender</label>
+            <p className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
+              Gender
+            </p>
             <Controller
               name="gender"
               control={control}
@@ -229,9 +273,9 @@ const PersonalInfoStep = ({ onNext }) => {
                       type="button"
                       onClick={() => field.onChange(g)}
                       className={`h-14 sm:h-16 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all duration-300 border px-1 sm:px-2 ${
-                        field.value === g 
-                        ? 'bg-[#121212] border-[#121212] text-white shadow-lg' 
-                        : 'bg-white border-[#EEEEEE] text-[#121212]/40 hover:border-[#121212]/20'
+                        field.value === g
+                          ? 'bg-[#121212] border-[#121212] text-white shadow-lg'
+                          : 'bg-white border-[#EEEEEE] text-[#121212]/40 hover:border-[#121212]/20'
                       }`}
                     >
                       {g.replace(/-/g, ' ')}
@@ -250,7 +294,9 @@ const PersonalInfoStep = ({ onNext }) => {
         <SectionHeader icon={Heart} title="Social Context" desc="Marital status & family details" />
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-2">
-            <label className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Marital Status</label>
+            <p className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
+              Marital Status
+            </p>
             <Controller
               name="maritalStatus"
               control={control}
@@ -262,9 +308,9 @@ const PersonalInfoStep = ({ onNext }) => {
                       type="button"
                       onClick={() => field.onChange(m)}
                       className={`h-14 sm:h-16 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
-                        field.value === m 
-                        ? 'bg-[#121212] border-[#121212] text-white shadow-lg' 
-                        : 'bg-white border-[#EEEEEE] text-[#121212]/40 hover:border-[#121212]/20'
+                        field.value === m
+                          ? 'bg-[#121212] border-[#121212] text-white shadow-lg'
+                          : 'bg-white border-[#EEEEEE] text-[#121212]/40 hover:border-[#121212]/20'
                       }`}
                     >
                       {m}
@@ -273,7 +319,10 @@ const PersonalInfoStep = ({ onNext }) => {
                 </div>
               )}
             />
-            <ErrorField error={errors.maritalStatus} touched={touchedFields.maritalStatus || isSubmitted} />
+            <ErrorField
+              error={errors.maritalStatus}
+              touched={touchedFields.maritalStatus || isSubmitted}
+            />
           </div>
 
           <AnimatePresence>
@@ -283,12 +332,22 @@ const PersonalInfoStep = ({ onNext }) => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
               >
-                <InputWrapper label="Spouse Name" id="spouseName" error={errors.spouseName} touched={touchedFields.spouseName || isSubmitted}>
+                <InputWrapper
+                  label="Spouse Name"
+                  id="spouseName"
+                  error={errors.spouseName}
+                  touched={touchedFields.spouseName || isSubmitted}
+                >
                   <Controller
                     name="spouseName"
                     control={control}
                     render={({ field }) => (
-                      <input {...field} id="spouseName" placeholder="Full name of spouse" className="input-premium" />
+                      <input
+                        {...field}
+                        id="spouseName"
+                        placeholder="Full name of spouse"
+                        className="input-premium"
+                      />
                     )}
                   />
                 </InputWrapper>
@@ -300,7 +359,11 @@ const PersonalInfoStep = ({ onNext }) => {
 
       {/* 3. Communication & Verification */}
       <section>
-        <SectionHeader icon={Shield} title="Secured Communication" desc="Phone, Email & Multi-factor verification" />
+        <SectionHeader
+          icon={Shield}
+          title="Secured Communication"
+          desc="Phone, Email & Multi-factor verification"
+        />
         <div className="grid md:grid-cols-2 gap-12">
           {/* Mobile Field with OTP Simulation */}
           <div className="space-y-6">
@@ -421,7 +484,7 @@ const PersonalInfoStep = ({ onNext }) => {
 
                 <div className="flex items-center justify-between pt-4 border-t border-[#EEEEEE]">
                   <p className="text-[9px] font-mono text-[#888888] uppercase tracking-widest">
-                    Didn't receive the code?
+                    Didn&apos;t receive the code?
                   </p>
                   <button
                     type="button"
@@ -442,14 +505,27 @@ const PersonalInfoStep = ({ onNext }) => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mt-8">
-          <InputWrapper label="Alternate Mobile (Optional)" id="altMobileNumber" error={errors.altMobileNumber} touched={touchedFields.altMobileNumber || isSubmitted}>
+          <InputWrapper
+            label="Alternate Mobile (Optional)"
+            id="altMobileNumber"
+            error={errors.altMobileNumber}
+            touched={touchedFields.altMobileNumber || isSubmitted}
+          >
             <div className="relative">
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[10px] font-black text-[#121212]/20">+91</span>
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[10px] font-black text-[#121212]/20">
+                +91
+              </span>
               <Controller
                 name="altMobileNumber"
                 control={control}
                 render={({ field }) => (
-                  <input {...field} id="altMobileNumber" maxLength={10} placeholder="88776 55443" className="input-premium pl-16" />
+                  <input
+                    {...field}
+                    id="altMobileNumber"
+                    maxLength={10}
+                    placeholder="88776 55443"
+                    className="input-premium pl-16"
+                  />
                 )}
               />
             </div>
@@ -459,13 +535,17 @@ const PersonalInfoStep = ({ onNext }) => {
 
       {/* 4. Statutory Verification */}
       <section>
-        <SectionHeader icon={Shield} title="Institutional Verification" desc="PAN & Aadhaar validation" />
+        <SectionHeader
+          icon={Shield}
+          title="Institutional Verification"
+          desc="PAN & Aadhaar validation"
+        />
         <div className="grid md:grid-cols-2 gap-12">
           {/* PAN Card */}
-          <InputWrapper 
-            label="PAN Card Number" 
-            id="panCard" 
-            error={errors.panCard} 
+          <InputWrapper
+            label="PAN Card Number"
+            id="panCard"
+            error={errors.panCard}
             touched={touchedFields.panCard || isSubmitted}
             verified={isPanVerified}
             isLoading={isVerifyingPan}
@@ -475,15 +555,15 @@ const PersonalInfoStep = ({ onNext }) => {
                 name="panCard"
                 control={control}
                 render={({ field: { onChange, value, ...rest } }) => (
-                  <input 
+                  <input
                     {...rest}
                     value={value}
-                    id="panCard" 
-                    maxLength={10} 
+                    id="panCard"
+                    maxLength={10}
                     disabled={isPanVerified}
                     onChange={(e) => onChange(e.target.value.toUpperCase())}
-                    placeholder="ABCDE1234F" 
-                    className={`input-premium pr-32 ${isPanVerified ? 'font-mono tracking-[0.3em] opacity-60' : ''}`} 
+                    placeholder="ABCDE1234F"
+                    className={`input-premium pr-32 ${isPanVerified ? 'font-mono tracking-[0.3em] opacity-60' : ''}`}
                   />
                 )}
               />
@@ -501,10 +581,10 @@ const PersonalInfoStep = ({ onNext }) => {
           </InputWrapper>
 
           {/* Aadhaar Card */}
-          <InputWrapper 
-            label="Aadhaar Number" 
-            id="aadhaar" 
-            error={errors.aadhaar} 
+          <InputWrapper
+            label="Aadhaar Number"
+            id="aadhaar"
+            error={errors.aadhaar}
             touched={touchedFields.aadhaar || isSubmitted}
             verified={isAadhaarVerified}
             isLoading={isVerifyingAadhaar}
@@ -514,15 +594,15 @@ const PersonalInfoStep = ({ onNext }) => {
                 name="aadhaar"
                 control={control}
                 render={({ field: { onChange, value, ...rest } }) => (
-                  <input 
+                  <input
                     {...rest}
                     value={value}
-                    id="aadhaar" 
-                    maxLength={12} 
+                    id="aadhaar"
+                    maxLength={12}
                     disabled={isAadhaarVerified}
                     onChange={(e) => onChange(e.target.value.replace(/\D/g, ''))}
-                    placeholder="XXXX XXXX XXXX" 
-                    className={`input-premium pr-32 ${isAadhaarVerified ? 'font-mono tracking-[0.3em] opacity-60' : ''}`} 
+                    placeholder="XXXX XXXX XXXX"
+                    className={`input-premium pr-32 ${isAadhaarVerified ? 'font-mono tracking-[0.3em] opacity-60' : ''}`}
                   />
                 )}
               />
@@ -543,15 +623,23 @@ const PersonalInfoStep = ({ onNext }) => {
 
       {/* 5. Professional & Financial */}
       <section>
-        <SectionHeader icon={Briefcase} title="Professional Profile" desc="Occupation & Annual earnings" />
+        <SectionHeader
+          icon={Briefcase}
+          title="Professional Profile"
+          desc="Occupation & Annual earnings"
+        />
         <div className="grid md:grid-cols-2 gap-x-12 gap-y-10">
-          <div className="space-y-2">
-            <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Occupation</label>
+          <InputWrapper
+            label="Occupation"
+            id="occupation"
+            error={errors.occupation}
+            touched={touchedFields.occupation || isSubmitted}
+          >
             <Controller
               name="occupation"
               control={control}
               render={({ field }) => (
-                <select {...field} className="input-premium appearance-none">
+                <select {...field} id="occupation" className="input-premium appearance-none">
                   <option value="">Select Category</option>
                   <option value="salaried">Salaried Professional</option>
                   <option value="self-employed">Self Employed</option>
@@ -561,16 +649,19 @@ const PersonalInfoStep = ({ onNext }) => {
                 </select>
               )}
             />
-            <ErrorField error={errors.occupation} touched={touchedFields.occupation || isSubmitted} />
-          </div>
+          </InputWrapper>
 
-          <div className="space-y-2">
-            <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Education</label>
+          <InputWrapper
+            label="Education"
+            id="education"
+            error={errors.education}
+            touched={touchedFields.education || isSubmitted}
+          >
             <Controller
               name="education"
               control={control}
               render={({ field }) => (
-                <select {...field} className="input-premium appearance-none">
+                <select {...field} id="education" className="input-premium appearance-none">
                   <option value="">Select Level</option>
                   <option value="high-school">High School</option>
                   <option value="graduate">Graduate</option>
@@ -579,13 +670,19 @@ const PersonalInfoStep = ({ onNext }) => {
                 </select>
               )}
             />
-            <ErrorField error={errors.education} touched={touchedFields.education || isSubmitted} />
-          </div>
+          </InputWrapper>
 
           <div className="md:col-span-2">
-            <InputWrapper label="Annual Income (INR)" id="annualIncome" error={errors.annualIncome} touched={touchedFields.annualIncome || isSubmitted}>
+            <InputWrapper
+              label="Annual Income (INR)"
+              id="annualIncome"
+              error={errors.annualIncome}
+              touched={touchedFields.annualIncome || isSubmitted}
+            >
               <div className="relative">
-                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-xl font-serif italic text-[#121212]/20">₹</span>
+                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-xl font-serif italic text-[#121212]/20">
+                  ₹
+                </span>
                 <Controller
                   name="annualIncome"
                   control={control}
@@ -611,12 +708,14 @@ const PersonalInfoStep = ({ onNext }) => {
       </section>
 
       {/* Hidden Submit for Wizard Control */}
-      <button type="submit" id="wizard-submit-btn" className="hidden">Submit</button>
+      <button type="submit" id="wizard-submit-btn" className="hidden">
+        Submit
+      </button>
 
       {/* Manual Continue Button (Visible on mobile/when sticky) */}
       <div className="md:hidden pt-8">
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={!isMobileVerified || !isPanVerified || !isAadhaarVerified}
           className="btn-primary w-full h-16 disabled:opacity-20"
         >
