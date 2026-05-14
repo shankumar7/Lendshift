@@ -175,7 +175,9 @@ const LoanSelectionStep = ({ onNext }) => {
           <div className="space-y-6">
             <label htmlFor="amount-slider" className="block space-y-6 cursor-pointer">
               <div className="flex justify-between items-end">
-                <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest">Loan Amount</span>
+                <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest">
+                  Loan Amount
+                </span>
                 <div className="text-xl sm:text-2xl font-serif italic text-[#121212]">
                   ₹{(amount || 0).toLocaleString('en-IN')}
                 </div>
@@ -211,10 +213,14 @@ const LoanSelectionStep = ({ onNext }) => {
           <div className="space-y-6">
             <label htmlFor="tenure-slider" className="block space-y-6 cursor-pointer">
               <div className="flex justify-between items-end">
-                <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest">Tenure</span>
+                <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest">
+                  Tenure
+                </span>
                 <div className="text-xl sm:text-2xl font-serif italic text-[#121212]">
                   {tenure}{' '}
-                  <span className="text-[10px] sm:text-xs font-sans not-italic text-[#888888]">Months</span>
+                  <span className="text-[10px] sm:text-xs font-sans not-italic text-[#888888]">
+                    Months
+                  </span>
                 </div>
               </div>
 
