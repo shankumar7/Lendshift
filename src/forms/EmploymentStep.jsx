@@ -51,29 +51,7 @@ const InputWrapper = ({ label, children, error, touched, icon: Icon, description
   </div>
 );
 
-const UnderwritingMetric = ({ label, value, subtext, status = 'neutral' }) => {
-  const getStatusColor = () => {
-    if (status === 'success') return 'text-[#2E7D32] bg-[#E8F5E9]';
-    if (status === 'warning') return 'text-[#FF8F00] bg-[#FFF8E1]';
-    if (status === 'danger') return 'text-[#C62828] bg-[#FFEBEE]';
-    return 'text-[#121212] bg-[#F8F9FA]';
-  };
-
-  return (
-    <div
-      className={`p-6 rounded-2xl border border-[#EEEEEE] ${getStatusColor()} transition-colors duration-500`}
-    >
-      <div className="flex justify-between items-start mb-2">
-        <p className="text-[10px] font-black uppercase tracking-widest opacity-40">{label}</p>
-        <ArrowUpRight size={14} className="opacity-40" />
-      </div>
-      <p className="text-2xl font-serif italic">{value}</p>
-      <p className="text-[9px] font-mono font-bold uppercase tracking-widest mt-2 opacity-60">
-        {subtext}
-      </p>
-    </div>
-  );
-};
+// UnderwritingMetric was not used and has been removed.
 
 const EmploymentStep = ({ onNext }) => {
   const { formData, updateFormData } = useLoanStore();
@@ -131,13 +109,24 @@ const EmploymentStep = ({ onNext }) => {
 
     const score = Math.max(300, Math.min(900, 450 + income / 1000 - dti * 5));
 
+    let risk = 'Low';
+    let riskStatus = 'success';
+
+    if (dti >= 50) {
+      risk = 'High';
+      riskStatus = 'danger';
+    } else if (dti >= 30) {
+      risk = 'Moderate';
+      riskStatus = 'warning';
+    }
+
     return {
       income,
       dti: dti.toFixed(1),
       eligibility: Math.round(eligibility / 1000) * 1000,
       score: Math.round(score),
-      risk: dti < 30 ? 'Low' : dti < 50 ? 'Moderate' : 'High',
-      riskStatus: dti < 30 ? 'success' : dti < 50 ? 'warning' : 'danger',
+      risk,
+      riskStatus,
     };
   }, [
     monthlyIncome,
@@ -704,7 +693,13 @@ const EmploymentStep = ({ onNext }) => {
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${Math.min(100, metrics.dti)}%` }}
-                    className={`h-full ${metrics.riskStatus === 'success' ? 'bg-[#4CAF50]' : metrics.riskStatus === 'warning' ? 'bg-[#FFB300]' : 'bg-[#FF5252]'}`}
+                    className={`h-full ${
+                      metrics.riskStatus === 'success'
+                        ? 'bg-[#4CAF50]'
+                        : metrics.riskStatus === 'warning'
+                          ? 'bg-[#FFB300]'
+                          : 'bg-[#FF5252]'
+                    }`}
                   />
                 </div>
               </div>
@@ -747,9 +742,9 @@ const EmploymentStep = ({ onNext }) => {
             <FileCheck size={14} className="text-[#888888]" />
           </div>
           <div className="space-y-3">
-            {getDynamicDocs().map((doc, idx) => (
+            {getDynamicDocs().map((doc) => (
               <div
-                key={idx}
+                key={doc}
                 className="flex items-center gap-3 p-3 bg-white rounded-xl border border-[#EEEEEE] shadow-sm"
               >
                 <div className="w-1.5 h-1.5 rounded-full bg-[#121212]/20" />

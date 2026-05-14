@@ -45,6 +45,7 @@ const ReviewSection = ({ title, icon: Icon, data, onEdit, isComplete }) => (
         </div>
       </div>
       <button
+        type="button"
         onClick={onEdit}
         className="p-3 hover:bg-[#F8F9FA] rounded-full text-[#888888] hover:text-[#121212] transition-all"
       >
@@ -59,7 +60,11 @@ const ReviewSection = ({ title, icon: Icon, data, onEdit, isComplete }) => (
             {key.replace(/([A-Z])/g, ' $1')}
           </p>
           <p className="text-xs font-bold text-[#121212] truncate">
-            {typeof value === 'boolean' ? (value ? 'Yes' : 'No') : value || '—'}
+            {typeof value === 'boolean'
+              ? value
+                ? 'Yes'
+                : 'No'
+              : value || '—'}
           </p>
         </div>
       ))}
@@ -107,7 +112,8 @@ const ReviewStep = () => {
       }, 1200);
       return () => clearTimeout(timer);
     }
-  }, [isSubmitting, submissionStage]);
+    return undefined;
+  }, [isSubmitting, submissionStage, stages.length]);
 
   const handleFinalSubmit = async () => {
     setIsSubmitting(true);
@@ -193,12 +199,21 @@ const ReviewStep = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-          <button className="h-16 px-12 rounded-2xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-4 group">
+          <button
+            type="button"
+            className="h-16 px-12 rounded-2xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-4 group"
+          >
             Download Summary{' '}
-            <Download size={16} className="group-hover:translate-y-1 transition-transform" />
+            <Download
+              size={16}
+              className="group-hover:translate-y-1 transition-transform"
+            />
           </button>
           <button
-            onClick={() => (window.location.href = '/')}
+            type="button"
+            onClick={() => {
+              window.location.href = '/';
+            }}
             className="h-16 px-12 rounded-2xl bg-white border border-[#EEEEEE] text-[10px] font-black uppercase tracking-widest flex items-center justify-center"
           >
             Back to Home
@@ -324,7 +339,7 @@ const ReviewStep = () => {
               Purpose: formData.loanSelection.purpose,
             }}
             onEdit={() => setStep(1)}
-            isComplete={true}
+            isComplete
           />
 
           <ReviewSection
@@ -337,7 +352,7 @@ const ReviewStep = () => {
               PAN: formData.personalInfo.panCard,
             }}
             onEdit={() => setStep(2)}
-            isComplete={true}
+            isComplete
           />
 
           <ReviewSection
@@ -349,7 +364,7 @@ const ReviewStep = () => {
               FaceMatch: '98% Confirmed',
             }}
             onEdit={() => setStep(3)}
-            isComplete={true}
+            isComplete
           />
 
           <ReviewSection
@@ -362,7 +377,7 @@ const ReviewStep = () => {
               Residence: formData.address.current.residenceType,
             }}
             onEdit={() => setStep(4)}
-            isComplete={true}
+            isComplete
           />
 
           <ReviewSection
@@ -374,7 +389,7 @@ const ReviewStep = () => {
               MonthlyNet: `₹${formData.employment.monthlyIncome.toLocaleString('en-IN')}`,
             }}
             onEdit={() => setStep(5)}
-            isComplete={true}
+            isComplete
           />
 
           <ReviewSection
@@ -386,7 +401,7 @@ const ReviewStep = () => {
               CoIncome: `₹${formData.coApplicant.monthlyIncome?.toLocaleString('en-IN') || 0}`,
             }}
             onEdit={() => setStep(6)}
-            isComplete={true}
+            isComplete
           />
 
           <ReviewSection
@@ -398,7 +413,7 @@ const ReviewStep = () => {
               Compliance: 'Ready',
             }}
             onEdit={() => setStep(7)}
-            isComplete={true}
+            isComplete
           />
         </div>
 
@@ -418,6 +433,7 @@ const ReviewStep = () => {
                 immediate application rejection.
               </p>
               <button
+                type="button"
                 onClick={() => setShowDisclosure(true)}
                 className="text-[10px] font-black uppercase tracking-widest text-[#0065FF] flex items-center gap-2"
               >
@@ -429,6 +445,7 @@ const ReviewStep = () => {
 
         <div className="flex justify-end">
           <button
+            type="button"
             disabled={!consent}
             onClick={handleFinalSubmit}
             className="btn-primary h-18 px-16 group disabled:opacity-20 transition-all shadow-xl hover:shadow-2xl hover:scale-[1.02]"
@@ -551,6 +568,7 @@ const ReviewStep = () => {
                   <h4 className="text-2xl font-serif italic">Institutional Disclosure</h4>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setShowDisclosure(false)}
                   className="p-2 hover:bg-[#F8F9FA] rounded-full"
                 >
@@ -571,6 +589,7 @@ const ReviewStep = () => {
               </div>
               <div className="p-8 bg-[#F8F9FA] border-t border-[#EEEEEE] flex justify-end">
                 <button
+                  type="button"
                   onClick={() => setShowDisclosure(false)}
                   className="px-12 h-14 rounded-2xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest"
                 >

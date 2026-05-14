@@ -80,8 +80,7 @@ const CoApplicantStep = ({ onNext }) => {
   const [otpTimer, setOtpTimer] = useState(0);
 
   // Gating Logic
-  const loanType = formData.loanSelection.loanType;
-  const loanAmount = formData.loanSelection.amount;
+  const { loanType, amount: loanAmount } = formData.loanSelection;
   const isRequired = useMemo(() => {
     if (loanType === 'home') return true;
     if (loanType === 'personal' && loanAmount > 500000) return true;
@@ -136,12 +135,19 @@ const CoApplicantStep = ({ onNext }) => {
       70 + (boost > 0 ? boost : 0) - (jointDti > 40 ? (jointDti - 40) * 2 : 0)
     );
 
+    let status = 'Diluted';
+    if (jointDti < 35) {
+      status = 'Strong';
+    } else if (jointDti < 50) {
+      status = 'Stable';
+    }
+
     return {
       combinedIncome,
       jointDti: jointDti.toFixed(1),
       boost: boost.toFixed(1),
       confidence: Math.round(confidence),
-      status: jointDti < 35 ? 'Strong' : jointDti < 50 ? 'Stable' : 'Diluted',
+      status,
     };
   }, [coIncome, coEmis, formData.employment]);
 

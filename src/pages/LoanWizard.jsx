@@ -26,7 +26,6 @@ import EmploymentStep from '../forms/EmploymentStep';
 import CoApplicantStep from '../forms/CoApplicantStep';
 import DocumentStep from '../forms/DocumentStep';
 import ReviewStep from '../forms/ReviewStep';
-import useUnderwriting from '../hooks/useUnderwriting';
 import useAccessibility from '../hooks/useAccessibility';
 
 const STEPS = [
@@ -45,17 +44,19 @@ const LoanWizard = () => {
   const navigate = useNavigate();
   const formRef = useRef(null);
 
-  const { formData, updateFormData, setResumeModal, isInitialized, setInitialized } = useLoanStore();
-  const underwriting = useUnderwriting();
-  const currentStep = useLoanStore((state) => state.currentStep);
+  const {
+    formData,
+    currentStep,
+    setStep,
+    lastSaved,
+    resetApplication,
+    isInitialized,
+    setInitialized,
+    setResumeModal,
+  } = useLoanStore();
+
+  const { personalInfo, kyc, address, documents: docs } = formData;
   const { announcementRef } = useAccessibility(currentStep);
-  const setStep = useLoanStore((state) => state.setStep);
-  const lastSaved = useLoanStore((state) => state.lastSaved);
-  const resetApplication = useLoanStore((state) => state.resetApplication);
-  const personalInfo = useLoanStore((state) => state.formData.personalInfo);
-  const kyc = useLoanStore((state) => state.formData.kyc);
-  const address = useLoanStore((state) => state.formData.address);
-  const docs = useLoanStore((state) => state.formData.documents);
   const [showResume, setShowResume] = useState(false);
 
   useAutoSave(30000);
@@ -195,7 +196,10 @@ const LoanWizard = () => {
   const progress = (currentStep / STEPS.length) * 100;
 
   return (
-    <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden font-sans" role="main">
+    <div
+      className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden font-sans"
+      role="main"
+    >
       <ResumeModal />
       <div ref={announcementRef} className="sr-only" role="status" aria-live="polite" />
       <aside className="w-full lg:w-[400px] bg-[#F8F9FA] border-r border-[#EEEEEE] p-6 sm:p-8 lg:p-12 flex flex-col justify-between overflow-y-auto">
@@ -281,7 +285,11 @@ const LoanWizard = () => {
               <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-[#F8F9FA] border border-[#EEEEEE] rounded-full">
                 <div className="w-1 h-1 rounded-full bg-[#2E7D32] animate-pulse" />
                 <span className="text-[9px] font-mono text-[#888888] uppercase tracking-widest">
-                  Saved {new Date(lastSaved).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  Saved{' '}
+                  {new Date(lastSaved).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
                 </span>
               </div>
             )}
@@ -402,7 +410,8 @@ const LoanWizard = () => {
               >
                 {currentStep === 8 ? 'Submit' : 'Continue'}
                 <ChevronRight
-                  size={18} sm:size={20}
+                  size={18}
+                  sm:size={20}
                   className="ml-2 sm:ml-3 group-hover:translate-x-1 transition-transform"
                 />
               </button>
@@ -411,12 +420,7 @@ const LoanWizard = () => {
         </div>
       </main>
 
-      <ResumeModal
-        isOpen={showResume}
-        onResume={handleResume}
-        onReset={handleStartFresh}
-        lastSavedTime={lastSaved}
-      />
+      <ResumeModal />
       <style>{`.custom-scrollbar::-webkit-scrollbar { width: 6px; } .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } .custom-scrollbar::-webkit-scrollbar-thumb { background: #EEEEEE; border-radius: 10px; } .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #DDDDDD; }`}</style>
     </div>
   );

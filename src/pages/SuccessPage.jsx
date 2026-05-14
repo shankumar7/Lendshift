@@ -1,8 +1,6 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, ArrowRight, Download, Share2, ShieldCheck, Globe } from 'lucide-react';
+import { CheckCircle2, ArrowRight, Download, ShieldCheck, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Logo from '@/components/Logo';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 
@@ -62,7 +60,10 @@ const SuccessPage = () => {
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Link to="/" className="btn-primary flex-1 h-16 rounded-xl group">
                 Back to Dashboard
-                <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight
+                  size={18}
+                  className="ml-2 group-hover:translate-x-1 transition-transform"
+                />
               </Link>
               <button type="button" className="btn-secondary flex-1 h-16 rounded-xl gap-2">
                 <Download size={18} />

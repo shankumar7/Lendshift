@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -7,15 +6,20 @@ import Footer from '@/components/Footer';
 
 const pageContent = {
   Personal: {
-    details: 'Our personal liquidity suite is designed for the modern individual. Whether it is asset-backed lending or high-velocity unsecured capital, we provide the fluidity required to navigate life’s strategic shifts.',
+    details:
+      'Our personal liquidity suite is designed for the modern individual. Whether it is asset-backed lending or high-velocity unsecured capital, we provide the fluidity required to navigate life’s strategic shifts.',
     pillars: [
       { label: 'Fluidity', text: 'Access capital that moves with your lifestyle, not against it.' },
-      { label: 'Discretion', text: 'Institutional-grade privacy protocols for all personal transactions.' },
+      {
+        label: 'Discretion',
+        text: 'Institutional-grade privacy protocols for all personal transactions.',
+      },
       { label: 'Precision', text: 'Tailored rates based on your unique financial trajectory.' },
     ],
   },
   Enterprise: {
-    details: 'Scale without boundaries. LendSwift Enterprise provides the heavy-duty capital infrastructure needed for Series B+ organizations and established corporate entities looking for atomic-speed working capital.',
+    details:
+      'Scale without boundaries. LendSwift Enterprise provides the heavy-duty capital infrastructure needed for Series B+ organizations and established corporate entities looking for atomic-speed working capital.',
     pillars: [
       { label: 'Scale', text: 'Limits designed for institutional growth and expansion.' },
       { label: 'Speed', text: 'Atomic settlement ensures your operations never slow down.' },
@@ -23,7 +27,8 @@ const pageContent = {
     ],
   },
   Mortgage: {
-    details: 'The estate journey, reimagined. We provide institutional-grade property financing with a focus on high-velocity approval and digital-first documentation protocols.',
+    details:
+      'The estate journey, reimagined. We provide institutional-grade property financing with a focus on high-velocity approval and digital-first documentation protocols.',
     pillars: [
       { label: 'Estate', text: 'Backing for residential, commercial, and mixed-use property.' },
       { label: 'Efficiency', text: 'Paperless closing protocols for the modern homeowner.' },
@@ -31,7 +36,8 @@ const pageContent = {
     ],
   },
   Markets: {
-    details: 'Navigating secondary liquidity. LendSwift Markets connects institutional lenders with premium credit opportunities through a transparent, high-velocity digital exchange.',
+    details:
+      'Navigating secondary liquidity. LendSwift Markets connects institutional lenders with premium credit opportunities through a transparent, high-velocity digital exchange.',
     pillars: [
       { label: 'Liquidity', text: 'Instant secondary market access for credit portfolios.' },
       { label: 'Yield', text: 'Optimized returns through algorithmic risk assessment.' },
@@ -39,7 +45,8 @@ const pageContent = {
     ],
   },
   About: {
-    details: 'LendSwift was founded on the belief that capital should be as fluid as the technology that powers our world. We are architecting a new standard for institutional trust.',
+    details:
+      'LendSwift was founded on the belief that capital should be as fluid as the technology that powers our world. We are architecting a new standard for institutional trust.',
     pillars: [
       { label: 'Origin', text: 'Founded in 2024 to bridge legacy and digital finance.' },
       { label: 'Team', text: 'Led by industry veterans from fintech and traditional banking.' },
@@ -47,7 +54,8 @@ const pageContent = {
     ],
   },
   Vision: {
-    details: 'We see a world where financial friction is zero. Our vision is to become the underlying operating system for global institutional liquidity.',
+    details:
+      'We see a world where financial friction is zero. Our vision is to become the underlying operating system for global institutional liquidity.',
     pillars: [
       { label: 'Atomic', text: 'Instant settlement as the global financial baseline.' },
       { label: 'Universal', text: 'Capital access without geographic or legacy constraints.' },
@@ -55,7 +63,8 @@ const pageContent = {
     ],
   },
   Careers: {
-    details: 'Build the architecture of modern liquidity. We are looking for engineers, designers, and strategists who want to redefine how the world moves capital.',
+    details:
+      'Build the architecture of modern liquidity. We are looking for engineers, designers, and strategists who want to redefine how the world moves capital.',
     pillars: [
       { label: 'Growth', text: 'Unlimited trajectory within a high-velocity environment.' },
       { label: 'Impact', text: 'Directly influence the global financial infrastructure.' },
@@ -63,7 +72,8 @@ const pageContent = {
     ],
   },
   Ethics: {
-    details: 'Trust is our primary asset. We operate with radical transparency, ensuring that every algorithmic decision is fair, unbiased, and clearly documented.',
+    details:
+      'Trust is our primary asset. We operate with radical transparency, ensuring that every algorithmic decision is fair, unbiased, and clearly documented.',
     pillars: [
       { label: 'Privacy', text: 'Zero-knowledge protocols for sensitive financial data.' },
       { label: 'Fairness', text: 'Unbiased underwriting through open-source philosophy.' },
@@ -71,7 +81,8 @@ const pageContent = {
     ],
   },
   Institutional: {
-    details: 'Infrastructure for the architects of finance. We provide API-first lending engines for banking partners, credit unions, and sovereign wealth entities.',
+    details:
+      'Infrastructure for the architects of finance. We provide API-first lending engines for banking partners, credit unions, and sovereign wealth entities.',
     pillars: [
       { label: 'API-First', text: 'Native integration into any legacy or modern core.' },
       { label: 'Security', text: 'Military-grade encryption for institutional transfers.' },
@@ -79,7 +90,8 @@ const pageContent = {
     ],
   },
   Support: {
-    details: 'Always online, always available. Our support ecosystem is designed to provide immediate technical and strategic assistance for all LendSwift partners.',
+    details:
+      'Always online, always available. Our support ecosystem is designed to provide immediate technical and strategic assistance for all LendSwift partners.',
     pillars: [
       { label: 'Priority', text: '24/7 dedicated channels for institutional clients.' },
       { label: 'Technical', text: 'Deep-dive support for API and integration needs.' },
@@ -87,7 +99,8 @@ const pageContent = {
     ],
   },
   'Our Methods': {
-    details: 'The mechanics of fluidity. We utilize proprietary e-bridge protocols and atomic settlement engines to move capital at the speed of thought.',
+    details:
+      'The mechanics of fluidity. We utilize proprietary e-bridge protocols and atomic settlement engines to move capital at the speed of thought.',
     pillars: [
       { label: 'E-Bridge', text: 'Direct connection to real-time verification sources.' },
       { label: 'Atomic', text: 'Smart-contract powered disbursement for zero lag.' },
