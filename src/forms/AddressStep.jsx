@@ -65,6 +65,62 @@ const FileUploadZone = ({ label, value, onChange, onRemove, error }) => {
     return 'border-[#EEEEEE] hover:border-[#CCCCCC]';
   };
 
+  const renderContent = () => {
+    if (value) {
+      return (
+        <div className="flex items-center gap-4 px-6 w-full">
+          <div className="w-12 h-12 rounded-lg bg-white border border-[#EEEEEE] flex items-center justify-center overflow-hidden">
+            {value.preview ? (
+              <img src={value.preview} alt="preview" className="w-full h-full object-cover" />
+            ) : (
+              <FileText size={24} className="text-[#888888]" />
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold truncate">{value.name}</p>
+            <p className="text-[10px] text-[#888888] font-mono">
+              {(value.size / 1024).toFixed(0)} KB
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onRemove}
+            className="p-2 hover:bg-white rounded-full transition-colors text-red-500"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      );
+    }
+    if (progress > 0 && progress < 100) {
+      return (
+        <div className="w-full px-8 space-y-2">
+          <div className="flex justify-between text-[10px] font-mono font-bold">
+            <span>UPLOADING</span>
+            <span>{progress}%</span>
+          </div>
+          <div className="h-1 bg-[#EEEEEE] rounded-full overflow-hidden">
+            <div className="h-full bg-[#0065FF]" style={{ width: `${progress}%` }} />
+          </div>
+        </div>
+      );
+    }
+    return (
+      <>
+        <UploadCloud size={24} className="text-[#888888]" />
+        <p className="text-[10px] font-black uppercase tracking-widest text-[#888888]">
+          Drag & drop or <span className="text-[#0065FF] cursor-pointer">browse</span>
+        </p>
+        <input
+          type="file"
+          id={`file-upload-${label.replace(/\s+/g, '-').toLowerCase()}`}
+          className="absolute inset-0 opacity-0 cursor-pointer"
+          onChange={(e) => handleFile(e.target.files[0])}
+        />
+      </>
+    );
+  };
+
   return (
     <div className="space-y-2">
       <label
@@ -86,53 +142,7 @@ const FileUploadZone = ({ label, value, onChange, onRemove, error }) => {
         }}
         className={`relative h-32 rounded-2xl border border-dashed transition-all duration-300 flex flex-col items-center justify-center gap-2 overflow-hidden ${getBorderStyles()}`}
       >
-        {value ? (
-          <div className="flex items-center gap-4 px-6 w-full">
-            <div className="w-12 h-12 rounded-lg bg-white border border-[#EEEEEE] flex items-center justify-center overflow-hidden">
-              {value.preview ? (
-                <img src={value.preview} alt="preview" className="w-full h-full object-cover" />
-              ) : (
-                <FileText size={24} className="text-[#888888]" />
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold truncate">{value.name}</p>
-              <p className="text-[10px] text-[#888888] font-mono">
-                {(value.size / 1024).toFixed(0)} KB
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={onRemove}
-              className="p-2 hover:bg-white rounded-full transition-colors text-red-500"
-            >
-              <X size={16} />
-            </button>
-          </div>
-        ) : progress > 0 && progress < 100 ? (
-          <div className="w-full px-8 space-y-2">
-            <div className="flex justify-between text-[10px] font-mono font-bold">
-              <span>UPLOADING</span>
-              <span>{progress}%</span>
-            </div>
-            <div className="h-1 bg-[#EEEEEE] rounded-full overflow-hidden">
-              <div className="h-full bg-[#0065FF]" style={{ width: `${progress}%` }} />
-            </div>
-          </div>
-        ) : (
-          <>
-            <UploadCloud size={24} className="text-[#888888]" />
-            <p className="text-[10px] font-black uppercase tracking-widest text-[#888888]">
-              Drag & drop or <span className="text-[#0065FF] cursor-pointer">browse</span>
-            </p>
-            <input
-              type="file"
-              id={`file-upload-${label.replace(/\s+/g, '-').toLowerCase()}`}
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              onChange={(e) => handleFile(e.target.files[0])}
-            />
-          </>
-        )}
+        {renderContent()}
       </div>
       {error && (
         <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
