@@ -310,8 +310,12 @@ const KYCStep = ({ onNext }) => {
 
           <div className="flex-shrink-0 flex items-center gap-6 border-l border-white/10 pl-8 sm:pl-16 hidden lg:flex">
             <div className="text-right space-y-1">
-              <p className="text-[9px] sm:text-[10px] font-mono text-white/40 uppercase">Completion</p>
-              <p className="text-2xl sm:text-3xl font-serif italic">{Math.round(completionPercent)}%</p>
+              <p className="text-[9px] sm:text-[10px] font-mono text-white/40 uppercase">
+                Completion
+              </p>
+              <p className="text-2xl sm:text-3xl font-serif italic">
+                {Math.round(completionPercent)}%
+              </p>
             </div>
             <div className="w-16 h-16 rounded-full border-4 border-white/5 flex items-center justify-center relative">
               <svg className="w-full h-full -rotate-90">
@@ -373,7 +377,7 @@ const KYCStep = ({ onNext }) => {
                   <VerificationBadge status={getPanBadgeStatus()} />
                 </div>
                 <div className="space-y-5">
-                  <label className="block space-y-5 cursor-pointer">
+                  <label htmlFor="pan-input" className="block space-y-5 cursor-pointer">
                     <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
                       Permanent Account Number
                     </span>
@@ -389,9 +393,7 @@ const KYCStep = ({ onNext }) => {
                             maxLength={10}
                             disabled={isPanVerified}
                             placeholder="ABCDE1234F"
-                            onChange={(e) =>
-                              field.onChange(e.target.value.toUpperCase())
-                            }
+                            onChange={(e) => field.onChange(e.target.value.toUpperCase())}
                             className="w-full h-14 sm:h-16 bg-[#F8F9FA] border-0 rounded-xl sm:rounded-2xl px-4 sm:px-6 font-mono tracking-[0.2em] sm:tracking-[0.4em] text-lg sm:text-xl focus:ring-2 focus:ring-[#121212] transition-all"
                           />
                         )}
@@ -437,7 +439,7 @@ const KYCStep = ({ onNext }) => {
                   <VerificationBadge status={getAadhaarBadgeStatus()} />
                 </div>
                 <div className="space-y-5">
-                  <label className="block space-y-5 cursor-pointer">
+                  <label htmlFor="aadhaar-input" className="block space-y-5 cursor-pointer">
                     <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
                       Aadhaar Identity
                     </span>
@@ -449,15 +451,11 @@ const KYCStep = ({ onNext }) => {
                           <input
                             {...field}
                             id="aadhaar-input"
-                            value={
-                              field.value?.replace(/(\d{4})(?=\d)/g, '$1 ') || ''
-                            }
+                            value={field.value?.replace(/(\d{4})(?=\d)/g, '$1 ') || ''}
                             maxLength={14}
                             disabled={isAadhaarVerified}
                             placeholder="XXXX XXXX XXXX"
-                            onChange={(e) =>
-                              field.onChange(e.target.value.replace(/\D/g, ''))
-                            }
+                            onChange={(e) => field.onChange(e.target.value.replace(/\D/g, ''))}
                             className={`w-full h-14 sm:h-16 bg-[#F8F9FA] border-0 rounded-xl sm:rounded-2xl px-4 sm:px-6 font-mono tracking-[0.2em] sm:tracking-[0.4em] text-lg sm:text-xl focus:ring-2 focus:ring-[#121212] transition-all ${isAadhaarVerified ? 'blur-[2px] opacity-40' : ''}`}
                           />
                         )}
@@ -469,9 +467,7 @@ const KYCStep = ({ onNext }) => {
                             e.preventDefault();
                             handleVerifyAadhaar();
                           }}
-                          disabled={
-                            isVerifyingAadhaar || aadhaarNumber?.length < 12
-                          }
+                          disabled={isVerifyingAadhaar || aadhaarNumber?.length < 12}
                           className="absolute right-3 top-1/2 -translate-y-1/2 h-10 px-8 rounded-xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#0065FF] transition-colors disabled:opacity-50"
                         >
                           {isVerifyingAadhaar ? (
@@ -505,7 +501,7 @@ const KYCStep = ({ onNext }) => {
 
               <div className="space-y-8">
                 <div className="space-y-3">
-                  <label className="block space-y-3 cursor-pointer">
+                  <label htmlFor="id-type-select" className="block space-y-3 cursor-pointer">
                     <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
                       ID Type
                     </span>
@@ -535,7 +531,7 @@ const KYCStep = ({ onNext }) => {
                 </div>
 
                 <div className="space-y-3">
-                  <label className="block space-y-3 cursor-pointer">
+                  <label htmlFor="id-number-input" className="block space-y-3 cursor-pointer">
                     <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
                       Document Number
                     </span>
@@ -723,7 +719,9 @@ const KYCStep = ({ onNext }) => {
           <span className="text-[8px] font-mono uppercase tracking-widest whitespace-nowrap">
             ISO 27001 Certified
           </span>
-          <span className="text-[8px] font-mono uppercase tracking-widest whitespace-nowrap">GDPR Compliant</span>
+          <span className="text-[8px] font-mono uppercase tracking-widest whitespace-nowrap">
+            GDPR Compliant
+          </span>
           <span className="text-[8px] font-mono uppercase tracking-widest whitespace-nowrap">
             Real-time Biometric Match
           </span>

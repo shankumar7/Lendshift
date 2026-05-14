@@ -60,25 +60,48 @@ const FileUploadZone = ({ label, value, onChange, onRemove, error }) => {
 
   return (
     <div className="space-y-2">
-      <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">{label}</span>
+      <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
+        {label}
+      </span>
       <div
-        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
         onDragLeave={() => setIsDragging(false)}
-        onDrop={(e) => { e.preventDefault(); setIsDragging(false); handleFile(e.dataTransfer.files[0]); }}
+        onDrop={(e) => {
+          e.preventDefault();
+          setIsDragging(false);
+          handleFile(e.dataTransfer.files[0]);
+        }}
         className={`relative h-32 rounded-2xl border border-dashed transition-all duration-300 flex flex-col items-center justify-center gap-2 overflow-hidden ${
-          value ? 'border-[#0065FF] bg-[#F0F7FF]' : isDragging ? 'border-[#121212] bg-[#FAFAFA]' : 'border-[#EEEEEE] hover:border-[#CCCCCC]'
+          value
+            ? 'border-[#0065FF] bg-[#F0F7FF]'
+            : isDragging
+              ? 'border-[#121212] bg-[#FAFAFA]'
+              : 'border-[#EEEEEE] hover:border-[#CCCCCC]'
         }`}
       >
         {value ? (
           <div className="flex items-center gap-4 px-6 w-full">
             <div className="w-12 h-12 rounded-lg bg-white border border-[#EEEEEE] flex items-center justify-center overflow-hidden">
-              {value.preview ? <img src={value.preview} alt="preview" className="w-full h-full object-cover" /> : <FileText size={24} className="text-[#888888]" />}
+              {value.preview ? (
+                <img src={value.preview} alt="preview" className="w-full h-full object-cover" />
+              ) : (
+                <FileText size={24} className="text-[#888888]" />
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-bold truncate">{value.name}</p>
-              <p className="text-[10px] text-[#888888] font-mono">{(value.size / 1024).toFixed(0)} KB</p>
+              <p className="text-[10px] text-[#888888] font-mono">
+                {(value.size / 1024).toFixed(0)} KB
+              </p>
             </div>
-            <button type="button" onClick={onRemove} className="p-2 hover:bg-white rounded-full transition-colors text-red-500">
+            <button
+              type="button"
+              onClick={onRemove}
+              className="p-2 hover:bg-white rounded-full transition-colors text-red-500"
+            >
               <X size={16} />
             </button>
           </div>
@@ -110,7 +133,11 @@ const FileUploadZone = ({ label, value, onChange, onRemove, error }) => {
           </>
         )}
       </div>
-      {error && <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{error.message}</p>}
+      {error && (
+        <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
+          {error.message}
+        </p>
+      )}
     </div>
   );
 };
@@ -153,7 +180,7 @@ const AddressStep = ({ onNext }) => {
     const lookupPin = async () => {
       if (pincode?.length === 6) {
         setIsLookupLoading(true);
-        await new Promise(r => setTimeout(r, 1000));
+        await new Promise((r) => setTimeout(r, 1000));
         const data = PIN_DATA[pincode] || { city: 'Sample City', state: 'Sample State' };
         setValue('current.city', data.city, { shouldValidate: true });
         setValue('current.state', data.state, { shouldValidate: true });
@@ -172,7 +199,7 @@ const AddressStep = ({ onNext }) => {
 
   const handleGeoVerify = async () => {
     setIsGeoVerifying(true);
-    await new Promise(r => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, 2000));
     setValue('isGeoVerified', true);
     setIsGeoVerifying(false);
   };
@@ -194,90 +221,178 @@ const AddressStep = ({ onNext }) => {
               <MapPin size={20} strokeWidth={1.5} />
             </div>
             <div>
-              <h3 className="text-xl sm:text-2xl font-serif italic text-[#121212]">Current Residence</h3>
-              <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">Primary Contact Address</p>
+              <h3 className="text-xl sm:text-2xl font-serif italic text-[#121212]">
+                Current Residence
+              </h3>
+              <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">
+                Primary Contact Address
+              </p>
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="md:col-span-2 space-y-2">
-              <label className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Address Line 1</label>
+              <label
+                htmlFor="current-address1"
+                className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+              >
+                Address Line 1
+              </label>
               <Controller
                 name="current.addressLine1"
                 control={control}
                 render={({ field }) => (
-                  <input {...field} placeholder="House / Flat No, Building Name" className="input-premium" />
+                  <input
+                    {...field}
+                    id="current-address1"
+                    placeholder="House / Flat No, Building Name"
+                    className="input-premium"
+                  />
                 )}
               />
-              {errors.current?.addressLine1 && <p className="text-[9px] sm:text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{errors.current.addressLine1.message}</p>}
+              {errors.current?.addressLine1 && (
+                <p className="text-[9px] sm:text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
+                  {errors.current.addressLine1.message}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
-              <label className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Address Line 2 (Optional)</label>
+              <label
+                htmlFor="current-address2"
+                className="block text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+              >
+                Address Line 2 (Optional)
+              </label>
               <Controller
                 name="current.addressLine2"
                 control={control}
                 render={({ field }) => (
-                  <input {...field} placeholder="Road Name, Area, Colony" className="input-premium" />
+                  <input
+                    {...field}
+                    id="current-address2"
+                    placeholder="Road Name, Area, Colony"
+                    className="input-premium"
+                  />
                 )}
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Landmark (Optional)</label>
+              <label
+                htmlFor="current-landmark"
+                className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+              >
+                Landmark (Optional)
+              </label>
               <Controller
                 name="current.landmark"
                 control={control}
                 render={({ field }) => (
-                  <input {...field} placeholder="e.g. Near Apollo Hospital" className="input-premium" />
+                  <input
+                    {...field}
+                    id="current-landmark"
+                    placeholder="e.g. Near Apollo Hospital"
+                    className="input-premium"
+                  />
                 )}
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">PIN Code</label>
+              <label
+                htmlFor="current-pincode"
+                className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+              >
+                PIN Code
+              </label>
               <div className="relative">
                 <Controller
                   name="current.pincode"
                   control={control}
                   render={({ field }) => (
-                    <input {...field} maxLength={6} placeholder="6 Digit PIN" className="input-premium" />
+                    <input
+                      {...field}
+                      id="current-pincode"
+                      maxLength={6}
+                      placeholder="6 Digit PIN"
+                      className="input-premium"
+                    />
                   )}
                 />
-                {isLookupLoading && <Loader2 size={16} className="absolute right-4 top-1/2 -translate-y-1/2 animate-spin text-[#0065FF]" />}
+                {isLookupLoading && (
+                  <Loader2
+                    size={16}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 animate-spin text-[#0065FF]"
+                  />
+                )}
               </div>
-              {errors.current?.pincode && <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{errors.current.pincode.message}</p>}
+              {errors.current?.pincode && (
+                <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
+                  {errors.current.pincode.message}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
-              <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">City</label>
+              <label
+                htmlFor="current-city"
+                className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+              >
+                City
+              </label>
               <Controller
                 name="current.city"
                 control={control}
                 render={({ field }) => (
-                  <input {...field} readOnly className="input-premium bg-[#F8F9FA] cursor-not-allowed" />
+                  <input
+                    {...field}
+                    id="current-city"
+                    readOnly
+                    className="input-premium bg-[#F8F9FA] cursor-not-allowed"
+                  />
                 )}
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">State</label>
+              <label
+                htmlFor="current-state"
+                className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+              >
+                State
+              </label>
               <Controller
                 name="current.state"
                 control={control}
                 render={({ field }) => (
-                  <input {...field} readOnly className="input-premium bg-[#F8F9FA] cursor-not-allowed" />
+                  <input
+                    {...field}
+                    id="current-state"
+                    readOnly
+                    className="input-premium bg-[#F8F9FA] cursor-not-allowed"
+                  />
                 )}
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Country</label>
+              <label
+                htmlFor="current-country"
+                className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+              >
+                Country
+              </label>
               <Controller
                 name="current.country"
                 control={control}
                 render={({ field }) => (
-                  <input {...field} readOnly className="input-premium bg-[#F8F9FA] cursor-not-allowed" />
+                  <input
+                    {...field}
+                    id="current-country"
+                    readOnly
+                    className="input-premium bg-[#F8F9FA] cursor-not-allowed"
+                  />
                 )}
               />
             </div>
@@ -292,18 +407,25 @@ const AddressStep = ({ onNext }) => {
             </div>
             <div>
               <h3 className="text-xl font-serif italic text-[#121212]">Residence Details</h3>
-              <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">Type & Duration</p>
+              <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">
+                Type & Duration
+              </p>
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-2">
-              <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Residence Type</label>
+              <label
+                htmlFor="residence-type"
+                className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+              >
+                Residence Type
+              </label>
               <Controller
                 name="current.residenceType"
                 control={control}
                 render={({ field }) => (
-                  <select {...field} className="input-premium appearance-none">
+                  <select {...field} id="residence-type" className="input-premium appearance-none">
                     <option value="">Select Type</option>
                     <option value="Owned">Owned</option>
                     <option value="Rented">Rented</option>
@@ -312,16 +434,29 @@ const AddressStep = ({ onNext }) => {
                   </select>
                 )}
               />
-              {errors.current?.residenceType && <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{errors.current.residenceType.message}</p>}
+              {errors.current?.residenceType && (
+                <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
+                  {errors.current.residenceType.message}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
-              <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Duration at Current Address</label>
+              <label
+                htmlFor="duration-at-address"
+                className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+              >
+                Duration at Current Address
+              </label>
               <Controller
                 name="current.durationAtAddress"
                 control={control}
                 render={({ field }) => (
-                  <select {...field} className="input-premium appearance-none">
+                  <select
+                    {...field}
+                    id="duration-at-address"
+                    className="input-premium appearance-none"
+                  >
                     <option value="">Select Duration</option>
                     <option value="Less than 1 year">Less than 1 year</option>
                     <option value="1–3 years">1–3 years</option>
@@ -330,7 +465,11 @@ const AddressStep = ({ onNext }) => {
                   </select>
                 )}
               />
-              {errors.current?.durationAtAddress && <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{errors.current.durationAtAddress.message}</p>}
+              {errors.current?.durationAtAddress && (
+                <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
+                  {errors.current.durationAtAddress.message}
+                </p>
+              )}
             </div>
 
             <AnimatePresence>
@@ -342,13 +481,19 @@ const AddressStep = ({ onNext }) => {
                   className="md:col-span-2 grid md:grid-cols-2 gap-8 overflow-hidden"
                 >
                   <div className="space-y-2">
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Monthly Rent (₹)</label>
+                    <label
+                      htmlFor="monthly-rent"
+                      className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+                    >
+                      Monthly Rent (₹)
+                    </label>
                     <Controller
                       name="current.monthlyRent"
                       control={control}
                       render={({ field }) => (
                         <input
                           {...field}
+                          id="monthly-rent"
                           type="number"
                           value={field.value === 0 ? '' : field.value}
                           onChange={(e) => {
@@ -360,15 +505,29 @@ const AddressStep = ({ onNext }) => {
                         />
                       )}
                     />
-                    {errors.current?.monthlyRent && <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{errors.current.monthlyRent.message}</p>}
+                    {errors.current?.monthlyRent && (
+                      <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
+                        {errors.current.monthlyRent.message}
+                      </p>
+                    )}
                   </div>
                   <div className="space-y-2">
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Landlord Name</label>
+                    <label
+                      htmlFor="landlord-name"
+                      className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+                    >
+                      Landlord Name
+                    </label>
                     <Controller
                       name="current.landlordName"
                       control={control}
                       render={({ field }) => (
-                        <input {...field} placeholder="Full Name" className="input-premium" />
+                        <input
+                          {...field}
+                          id="landlord-name"
+                          placeholder="Full Name"
+                          className="input-premium"
+                        />
                       )}
                     />
                   </div>
@@ -393,38 +552,71 @@ const AddressStep = ({ onNext }) => {
                 </div>
                 <div>
                   <h3 className="text-xl font-serif italic text-[#121212]">Previous Address</h3>
-                  <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">Required for short residency</p>
+                  <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">
+                    Required for short residency
+                  </p>
                 </div>
               </div>
 
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="md:col-span-2 space-y-2">
-                  <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Address Line 1</label>
+                  <label
+                    htmlFor="previous-address1"
+                    className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+                  >
+                    Address Line 1
+                  </label>
                   <Controller
                     name="previous.addressLine1"
                     control={control}
                     render={({ field }) => (
-                      <input {...field} placeholder="Previous House/Street" className="input-premium" />
+                      <input
+                        {...field}
+                        id="previous-address1"
+                        placeholder="Previous House/Street"
+                        className="input-premium"
+                      />
                     )}
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">City</label>
+                  <label
+                    htmlFor="previous-city"
+                    className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+                  >
+                    City
+                  </label>
                   <Controller
                     name="previous.city"
                     control={control}
                     render={({ field }) => (
-                      <input {...field} placeholder="City" className="input-premium" />
+                      <input
+                        {...field}
+                        id="previous-city"
+                        placeholder="City"
+                        className="input-premium"
+                      />
                     )}
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">PIN Code</label>
+                  <label
+                    htmlFor="previous-pincode"
+                    className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+                  >
+                    PIN Code
+                  </label>
                   <Controller
                     name="previous.pincode"
                     control={control}
                     render={({ field }) => (
-                      <input {...field} maxLength={6} placeholder="6 Digit PIN" className="input-premium" />
+                      <input
+                        {...field}
+                        id="previous-pincode"
+                        maxLength={6}
+                        placeholder="6 Digit PIN"
+                        className="input-premium"
+                      />
                     )}
                   />
                 </div>
@@ -442,10 +634,15 @@ const AddressStep = ({ onNext }) => {
               </div>
               <div>
                 <h3 className="text-xl font-serif italic text-[#121212]">Permanent Address</h3>
-                <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">Native or Legal Residence</p>
+                <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">
+                  Native or Legal Residence
+                </p>
               </div>
             </div>
-            <label className="flex items-center gap-3 cursor-pointer group">
+            <label
+              htmlFor="same-as-current"
+              className="flex items-center gap-3 cursor-pointer group"
+            >
               <div className="relative">
                 <Controller
                   name="isPermanentSameAsCurrent"
@@ -453,6 +650,7 @@ const AddressStep = ({ onNext }) => {
                   render={({ field }) => (
                     <input
                       type="checkbox"
+                      id="same-as-current"
                       checked={field.value}
                       onChange={field.onChange}
                       className="peer sr-only"
@@ -462,7 +660,9 @@ const AddressStep = ({ onNext }) => {
                 <div className="w-10 h-6 bg-[#EEEEEE] rounded-full peer-checked:bg-[#121212] transition-colors" />
                 <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4" />
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#121212]/60 group-hover:text-[#121212]">Same as Current</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#121212]/60 group-hover:text-[#121212]">
+                Same as Current
+              </span>
             </label>
           </div>
 
@@ -475,32 +675,63 @@ const AddressStep = ({ onNext }) => {
                 className="grid md:grid-cols-2 gap-8 overflow-hidden"
               >
                 <div className="md:col-span-2 space-y-2">
-                  <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Address Line 1</label>
+                  <label
+                    htmlFor="permanent-address1"
+                    className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+                  >
+                    Address Line 1
+                  </label>
                   <Controller
                     name="permanent.addressLine1"
                     control={control}
                     render={({ field }) => (
-                      <input {...field} placeholder="Permanent Residence" className="input-premium" />
+                      <input
+                        {...field}
+                        id="permanent-address1"
+                        placeholder="Permanent Residence"
+                        className="input-premium"
+                      />
                     )}
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">PIN Code</label>
+                  <label
+                    htmlFor="permanent-pincode"
+                    className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+                  >
+                    PIN Code
+                  </label>
                   <Controller
                     name="permanent.pincode"
                     control={control}
                     render={({ field }) => (
-                      <input {...field} maxLength={6} placeholder="6 Digit PIN" className="input-premium" />
+                      <input
+                        {...field}
+                        id="permanent-pincode"
+                        maxLength={6}
+                        placeholder="6 Digit PIN"
+                        className="input-premium"
+                      />
                     )}
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">City</label>
+                  <label
+                    htmlFor="permanent-city"
+                    className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+                  >
+                    City
+                  </label>
                   <Controller
                     name="permanent.city"
                     control={control}
                     render={({ field }) => (
-                      <input {...field} placeholder="City" className="input-premium" />
+                      <input
+                        {...field}
+                        id="permanent-city"
+                        placeholder="City"
+                        className="input-premium"
+                      />
                     )}
                   />
                 </div>
@@ -517,18 +748,29 @@ const AddressStep = ({ onNext }) => {
             </div>
             <div>
               <h3 className="text-xl font-serif italic text-[#121212]">Verification Documents</h3>
-              <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">Upload Address Proof</p>
+              <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">
+                Upload Address Proof
+              </p>
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-2">
-              <label className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">Proof Type</label>
+              <label
+                htmlFor="address-proof-type"
+                className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+              >
+                Proof Type
+              </label>
               <Controller
                 name="addressProofType"
                 control={control}
                 render={({ field }) => (
-                  <select {...field} className="input-premium appearance-none">
+                  <select
+                    {...field}
+                    id="address-proof-type"
+                    className="input-premium appearance-none"
+                  >
                     <option value="">Select Document Type</option>
                     <option value="Electricity Bill">Electricity Bill</option>
                     <option value="Rental Agreement">Rental Agreement</option>
@@ -538,7 +780,11 @@ const AddressStep = ({ onNext }) => {
                   </select>
                 )}
               />
-              {errors.addressProofType && <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">{errors.addressProofType.message}</p>}
+              {errors.addressProofType && (
+                <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
+                  {errors.addressProofType.message}
+                </p>
+              )}
             </div>
 
             <FileUploadZone
@@ -546,7 +792,11 @@ const AddressStep = ({ onNext }) => {
               value={documents.addressProof}
               onChange={(file) => updateFormData('documents', { addressProof: file })}
               onRemove={() => updateFormData('documents', { addressProof: null })}
-              error={!documents.addressProof && errors.addressProofType ? { message: 'Document upload required' } : null}
+              error={
+                !documents.addressProof && errors.addressProofType
+                  ? { message: 'Document upload required' }
+                  : null
+              }
             />
           </div>
         </section>
@@ -559,13 +809,18 @@ const AddressStep = ({ onNext }) => {
             </div>
             <div>
               <h3 className="text-xl font-serif italic text-[#121212]">Geo-Spatial Validation</h3>
-              <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">GPS Location Matching</p>
+              <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">
+                GPS Location Matching
+              </p>
             </div>
           </div>
 
           <div className="p-8 sm:p-12 rounded-[2rem] sm:rounded-[3rem] border border-[#EEEEEE] bg-[#FAFAFA] flex flex-col md:flex-row items-center gap-8 sm:gap-12">
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white shadow-2xl flex items-center justify-center relative overflow-hidden shrink-0">
-              <Globe size={32} className={isGeoVerifying ? 'text-[#0065FF] animate-pulse' : 'text-[#EEEEEE]'} />
+              <Globe
+                size={32}
+                className={isGeoVerifying ? 'text-[#0065FF] animate-pulse' : 'text-[#EEEEEE]'}
+              />
               {isGeoVerified && (
                 <div className="absolute inset-0 bg-[#E8F5E9] flex items-center justify-center">
                   <CheckCircle2 size={32} className="text-[#2E7D32]" />
@@ -585,7 +840,8 @@ const AddressStep = ({ onNext }) => {
               <div className="space-y-2">
                 <h4 className="text-lg font-bold">Verify Your Current Location</h4>
                 <p className="text-xs text-[#888888] leading-relaxed">
-                  Institutional compliance requires us to match your current GPS location with the residential address provided.
+                  Institutional compliance requires us to match your current GPS location with the
+                  residential address provided.
                 </p>
               </div>
 
@@ -609,8 +865,12 @@ const AddressStep = ({ onNext }) => {
                 <div className="flex items-center gap-4 text-[#2E7D32] bg-[#E8F5E9] p-4 rounded-2xl border border-[#C8E6C9]">
                   <CheckCircle2 size={24} />
                   <div>
-                    <p className="text-xs font-black uppercase tracking-widest">Location Match Verified</p>
-                    <p className="text-[10px] font-mono font-bold uppercase tracking-widest opacity-60">Accuracy: 99.8% Match with Address</p>
+                    <p className="text-xs font-black uppercase tracking-widest">
+                      Location Match Verified
+                    </p>
+                    <p className="text-[10px] font-mono font-bold uppercase tracking-widest opacity-60">
+                      Accuracy: 99.8% Match with Address
+                    </p>
                   </div>
                 </div>
               )}
@@ -619,7 +879,9 @@ const AddressStep = ({ onNext }) => {
         </section>
 
         {/* Hidden Submit */}
-        <button type="submit" id="wizard-submit-btn" className="hidden">Submit</button>
+        <button type="submit" id="wizard-submit-btn" className="hidden">
+          Submit
+        </button>
       </form>
 
       {/* Summary Sidebar */}
@@ -639,7 +901,9 @@ const AddressStep = ({ onNext }) => {
                 { id: 'type', label: 'Residency Type', status: !!residenceType },
               ].map((item) => (
                 <div key={item.id} className="flex items-center justify-between group">
-                  <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${item.status ? 'text-white' : 'text-white/20'}`}>
+                  <span
+                    className={`text-[10px] font-black uppercase tracking-widest transition-colors ${item.status ? 'text-white' : 'text-white/20'}`}
+                  >
                     {item.label}
                   </span>
                   {item.status ? (
@@ -668,7 +932,8 @@ const AddressStep = ({ onNext }) => {
             <p className="text-[10px] font-black uppercase tracking-widest">Auto-Saved Progress</p>
           </div>
           <p className="text-[10px] text-[#888888] leading-relaxed">
-            Your progress is being saved in real-time. You can resume this application from any device.
+            Your progress is being saved in real-time. You can resume this application from any
+            device.
           </p>
         </div>
       </aside>

@@ -36,7 +36,7 @@ const Footer = () => (
                 { name: 'Personal', path: '/personal' },
                 { name: 'Enterprise', path: '/enterprise' },
                 { name: 'Mortgage', path: '/mortgage' },
-                { name: 'Markets', path: '/markets' }
+                { name: 'Markets', path: '/markets' },
               ].map((link) => (
                 <Link
                   key={link.name}
@@ -55,7 +55,7 @@ const Footer = () => (
                 { name: 'About', path: '/about' },
                 { name: 'Vision', path: '/vision' },
                 { name: 'Careers', path: '/careers' },
-                { name: 'Ethics', path: '/ethics' }
+                { name: 'Ethics', path: '/ethics' },
               ].map((link) => (
                 <Link
                   key={link.name}
@@ -74,7 +74,7 @@ const Footer = () => (
                 { name: 'LinkedIn', path: '#' },
                 { name: 'Twitter', path: '#' },
                 { name: 'Contact', path: '#' },
-                { name: 'Support', path: '/support' }
+                { name: 'Support', path: '/support' },
               ].map((link) => (
                 <Link
                   key={link.name}
