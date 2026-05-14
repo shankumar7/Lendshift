@@ -86,9 +86,12 @@ const FileUploadZone = ({ label, value, onChange, onRemove, error }) => {
 
   return (
     <div className="space-y-2">
-      <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
+      <label
+        htmlFor={`file-upload-${label.replace(/\s+/g, '-').toLowerCase()}`}
+        className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+      >
         {label}
-      </span>
+      </label>
       <div
         onDragOver={(e) => {
           e.preventDefault();
@@ -377,46 +380,43 @@ const KYCStep = ({ onNext }) => {
                   <VerificationBadge status={getPanBadgeStatus()} />
                 </div>
                 <div className="space-y-5">
-                  <label htmlFor="pan-input" className="block space-y-5 cursor-pointer">
-                    <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
-                      Permanent Account Number
-                    </span>
-                    <div className="relative">
-                      <Controller
-                        name="panNumber"
-                        control={control}
-                        render={({ field }) => (
-                          <input
-                            {...field}
-                            value={field.value || ''}
-                            id="pan-input"
-                            maxLength={10}
-                            disabled={isPanVerified}
-                            placeholder="ABCDE1234F"
-                            onChange={(e) => field.onChange(e.target.value.toUpperCase())}
-                            className="w-full h-14 sm:h-16 bg-[#F8F9FA] border-0 rounded-xl sm:rounded-2xl px-4 sm:px-6 font-mono tracking-[0.2em] sm:tracking-[0.4em] text-lg sm:text-xl focus:ring-2 focus:ring-[#121212] transition-all"
-                          />
-                        )}
-                      />
-                      {!isPanVerified && (
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleVerifyPan();
-                          }}
-                          disabled={isVerifyingPan || panNumber?.length < 10}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 h-10 px-8 rounded-xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#0065FF] transition-colors disabled:opacity-50"
-                        >
-                          {isVerifyingPan ? (
-                            <Loader2 size={14} className="animate-spin" />
-                          ) : (
-                            'Verify'
-                          )}
-                        </button>
-                      )}
-                    </div>
+                  <label
+                    htmlFor="pan-input"
+                    className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+                  >
+                    Permanent Account Number
                   </label>
+                  <div className="relative">
+                    <Controller
+                      name="panNumber"
+                      control={control}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          value={field.value || ''}
+                          id="pan-input"
+                          maxLength={10}
+                          disabled={isPanVerified}
+                          placeholder="ABCDE1234F"
+                          onChange={(e) => field.onChange(e.target.value.toUpperCase())}
+                          className="w-full h-14 sm:h-16 bg-[#F8F9FA] border-0 rounded-xl sm:rounded-2xl px-4 sm:px-6 font-mono tracking-[0.2em] sm:tracking-[0.4em] text-lg sm:text-xl focus:ring-2 focus:ring-[#121212] transition-all"
+                        />
+                      )}
+                    />
+                    {!isPanVerified && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleVerifyPan();
+                        }}
+                        disabled={isVerifyingPan || panNumber?.length < 10}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 h-10 px-8 rounded-xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#0065FF] transition-colors disabled:opacity-50"
+                      >
+                        {isVerifyingPan ? <Loader2 size={14} className="animate-spin" /> : 'Verify'}
+                      </button>
+                    )}
+                  </div>
                   {errors.panNumber && (
                     <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
                       {errors.panNumber.message}
@@ -439,46 +439,47 @@ const KYCStep = ({ onNext }) => {
                   <VerificationBadge status={getAadhaarBadgeStatus()} />
                 </div>
                 <div className="space-y-5">
-                  <label htmlFor="aadhaar-input" className="block space-y-5 cursor-pointer">
-                    <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
-                      Aadhaar Identity
-                    </span>
-                    <div className="relative">
-                      <Controller
-                        name="aadhaarNumber"
-                        control={control}
-                        render={({ field }) => (
-                          <input
-                            {...field}
-                            id="aadhaar-input"
-                            value={field.value?.replace(/(\d{4})(?=\d)/g, '$1 ') || ''}
-                            maxLength={14}
-                            disabled={isAadhaarVerified}
-                            placeholder="XXXX XXXX XXXX"
-                            onChange={(e) => field.onChange(e.target.value.replace(/\D/g, ''))}
-                            className={`w-full h-14 sm:h-16 bg-[#F8F9FA] border-0 rounded-xl sm:rounded-2xl px-4 sm:px-6 font-mono tracking-[0.2em] sm:tracking-[0.4em] text-lg sm:text-xl focus:ring-2 focus:ring-[#121212] transition-all ${isAadhaarVerified ? 'blur-[2px] opacity-40' : ''}`}
-                          />
-                        )}
-                      />
-                      {!isAadhaarVerified && (
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleVerifyAadhaar();
-                          }}
-                          disabled={isVerifyingAadhaar || aadhaarNumber?.length < 12}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 h-10 px-8 rounded-xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#0065FF] transition-colors disabled:opacity-50"
-                        >
-                          {isVerifyingAadhaar ? (
-                            <Loader2 size={14} className="animate-spin" />
-                          ) : (
-                            'Verify'
-                          )}
-                        </button>
-                      )}
-                    </div>
+                  <label
+                    htmlFor="aadhaar-input"
+                    className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+                  >
+                    Aadhaar Identity
                   </label>
+                  <div className="relative">
+                    <Controller
+                      name="aadhaarNumber"
+                      control={control}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          id="aadhaar-input"
+                          value={field.value?.replace(/(\d{4})(?=\d)/g, '$1 ') || ''}
+                          maxLength={14}
+                          disabled={isAadhaarVerified}
+                          placeholder="XXXX XXXX XXXX"
+                          onChange={(e) => field.onChange(e.target.value.replace(/\D/g, ''))}
+                          className={`w-full h-14 sm:h-16 bg-[#F8F9FA] border-0 rounded-xl sm:rounded-2xl px-4 sm:px-6 font-mono tracking-[0.2em] sm:tracking-[0.4em] text-lg sm:text-xl focus:ring-2 focus:ring-[#121212] transition-all ${isAadhaarVerified ? 'blur-[2px] opacity-40' : ''}`}
+                        />
+                      )}
+                    />
+                    {!isAadhaarVerified && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleVerifyAadhaar();
+                        }}
+                        disabled={isVerifyingAadhaar || aadhaarNumber?.length < 12}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 h-10 px-8 rounded-xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#0065FF] transition-colors disabled:opacity-50"
+                      >
+                        {isVerifyingAadhaar ? (
+                          <Loader2 size={14} className="animate-spin" />
+                        ) : (
+                          'Verify'
+                        )}
+                      </button>
+                    )}
+                  </div>
                   {errors.aadhaarNumber && (
                     <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
                       {errors.aadhaarNumber.message}
@@ -501,28 +502,29 @@ const KYCStep = ({ onNext }) => {
 
               <div className="space-y-8">
                 <div className="space-y-3">
-                  <label htmlFor="id-type-select" className="block space-y-3 cursor-pointer">
-                    <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
-                      ID Type
-                    </span>
-                    <Controller
-                      name="idType"
-                      control={control}
-                      render={({ field }) => (
-                        <select
-                          {...field}
-                          value={field.value || ''}
-                          id="id-type-select"
-                          className="input-premium h-14 rounded-xl"
-                        >
-                          <option value="">Select ID Type</option>
-                          <option value="passport">Indian Passport</option>
-                          <option value="voter-id">Voter Identity Card</option>
-                          <option value="driving-license">Driving License</option>
-                        </select>
-                      )}
-                    />
+                  <label
+                    htmlFor="id-type-select"
+                    className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+                  >
+                    ID Type
                   </label>
+                  <Controller
+                    name="idType"
+                    control={control}
+                    render={({ field }) => (
+                      <select
+                        {...field}
+                        value={field.value || ''}
+                        id="id-type-select"
+                        className="input-premium h-14 rounded-xl"
+                      >
+                        <option value="">Select ID Type</option>
+                        <option value="passport">Indian Passport</option>
+                        <option value="voter-id">Voter Identity Card</option>
+                        <option value="driving-license">Driving License</option>
+                      </select>
+                    )}
+                  />
                   {errors.idType && (
                     <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
                       {errors.idType.message}
@@ -531,24 +533,25 @@ const KYCStep = ({ onNext }) => {
                 </div>
 
                 <div className="space-y-3">
-                  <label htmlFor="id-number-input" className="block space-y-3 cursor-pointer">
-                    <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
-                      Document Number
-                    </span>
-                    <Controller
-                      name="idNumber"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          value={field.value || ''}
-                          id="id-number-input"
-                          placeholder="Enter ID Number"
-                          className="input-premium h-14 rounded-xl"
-                        />
-                      )}
-                    />
+                  <label
+                    htmlFor="id-number-input"
+                    className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+                  >
+                    Document Number
                   </label>
+                  <Controller
+                    name="idNumber"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        value={field.value || ''}
+                        id="id-number-input"
+                        placeholder="Enter ID Number"
+                        className="input-premium h-14 rounded-xl"
+                      />
+                    )}
+                  />
                   {errors.idNumber && (
                     <p className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">
                       {errors.idNumber.message}

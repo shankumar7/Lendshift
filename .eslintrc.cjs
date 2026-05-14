@@ -48,6 +48,12 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    'jsx-a11y/label-has-associated-control': [
+      'error',
+      {
+        assert: 'either',
+      },
+    ],
   },
   settings: {
     react: {

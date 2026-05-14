@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useForm, Controller, useWatch } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -37,6 +37,7 @@ const FileUploadZone = ({ label, value, onChange, onRemove, error }) => {
   const handleFile = (file) => {
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
+      // eslint-disable-next-line no-alert
       alert('File size exceeds 5MB limit');
       return;
     }
@@ -58,11 +59,20 @@ const FileUploadZone = ({ label, value, onChange, onRemove, error }) => {
     }, 100);
   };
 
+  const getBorderStyles = () => {
+    if (value) return 'border-[#0065FF] bg-[#F0F7FF]';
+    if (isDragging) return 'border-[#121212] bg-[#FAFAFA]';
+    return 'border-[#EEEEEE] hover:border-[#CCCCCC]';
+  };
+
   return (
     <div className="space-y-2">
-      <span className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40">
+      <label
+        htmlFor={`file-upload-${label.replace(/\s+/g, '-').toLowerCase()}`}
+        className="block text-[10px] font-black uppercase tracking-widest text-[#121212]/40"
+      >
         {label}
-      </span>
+      </label>
       <div
         onDragOver={(e) => {
           e.preventDefault();
@@ -74,13 +84,7 @@ const FileUploadZone = ({ label, value, onChange, onRemove, error }) => {
           setIsDragging(false);
           handleFile(e.dataTransfer.files[0]);
         }}
-        className={`relative h-32 rounded-2xl border border-dashed transition-all duration-300 flex flex-col items-center justify-center gap-2 overflow-hidden ${
-          value
-            ? 'border-[#0065FF] bg-[#F0F7FF]'
-            : isDragging
-              ? 'border-[#121212] bg-[#FAFAFA]'
-              : 'border-[#EEEEEE] hover:border-[#CCCCCC]'
-        }`}
+        className={`relative h-32 rounded-2xl border border-dashed transition-all duration-300 flex flex-col items-center justify-center gap-2 overflow-hidden ${getBorderStyles()}`}
       >
         {value ? (
           <div className="flex items-center gap-4 px-6 w-full">
@@ -105,31 +109,28 @@ const FileUploadZone = ({ label, value, onChange, onRemove, error }) => {
               <X size={16} />
             </button>
           </div>
+        ) : progress > 0 && progress < 100 ? (
+          <div className="w-full px-8 space-y-2">
+            <div className="flex justify-between text-[10px] font-mono font-bold">
+              <span>UPLOADING</span>
+              <span>{progress}%</span>
+            </div>
+            <div className="h-1 bg-[#EEEEEE] rounded-full overflow-hidden">
+              <div className="h-full bg-[#0065FF]" style={{ width: `${progress}%` }} />
+            </div>
+          </div>
         ) : (
           <>
-            {progress > 0 && progress < 100 ? (
-              <div className="w-full px-8 space-y-2">
-                <div className="flex justify-between text-[10px] font-mono font-bold">
-                  <span>UPLOADING</span>
-                  <span>{progress}%</span>
-                </div>
-                <div className="h-1 bg-[#EEEEEE] rounded-full overflow-hidden">
-                  <div className="h-full bg-[#0065FF]" style={{ width: `${progress}%` }} />
-                </div>
-              </div>
-            ) : (
-              <>
-                <UploadCloud size={24} className="text-[#888888]" />
-                <p className="text-[10px] font-black uppercase tracking-widest text-[#888888]">
-                  Drag & drop or <span className="text-[#0065FF] cursor-pointer">browse</span>
-                </p>
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  onChange={(e) => handleFile(e.target.files[0])}
-                />
-              </>
-            )}
+            <UploadCloud size={24} className="text-[#888888]" />
+            <p className="text-[10px] font-black uppercase tracking-widest text-[#888888]">
+              Drag & drop or <span className="text-[#0065FF] cursor-pointer">browse</span>
+            </p>
+            <input
+              type="file"
+              id={`file-upload-${label.replace(/\s+/g, '-').toLowerCase()}`}
+              className="absolute inset-0 opacity-0 cursor-pointer"
+              onChange={(e) => handleFile(e.target.files[0])}
+            />
           </>
         )}
       </div>
@@ -180,7 +181,9 @@ const AddressStep = ({ onNext }) => {
     const lookupPin = async () => {
       if (pincode?.length === 6) {
         setIsLookupLoading(true);
-        await new Promise((r) => setTimeout(r, 1000));
+        await new Promise((r) => {
+          setTimeout(r, 1000);
+        });
         const data = PIN_DATA[pincode] || { city: 'Sample City', state: 'Sample State' };
         setValue('current.city', data.city, { shouldValidate: true });
         setValue('current.state', data.state, { shouldValidate: true });
@@ -199,7 +202,9 @@ const AddressStep = ({ onNext }) => {
 
   const handleGeoVerify = async () => {
     setIsGeoVerifying(true);
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => {
+      setTimeout(r, 2000);
+    });
     setValue('isGeoVerified', true);
     setIsGeoVerifying(false);
   };
