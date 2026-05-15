@@ -124,6 +124,7 @@ const LoanSelectionStep = ({ onNext }) => {
 
   const onSubmit = (data) => {
     updateFormData('loanSelection', data);
+    useLoanStore.setState({ isStep1Submitted: true });
     onNext();
   };
 

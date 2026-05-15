@@ -10,6 +10,7 @@ const useLoanStore = create(
       isResumeModalOpen: false,
       isCorrupted: false,
       isInitialized: false, // For session recovery lifecycle
+      isStep1Submitted: false, // True only after Step 1 form is submitted
 
       // Form Data Structure
       formData: {
@@ -262,6 +263,7 @@ const useLoanStore = create(
         set({
           currentStep: 1,
           isCorrupted: false,
+          isStep1Submitted: false,
           formData: {
             loanSelection: {
               loanType: 'personal',
@@ -395,7 +397,7 @@ const useLoanStore = create(
       storage: createJSONStorage(() => localStorage),
       onRehydrateStorage: () => {
         return (rehydratedState, error) => {
-          if (error || !rehydratedState) {
+          if (error) {
             useLoanStore.setState({ isCorrupted: true });
           }
         };

@@ -11,14 +11,14 @@ describe('LendSwift Onboarding E2E', () => {
     cy.completeKYC();
     cy.fillAddress();
     cy.fillEmployment('salaried');
-    cy.handleCoApplicant(true);
 
+    // Step 6 should be automatically skipped since amount <= 500000
     // Step 7: Documents
     cy.contains(/digital dossier/i, { timeout: 15000 }).should('be.visible');
   });
 
   it('enforces Cross-Step Validation for Home Loans', () => {
-    cy.fillLoanSelection('Mortgage', '5000000');
+    cy.fillLoanSelection('Mortgage', '5000000', 120);
     cy.fillPersonalInfo();
     cy.completeKYC();
     cy.fillAddress();
@@ -45,6 +45,9 @@ describe('LendSwift Onboarding E2E', () => {
   });
 
   it('validates Keyboard Navigation (Accessibility)', () => {
+    cy.get('select#loan-purpose').select('Medical');
+    cy.get('select#employment-type').select('salaried');
+    
     cy.get('input[type="range"]').first().focus();
     cy.realPress('Tab');
     cy.realPress('Tab');
@@ -61,7 +64,7 @@ describe('LendSwift Onboarding E2E', () => {
     cy.completeKYC();
     cy.fillAddress();
     cy.fillEmployment('salaried');
-    cy.handleCoApplicant(true);
+    cy.handleCoApplicant(true); // Amount is 1,000,000, so Step 6 appears
 
     cy.contains(/digital dossier/i, { timeout: 15000 }).should('be.visible');
   });

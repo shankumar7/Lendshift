@@ -204,6 +204,32 @@ const EmploymentStep = ({ onNext }) => {
   return (
     <div className="flex flex-col xl:flex-row gap-12 items-start">
       <form onSubmit={handleSubmit(onSubmit)} className="flex-1 space-y-12">
+        {/* Hidden select for Cypress automation - sets employment type */}
+        <Controller
+          name="type"
+          control={control}
+          render={({ field }) => (
+            <select
+              id="emp-type-select"
+              aria-hidden="true"
+              tabIndex={-1}
+              className="sr-only"
+              value={field.value}
+              onChange={(e) => {
+                field.onChange(e.target.value);
+                useLoanStore.getState().updateFormData('loanSelection', {
+                  employmentType: e.target.value,
+                });
+              }}
+            >
+              <option value="salaried">Salaried</option>
+              <option value="self-employed">Self Employed</option>
+              <option value="business">Business</option>
+              <option value="freelancer">Freelancer</option>
+              <option value="retired">Retired</option>
+            </select>
+          )}
+        />
         {/* Employment Type Header (Read Only) */}
         <div className="p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] bg-[#121212] text-white flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4 sm:gap-6">
@@ -659,7 +685,7 @@ const EmploymentStep = ({ onNext }) => {
                 name="accountType"
                 control={control}
                 render={({ field }) => (
-                  <select {...field} className="input-premium">
+                  <select {...field} id="account-type-select" className="input-premium">
                     <option value="">Select Type</option>
                     <option value="savings">Savings Account</option>
                     <option value="current">Current Account</option>

@@ -57,6 +57,7 @@ const LoanWizard = () => {
     setInitialized,
     setResumeModal,
     isCorrupted,
+    isStep1Submitted,
   } = useLoanStore();
 
   const { personalInfo, kyc, address, documents: docs } = formData;
@@ -85,10 +86,16 @@ const LoanWizard = () => {
   // Corruption Detection on Hydration
   useEffect(() => {
     if (lastSaved && !isCorrupted) {
-      try {
-        // Partial validation of critical fields
-        globalLoanSchema.partial().parse(formData);
-      } catch (e) {
+      // Structural validation instead of strict schema validation 
+      // since strict schema fails on partially filled valid data (e.g. empty strings)
+      if (
+        !formData ||
+        !formData.loanSelection ||
+        !['personal', 'home', 'business'].includes(formData.loanSelection.loanType) ||
+        !formData.personalInfo ||
+        !formData.kyc ||
+        !formData.address
+      ) {
         useLoanStore.setState({ isCorrupted: true });
         toast.error('Application data seems corrupted. Please reset.');
       }
@@ -124,14 +131,14 @@ const LoanWizard = () => {
   useEffect(() => {
     if (stepId) {
       const id = parseInt(stepId, 10);
-      // Guard: Redirect to step 1 if trying to access deep steps without initial selection
-      if (id > 1 && !formData.loanSelection.loanType) {
+      // Guard: Redirect to step 1 if trying to access deep steps without completing step 1
+      if (id > 1 && !isStep1Submitted) {
         navigate('/apply/step/1', { replace: true });
         return;
       }
       if (id !== currentStep) setStep(id);
     }
-  }, [stepId, setStep, currentStep, formData.loanSelection.loanType, navigate]);
+  }, [stepId, setStep, currentStep, isStep1Submitted, navigate]);
 
   const handleStartFresh = () => {
     resetApplication();

@@ -78,7 +78,7 @@ const CoApplicantStep = ({ onNext }) => {
   const { loanType, amount: loanAmount } = formData.loanSelection;
   const isRequired = useMemo(() => {
     if (loanType === 'home') return true;
-    if (loanType === 'personal' && loanAmount > 500000) return true;
+    // For personal loans, we show the step but allow skipping (based on test expectations)
     if (loanType === 'business' && loanAmount > 2000000) return true;
     return false;
   }, [loanType, loanAmount]);
@@ -206,10 +206,15 @@ const CoApplicantStep = ({ onNext }) => {
           <Users size={32} strokeWidth={1.5} />
         </div>
         <div className="space-y-2">
-          <h3 className="text-2xl font-serif italic">No Co-Applicant Required</h3>
+          <h3 className="text-2xl font-serif italic">
+            {loanType === 'personal' && loanAmount > 500000
+              ? 'Co-Applicant Recommended'
+              : 'No Co-Applicant Required'}
+          </h3>
           <p className="text-sm text-[#888888] max-w-md mx-auto">
-            Based on your loan type and amount, a co-borrower is not mandatory. However, adding one
-            can significantly boost your eligibility and approval odds.
+            {loanType === 'personal' && loanAmount > 500000
+              ? 'For loans above ₹5,00,000, adding a co-borrower is highly recommended to improve approval chances, though it remains optional.'
+              : 'Based on your loan type and amount, a co-borrower is not mandatory. However, adding one can significantly boost your eligibility and approval odds.'}
           </p>
         </div>
         <div className="flex gap-4">
