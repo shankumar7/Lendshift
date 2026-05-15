@@ -14,6 +14,7 @@ Unlike traditional wizards that store "activeStep" solely in local component sta
 
 - **Deep Linking**: Allows the application to be bookmarked and resumed at a specific point in the funnel.
 - **State Hydration**: On mount, the `LoanWizard` component cross-references the URL `stepId` with the Zustand `currentStep` to ensure the user is not jumping ahead of validation boundaries.
+- **Anti-Tampering Guards**: Implements `isStep1Submitted` as a persistent gating mechanism. This ensures that users cannot bypass the initial Loan Selection phase via direct URL navigation (`/apply/step/8`), enforcing the sequential integrity of the financial funnel.
 
 ---
 
@@ -74,6 +75,12 @@ The auto-save hook implements a **Comparison-Based Trigger**:
 2. **Interval Check**: Every 30 seconds, it compares the _current_ state with the _last-saved_ snapshot.
 3. **Execution**: If a difference is detected, it triggers the `saveProgress` action.
 
+### 4.3 Structural Sanity Checks (Hydration Layer)
+
+To prevent session corruption during store hydration (Zustand `persist`), we implement a **Structural Sanity Check**:
+- Instead of strict schema validation (which fails on partially filled forms), we check for the **existence and shape** of core data structures (`loanSelection`, `personalInfo`).
+- If a catastrophic mismatch is detected (e.g. key objects missing), the system triggers a **"Corrupted State"** flag, prompting the user to reset to safety rather than crashing the UI.
+
 ---
 
 ## 5. Security & Identity (KYC Engine)
@@ -102,5 +109,5 @@ Modals (Resume Application) utilize focus trapping to ensure that keyboard users
 
 <div align="center">
   <p><strong>Zetheta Algorithms Private Limited | Institutional Engineering Division</strong></p>
-  <p>Revision: 2026.05.13 | Lead Architect: Antigravity</p>
+  <p>Revision: 2026.05.15 | Lead Architect: Antigravity (Google DeepMind)</p>
 </div>
