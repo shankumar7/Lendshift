@@ -47,7 +47,7 @@ describe('LendSwift Onboarding E2E', () => {
   it('validates Keyboard Navigation (Accessibility)', () => {
     cy.get('select#loan-purpose').select('Medical');
     cy.get('select#employment-type').select('salaried');
-    
+
     cy.get('input[type="range"]').first().focus();
     cy.realPress('Tab');
     cy.realPress('Tab');

@@ -20,6 +20,7 @@ import {
   X,
   CreditCard,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import useLoanStore from '../store/useLoanStore';
 
 const ReviewSection = ({ title, icon: Icon, data, onEdit, isComplete }) => (
@@ -86,7 +87,8 @@ const SubmissionStep = ({ label, status }) => (
 );
 
 const ReviewStep = () => {
-  const { formData, setStep, submitApplication } = useLoanStore();
+  const navigate = useNavigate();
+  const { formData, setStep, submitApplication, resetApplication } = useLoanStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStage, setSubmissionStage] = useState(0);
   const [consent, setConsent] = useState(false);
@@ -109,6 +111,36 @@ const ReviewStep = () => {
     }
     return undefined;
   }, [isSubmitting, submissionStage, stages.length]);
+
+  const handleDownloadSummary = () => {
+    const { loanSelection, personalInfo, submission } = formData;
+    const lines = [
+      'LendSwift - Application Summary',
+      '================================',
+      `Application ID : ${submission.applicationId}`,
+      `Submitted      : ${submission.timestamp}`,
+      `Applicant      : ${[personalInfo.firstName, personalInfo.lastName].filter(Boolean).join(' ')}`,
+      `Email          : ${personalInfo.email}`,
+      `Loan Type      : ${loanSelection.loanType}`,
+      `Amount         : INR ${Number(loanSelection.amount).toLocaleString('en-IN')}`,
+      `Tenure         : ${loanSelection.tenure} months`,
+      `Purpose        : ${loanSelection.purpose}`,
+    ];
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${submission.applicationId || 'application'}-summary.txt`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleBackHome = () => {
+    resetApplication();
+    navigate('/');
+  };
 
   const handleFinalSubmit = async () => {
     setIsSubmitting(true);
@@ -196,6 +228,7 @@ const ReviewStep = () => {
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <button
             type="button"
+            onClick={handleDownloadSummary}
             className="h-16 px-12 rounded-2xl bg-[#121212] text-white text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-4 group"
           >
             Download Summary{' '}
@@ -203,9 +236,7 @@ const ReviewStep = () => {
           </button>
           <button
             type="button"
-            onClick={() => {
-              window.location.href = '/';
-            }}
+            onClick={handleBackHome}
             className="h-16 px-12 rounded-2xl bg-white border border-[#EEEEEE] text-[10px] font-black uppercase tracking-widest flex items-center justify-center"
           >
             Back to Home
@@ -268,7 +299,7 @@ const ReviewStep = () => {
 
         <div className="relative z-10 space-y-6 sm:y-8 text-center max-w-2xl">
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-8 sm:mb-12">
-            <Loader2 size={32} sm:size={40} className="animate-spin text-[#0065FF]" />
+            <Loader2 size={32} className="animate-spin text-[#0065FF]" />
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-6xl font-serif italic">
             Transmitting Application

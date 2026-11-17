@@ -92,7 +92,7 @@ const Footer = () => (
       <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
         <div className="space-y-4 max-w-2xl">
           <p className="text-mono text-[9px] text-white/40 uppercase tracking-widest leading-relaxed">
-            Zetheta Algorithms Private Limited © 2026 / An institutional digital financing platform.{' '}
+            LendSwift © 2026 / An institutional digital financing platform.{' '}
             <br />
             LendSwift is a regulated entity. All lending activities are subject to local financial
             laws and credit verification protocols. Privacy and security are prioritized using

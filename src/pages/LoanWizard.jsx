@@ -86,7 +86,7 @@ const LoanWizard = () => {
   // Corruption Detection on Hydration
   useEffect(() => {
     if (lastSaved && !isCorrupted) {
-      // Structural validation instead of strict schema validation 
+      // Structural validation instead of strict schema validation
       // since strict schema fails on partially filled valid data (e.g. empty strings)
       if (
         !formData ||
@@ -154,21 +154,26 @@ const LoanWizard = () => {
     }
   }, [isInitialized, lastSaved, currentStep, setResumeModal, setInitialized]);
 
-  const onStepSuccess = () => {
+  const onStepSuccess = useCallback(() => {
     const currentIndexInVisible = visibleSteps.findIndex((s) => s.id === currentStep);
     if (currentIndexInVisible !== -1 && currentIndexInVisible < visibleSteps.length - 1) {
       const nextStep = visibleSteps[currentIndexInVisible + 1];
       navigate(`/apply/step/${nextStep.id}`);
     }
-  };
+  }, [visibleSteps, currentStep, navigate]);
 
   const handleContinue = useCallback(() => {
     if (isNavigating) return;
     setIsNavigating(true);
     const submitBtn = document.getElementById('wizard-submit-btn');
-    if (submitBtn) submitBtn.click();
+    if (submitBtn) {
+      submitBtn.click();
+    } else if (currentStep === 6) {
+      // Optional co-applicant prompt has no form to submit: treat Continue as "skip".
+      onStepSuccess();
+    }
     setTimeout(() => setIsNavigating(false), 500); // 500ms debounce
-  }, [isNavigating]);
+  }, [isNavigating, currentStep, onStepSuccess]);
 
   // Keyboard navigation: Enter to submit
   useEffect(() => {
@@ -336,7 +341,7 @@ const LoanWizard = () => {
                 onClick={handleBack}
                 className="p-1.5 sm:p-2 hover:bg-[#FAFAFA] rounded-full transition-colors opacity-40 hover:opacity-100"
               >
-                <ChevronLeft size={18} sm:size={20} />
+                <ChevronLeft size={18} />
               </button>
               <span className="text-[10px] font-mono text-[#EEEEEE]">/</span>
               <p className="text-[9px] sm:text-xs font-black uppercase tracking-widest truncate max-w-[100px] sm:max-w-none">
@@ -490,19 +495,21 @@ const LoanWizard = () => {
               >
                 <ChevronLeft size={20} /> Previous
               </button>
-              <button
-                type="button"
-                onClick={handleContinue}
-                disabled={!isStepComplete()}
-                className="btn-primary h-14 sm:h-16 px-8 sm:px-12 group disabled:opacity-20 transition-all"
-              >
-                {currentStep === 8 ? 'Submit' : 'Continue'}
-                <ChevronRight
-                  size={18}
-                  sm:size={20}
-                  className="ml-2 sm:ml-3 group-hover:translate-x-1 transition-transform"
-                />
-              </button>
+              {currentStep !== 8 && (
+                <button
+                  type="button"
+                  onClick={handleContinue}
+                  disabled={!isStepComplete()}
+                  className="btn-primary h-14 sm:h-16 px-8 sm:px-12 group disabled:opacity-20 transition-all"
+                >
+                  {currentStep === 8 ? 'Submit' : 'Continue'}
+                  <ChevronRight
+                    size={18}
+
+                    className="ml-2 sm:ml-3 group-hover:translate-x-1 transition-transform"
+                  />
+                </button>
+              )}
             </div>
           </div>
         </div>

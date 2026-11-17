@@ -13,6 +13,6 @@ describe('LendSwift Landing Page', () => {
   });
 
   it('should display the footer with company name', () => {
-    cy.get('footer').should('contain', 'Zetheta Algorithms Private Limited');
+    cy.get('footer').should('contain', 'LendSwift © 2026');
   });
 });

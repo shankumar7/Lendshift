@@ -35,7 +35,7 @@ const SectionHeader = ({ icon: Icon, title, desc }) => (
   <div className="space-y-4 mb-8 sm:mb-10">
     <div className="flex items-center gap-3 sm:gap-4">
       <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-[#F8F9FA] flex items-center justify-center text-[#121212]">
-        <Icon size={16} sm:size={18} strokeWidth={1.5} />
+        <Icon size={16} strokeWidth={1.5} />
       </div>
       <div>
         <h3 className="text-lg sm:text-xl font-serif italic text-[#121212]">{title}</h3>
