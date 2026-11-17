@@ -86,8 +86,8 @@ Forms use React Hook Form with Zod schemas (one per step in `src/schemas`). The 
 You need Node.js 18 or newer and npm.
 
 ```bash
-git clone https://github.com/shankumar7/multi-step-loan-application.git
-cd multi-step-loan-application
+git clone https://github.com/shankumar7/Lendshift.git
+cd Lendshift
 npm install
 npm run dev
 ```
