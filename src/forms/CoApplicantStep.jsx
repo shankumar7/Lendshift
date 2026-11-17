@@ -178,7 +178,7 @@ const CoApplicantStep = ({ onNext }) => {
 
   const saveSignature = () => {
     if (!sigCanvas.current.isEmpty()) {
-      setValue('signature', sigCanvas.current.getTrimmedCanvas().toDataURL('image/png'));
+      setValue('signature', sigCanvas.current.getCanvas().toDataURL('image/png'));
     }
   };
 
@@ -244,7 +244,7 @@ const CoApplicantStep = ({ onNext }) => {
         <div className="p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] bg-[#F8F9FA] border border-[#EEEEEE] flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4 sm:gap-6">
             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-[#121212] text-white flex items-center justify-center">
-              <Users size={20} sm:size={24} />
+              <Users size={20} />
             </div>
             <div>
               <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.3em] text-[#888888]">
@@ -351,7 +351,7 @@ const CoApplicantStep = ({ onNext }) => {
               touched={touchedFields.mobile || isSubmitted}
               icon={Smartphone}
             >
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-wrap gap-3">
                 <Controller
                   name="mobile"
                   control={control}
@@ -361,7 +361,7 @@ const CoApplicantStep = ({ onNext }) => {
                       id="co-mobile"
                       placeholder="9876543210"
                       maxLength={10}
-                      className="input-premium flex-1 font-mono"
+                      className="input-premium flex-1 min-w-[140px] font-mono"
                     />
                   )}
                 />
@@ -369,7 +369,7 @@ const CoApplicantStep = ({ onNext }) => {
                   type="button"
                   onClick={handleSendOtp}
                   disabled={otpTimer > 0 || !mobile}
-                  className="px-6 h-14 sm:h-auto rounded-xl sm:rounded-2xl bg-[#121212] text-white text-[9px] font-black uppercase tracking-widest disabled:opacity-20"
+                  className="px-6 h-12 w-full rounded-xl sm:rounded-2xl bg-[#121212] text-white text-[9px] font-black uppercase tracking-widest disabled:opacity-20"
                 >
                   {otpTimer > 0 ? `${otpTimer}s` : 'Verify'}
                 </button>
@@ -402,7 +402,7 @@ const CoApplicantStep = ({ onNext }) => {
               touched={touchedFields.pan || isSubmitted}
               icon={Fingerprint}
             >
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3">
                 <Controller
                   name="pan"
                   control={control}
@@ -412,7 +412,7 @@ const CoApplicantStep = ({ onNext }) => {
                       id="co-pan"
                       placeholder="ABCDE1234F"
                       maxLength={10}
-                      className="input-premium flex-1 font-mono uppercase"
+                      className="input-premium flex-1 min-w-[140px] font-mono uppercase"
                     />
                   )}
                 />
@@ -420,7 +420,7 @@ const CoApplicantStep = ({ onNext }) => {
                   type="button"
                   onClick={() => simulateVerification('pan')}
                   disabled={pan?.length !== 10}
-                  className="px-6 rounded-2xl bg-[#F8F9FA] border border-[#EEEEEE] text-[9px] font-black uppercase tracking-widest"
+                  className="px-6 h-12 w-full rounded-2xl bg-[#F8F9FA] border border-[#EEEEEE] text-[9px] font-black uppercase tracking-widest disabled:opacity-40"
                 >
                   Validate
                 </button>
@@ -433,7 +433,7 @@ const CoApplicantStep = ({ onNext }) => {
               touched={touchedFields.aadhaar || isSubmitted}
               icon={Lock}
             >
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3">
                 <Controller
                   name="aadhaar"
                   control={control}
@@ -443,7 +443,7 @@ const CoApplicantStep = ({ onNext }) => {
                       id="co-aadhaar"
                       placeholder="1234 5678 9012"
                       maxLength={12}
-                      className="input-premium flex-1 font-mono"
+                      className="input-premium flex-1 min-w-[140px] font-mono"
                     />
                   )}
                 />
@@ -451,7 +451,7 @@ const CoApplicantStep = ({ onNext }) => {
                   type="button"
                   onClick={() => simulateVerification('aadhaar')}
                   disabled={aadhaar?.length !== 12}
-                  className="px-6 rounded-2xl bg-[#F8F9FA] border border-[#EEEEEE] text-[9px] font-black uppercase tracking-widest"
+                  className="px-6 h-12 w-full rounded-2xl bg-[#F8F9FA] border border-[#EEEEEE] text-[9px] font-black uppercase tracking-widest disabled:opacity-40"
                 >
                   KYC
                 </button>

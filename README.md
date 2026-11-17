@@ -1,6 +1,6 @@
-# LendSwift — Institutional-Grade Fintech Engineering Platform
+# LendSwift — Multi-Step Loan Application
 
-LendSwift is a production-ready, editorial-style fintech application engineered to redefine the global loan application journey. Built for institutional reliability, it combines high-fidelity design with complex financial orchestration, featuring real-time underwriting, biometric identity verification, and an 8-step cinematic onboarding flow.
+LendSwift is an editorial-style, multi-step loan application built with React. It walks an applicant through an 8-step onboarding flow — loan configuration with a live EMI calculator, identity and KYC verification, address, employment, an optional/mandatory co-applicant, document upload with e-signature, and a final review — with autosave and session recovery along the way.
 
 ![LendSwift Hero Banner](./public/hero-banner.png)
 
@@ -10,159 +10,75 @@ LendSwift is a production-ready, editorial-style fintech application engineered 
 [![Zustand](https://img.shields.io/badge/Zustand-orange?style=for-the-badge)](https://github.com/pmndrs/zustand)
 [![Cypress](https://img.shields.io/badge/Cypress-17202C?style=for-the-badge&logo=cypress&logoColor=white)](https://www.cypress.io/)
 
----
-
-## 💎 1. Design Philosophy: "Editorial Fintech"
-
-LendSwift departs from generic "SaaS dashboards," opting for a high-concept **Editorial Fintech** approach. This philosophy prioritizes the user as an institutional partner, not just a customer.
-
-### Core Visual Pillars:
-
-- **Cinematic Experience**: Every transition is governed by physics-based Framer Motion orchestrations (spring stiffness: 100, damping: 30) to create a "living" interface.
-- **Premium Typography**:
-  - _Serif_: **Instrument Serif** for display titles, conveying authority and history.
-  - _Sans_: **Inter** for high-density data, ensuring readability.
-  - _Mono_: **Space Mono** for financial identifiers (PAN, Aadhaar, IDs), emphasizing technical precision.
-- **Glassmorphism & Depth**: Subtle transparency and backdrop blurs (`backdrop-blur-xl`) create a sense of institutional security and modern layering.
-- **High-Density Clarity**: Complex financial data is structured into intuitive, high-contrast layouts.
+> **Note:** All verification, OTP, OCR, geo-location and underwriting behaviour is **simulated** on the client. No data leaves the browser and no real KYC or credit checks are performed.
 
 ---
 
-## 🚀 2. Quick Start
+## Features
 
-Get LendSwift running locally in less than 2 minutes.
+- **8-step guided wizard** synced to the URL (`/apply/step/:id`), with deep-link guards that stop users skipping ahead.
+- **Live EMI calculator** with loan-type specific limits (e.g. Home Loans need a 60-month minimum tenure).
+- **Strict validation** with Zod + React Hook Form: PAN entity-type checks, Aadhaar format, IFSC lookup, age gating (21+), pincode lookup.
+- **Smart step logic** — the Co-Applicant step is skipped for personal loans up to ₹5,00,000, optional above that, and mandatory for home loans.
+- **KYC & documents** — simulated PAN/Aadhaar verification, face match, drag-and-drop uploads with client-side image compression and mock OCR.
+- **E-signature** captured on a canvas, plus agreement consent.
+- **Autosave & session recovery** — progress persists in `localStorage` and a "Resume Application" modal restores it.
+- **Review & submit** with a simulated submission pipeline, tracking timeline and downloadable summary.
+- **Responsive & accessible** — verified from phone to desktop, with ARIA live announcements for step changes.
 
-### Prerequisites
+## Design
 
-- **Node.js** (v18.0.0 or higher)
-- **npm** or **yarn**
+An "Editorial Fintech" look: _Instrument Serif_ for display, _Inter_ for UI text and _Space Mono_ for identifiers, with restrained glassmorphism and Framer Motion transitions.
 
-### Installation Steps
+## Tech stack
 
-1. **Clone the Repository**
+React 19 · Vite · React Router 7 · Zustand (persist) · React Hook Form · Zod · Tailwind CSS · Framer Motion · react-dropzone · react-signature-canvas · react-hot-toast · Cypress · ESLint + Prettier
 
-   ```bash
-   git clone https://github.com/your-repo/lendswift.git
-   cd lendswift
-   ```
+## Quick start
 
-2. **Install Dependencies**
+Prerequisites: Node.js 18+ and npm.
 
-   ```bash
-   npm install
-   ```
+```bash
+git clone https://github.com/shankumar7/multi-step-loan-application.git
+cd multi-step-loan-application
+npm install
+npm run dev
+```
 
-3. **Launch Development Server**
+The app runs at `http://localhost:5173`.
 
-   ```bash
-   npm run dev
-   ```
+### Scripts
 
-   The application will be available at `http://localhost:5173`.
+| Command                                | Description                                    |
+| -------------------------------------- | ---------------------------------------------- |
+| `npm run dev`                          | Start the Vite dev server                      |
+| `npm run build`                        | Create a production build in `dist`            |
+| `npm run preview`                      | Preview the production build                   |
+| `npm run lint` / `npm run lint:fix`    | Lint the codebase                              |
+| `npm run format`                       | Format with Prettier                           |
+| `npm run cypress:open` / `cypress:run` | Run the E2E tests (dev server must be running) |
 
-4. **Run Tests**
+## Try it
 
-   ```bash
-   # Open Cypress Dashboard
-   npm run cypress:open
+A full happy path uses any values that pass validation, e.g. mobile `9876543210` (any 6-digit OTP), PAN `ABCPD1234F`, Aadhaar `123456789012`, IFSC `SBIN0001234`, pincode `400001`, and any small image for the document uploads.
 
-   # Run Headless Tests
-   npm run cypress:run
-   ```
-
----
-
-## 📱 3. Responsive Engineering Dossier (320px - 1920px)
-
-LendSwift is engineered with a **Viewport-Specific UI Strategy**, ensuring that the high-fidelity aesthetic is never compromised regardless of device form factor.
-
-### 3.1 The Breakpoint Matrix:
-
-- **320px - 414px (Ultra-Mobile)**: Vertical stacking, fluid scaling of `text-editorial` from `4xl` to `text-2xl`, and expanded touch targets (min 56px).
-- **768px (Tablet)**: Side-by-side layouts for summary sidebars, compact icon-based wizard indicators.
-- **1024px - 1440px (Desktop)**: Full dual-pane orchestration with a 12-column institutional grid.
-- **1920px+ (Ultra-Wide)**: Content-centering with `max-w-7xl` containers to maintain optimal line-length readability.
-
----
-
-## 🧠 4. Systems Architecture
-
-### 4.1 State Orchestration (Zustand)
-
-We utilize **Zustand** with the `persist` middleware for zero-boilerplate, high-performance state management.
-
-- **Atomic Updates**: State is segmented by section to prevent global re-renders.
-- **Session Recovery**: LocalStorage persistence allows for instant "Resume Application" capability.
-
-### 4.2 Form Layer (React Hook Form & Zod)
-
-- **React Hook Form**: Handles complex input validation using uncontrolled inputs for maximum performance.
-- **Zod**: Our primary source of truth for statutory data integrity. Features strict pattern matching for PAN/Aadhaar and cross-field dependencies.
-
-### 4.3 Underwriting Engine
-
-The `useUnderwriting` hook calculates real-time **Debt-to-Income (DTI)** ratios and **Confidence Scores** based on user inputs, providing immediate eligibility feedback.
-
----
-
-## 📂 5. Project Structure
+## Project structure
 
 ```text
 src/
-├── components/       # Atomic UI elements (Buttons, Inputs, Cards)
-├── forms/            # The 8 core wizard steps (KYC, Employment, etc.)
-├── hooks/            # Business logic (Underwriting, AutoSave, A11y)
-├── pages/            # Route containers (Wizard, Landing, Success)
-├── schemas/          # Zod validation schemas for every form step
-├── store/            # Zustand state engine & persistence logic
-├── styles/           # Global design tokens & Tailwind extensions
-├── utils/            # Formatting, encryption, and math helpers
-└── tests/            # Component and integration tests
+├── components/   # Nav, Footer, Logo, EMI panel, form fields, modals
+├── forms/        # The 8 wizard steps (loan, personal, KYC, address, employment, co-applicant, documents, review)
+├── hooks/        # useAutoSave, useAccessibility
+├── pages/        # Landing, LoanWizard, Success and static pages
+├── schemas/      # Zod schemas per step
+├── store/        # Zustand store with persistence
+├── styles/       # Global styles and design tokens
+└── utils/        # Small helpers
+cypress/          # E2E specs and custom commands
 ```
 
----
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for a deeper look at routing, state and validation.
 
-## 🛠️ 6. Development Scripts
+## License
 
-- `npm run dev`: Starts the Vite development server.
-- `npm run build`: Generates the production-ready bundle.
-- `npm run lint`: Runs ESLint to check for code quality and accessibility violations.
-- `npm run lint:fix`: Automatically fixes linting issues where possible.
-- `npm run format`: Formats code using Prettier.
-- `npm run cypress:open`: Launches the interactive Cypress test runner.
-- `npm run cypress:run`: Executes E2E tests in headless mode.
-
----
-
-## 🛡️ 7. E3 QA Stress Test Protocol Compliance
-
-LendSwift is validated against the **E3.4 Institutional Stress Test Protocol**, ensuring zero-error performance under edge-case scenarios:
-
-- **PAN Entity Validation**: Strict 4th-character validation (`P`, `C`, `H`, `F`, `A`, `T`, `B`, `L`, `J`, `G`) with entity-specific error messaging.
-- **DOB Age Gating**: Hardened 21-year threshold logic (accepts exactly 21 years today, rejects 20y 364d).
-- **Dynamic Thresholding**: Step 6 (Co-Applicant) triggers strictly on amounts **exceeding** ₹5,00,000 for Personal Loans.
-- **Structural Integrity**: Hybrid validation on hydration prevents "Corrupted State" false positives while maintaining strict data schemas for submission.
-
----
-
-## 🧪 8. Quality & Compliance
-
-- **Accessibility**: WCAG 2.1 AA compliance verified via `eslint-plugin-jsx-a11y`.
-- **E2E Testing**: Full coverage for the 8-step journey via Cypress.
-- **Step Guards**: Anti-tampering logic prevents deep-linking into steps without satisfying prerequisite data.
-- **Statutory Security**: Simulated AES-256 encryption and biometric face-matching protocols.
-
----
-
-## 📄 9. License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-<div align="center">
-  <p>Engineered with precision for the next generation of global fintech.</p>
-  <p><strong>Zetheta Algorithms Private Limited | Institutional Fintech Engineering Division</strong></p>
-</div>
-
-![LendSwift Footer Banner](./public/footer-banner.png)
+Released under the [MIT License](LICENSE).

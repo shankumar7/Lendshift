@@ -2,34 +2,41 @@
 // Custom Commands for LendSwift Onboarding
 // ***********************************************
 
-Cypress.Commands.add('fillLoanSelection', (title = 'Personal', amount = '500000', tenure = 12, purpose = null) => {
-  cy.contains(title, { timeout: 10000 }).click({ force: true });
-  cy.wait(300); // allow loan type switch to update slider bounds
+Cypress.Commands.add(
+  'fillLoanSelection',
+  (title = 'Personal', amount = '500000', tenure = 12, purpose = null) => {
+    cy.contains(title, { timeout: 10000 }).click({ force: true });
+    cy.wait(300); // allow loan type switch to update slider bounds
 
-  // Set amount slider — must use nativeInputValueSetter for React controlled inputs
-  cy.get('input#amount-slider').then(($el) => {
-    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-    nativeInputValueSetter.call($el[0], amount);
-    $el[0].dispatchEvent(new Event('input', { bubbles: true }));
-    $el[0].dispatchEvent(new Event('change', { bubbles: true }));
-  });
+    // Set amount slider — must use nativeInputValueSetter for React controlled inputs
+    cy.get('input#amount-slider').then(($el) => {
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+        window.HTMLInputElement.prototype,
+        'value'
+      ).set;
+      nativeInputValueSetter.call($el[0], amount);
+      $el[0].dispatchEvent(new Event('input', { bubbles: true }));
+      $el[0].dispatchEvent(new Event('change', { bubbles: true }));
+    });
 
-  // Set tenure slider
-  cy.get('input#tenure-slider').then(($el) => {
-    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-    nativeInputValueSetter.call($el[0], String(tenure));
-    $el[0].dispatchEvent(new Event('input', { bubbles: true }));
-    $el[0].dispatchEvent(new Event('change', { bubbles: true }));
-  });
+    // Set tenure slider
+    cy.get('input#tenure-slider').then(($el) => {
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+        window.HTMLInputElement.prototype,
+        'value'
+      ).set;
+      nativeInputValueSetter.call($el[0], String(tenure));
+      $el[0].dispatchEvent(new Event('input', { bubbles: true }));
+      $el[0].dispatchEvent(new Event('change', { bubbles: true }));
+    });
 
-  if (!purpose) {
-    purpose = title === 'Mortgage' ? 'Purchase of Plot' : 'Medical';
+    const selectedPurpose = purpose || (title === 'Mortgage' ? 'Purchase of Plot' : 'Medical');
+    cy.get('select#loan-purpose').select(selectedPurpose);
+    cy.get('select#employment-type').select('salaried');
+    cy.get('input#monthly-income').clear().type('500000');
+    cy.get('#wizard-submit-btn').click({ force: true });
   }
-  cy.get('select#loan-purpose').select(purpose);
-  cy.get('select#employment-type').select('salaried');
-  cy.get('input#monthly-income').clear().type('500000');
-  cy.get('#wizard-submit-btn').click({ force: true });
-});
+);
 
 Cypress.Commands.add('fillPersonalInfo', () => {
   cy.get('input#firstName', { timeout: 10000 }).type('John');
@@ -98,19 +105,31 @@ Cypress.Commands.add('fillEmployment', (type = 'salaried') => {
   cy.wait(500); // wait for dynamic fields to render
 
   if (type === 'salaried') {
-    cy.get('input[placeholder="e.g. Google India Pvt Ltd"]', { timeout: 5000 }).type('Google Cloud', { force: true });
+    cy.get('input[placeholder="e.g. Google India Pvt Ltd"]', { timeout: 5000 }).type(
+      'Google Cloud',
+      { force: true }
+    );
     cy.get('input[placeholder="₹ 0.00"]').type('500000', { force: true });
   } else if (type === 'business') {
-    cy.get('input[placeholder="Legal Business Name"]', { timeout: 5000 }).type('Acme Corp', { force: true });
+    cy.get('input[placeholder="Legal Business Name"]', { timeout: 5000 }).type('Acme Corp', {
+      force: true,
+    });
     cy.get('input[placeholder="Annual Business Turnover"]').type('6000000', { force: true });
   } else if (type === 'self-employed') {
-    cy.get('input[placeholder="Annual Revenue"]', { timeout: 5000 }).type('6000000', { force: true });
+    cy.get('input[placeholder="Annual Revenue"]', { timeout: 5000 }).type('6000000', {
+      force: true,
+    });
   } else if (type === 'freelancer') {
-    cy.get('input[placeholder="e.g. UI/UX Design"]', { timeout: 5000 }).type('Software Development', { force: true });
+    cy.get('input[placeholder="e.g. UI/UX Design"]', { timeout: 5000 }).type(
+      'Software Development',
+      { force: true }
+    );
     cy.get('input[placeholder="Average Monthly Income"]').type('500000', { force: true });
   }
 
-  cy.get('input[placeholder="HDFC0001234"]', { timeout: 5000 }).type('SBIN0001234', { force: true });
+  cy.get('input[placeholder="HDFC0001234"]', { timeout: 5000 }).type('SBIN0001234', {
+    force: true,
+  });
   cy.wait(3500); // wait for IFSC lookup simulation
   // Account type is required by the schema
   cy.get('select#account-type-select', { timeout: 5000 }).select('savings', { force: true });

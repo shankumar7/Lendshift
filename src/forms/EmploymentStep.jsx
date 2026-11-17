@@ -234,11 +234,11 @@ const EmploymentStep = ({ onNext }) => {
         <div className="p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] bg-[#121212] text-white flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4 sm:gap-6">
             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/10 flex items-center justify-center">
-              {employmentType === 'salaried' && <Building2 size={20} sm:size={24} />}
-              {employmentType === 'business' && <Gem size={20} sm:size={24} />}
-              {employmentType === 'self-employed' && <TrendingUp size={20} sm:size={24} />}
-              {employmentType === 'freelancer' && <Coffee size={20} sm:size={24} />}
-              {employmentType === 'retired' && <Heart size={20} sm:size={24} />}
+              {employmentType === 'salaried' && <Building2 size={20} />}
+              {employmentType === 'business' && <Gem size={20} />}
+              {employmentType === 'self-employed' && <TrendingUp size={20} />}
+              {employmentType === 'freelancer' && <Coffee size={20} />}
+              {employmentType === 'retired' && <Heart size={20} />}
             </div>
             <div>
               <p className="text-[9px] font-mono uppercase tracking-[0.3em] text-white/40">

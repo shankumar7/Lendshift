@@ -38,7 +38,7 @@ The `LoanWizard` uses a flexbox-based responsive wrapper that dynamically adjust
 
 ## 3. The Underwriting Engine (Logic Layer)
 
-The `useUnderwriting.js` hook serves as the application's **Risk Evaluation Core**.
+The underwriting metrics are computed inside the Co-Applicant and Review steps (`CoApplicantStep.jsx`, `ReviewStep.jsx`) as memoized calculations over the Zustand store.
 
 ### 3.1 Real-time Debt-to-Income (DTI) Calculation
 
@@ -78,6 +78,7 @@ The auto-save hook implements a **Comparison-Based Trigger**:
 ### 4.3 Structural Sanity Checks (Hydration Layer)
 
 To prevent session corruption during store hydration (Zustand `persist`), we implement a **Structural Sanity Check**:
+
 - Instead of strict schema validation (which fails on partially filled forms), we check for the **existence and shape** of core data structures (`loanSelection`, `personalInfo`).
 - If a catastrophic mismatch is detected (e.g. key objects missing), the system triggers a **"Corrupted State"** flag, prompting the user to reset to safety rather than crashing the UI.
 
@@ -108,6 +109,5 @@ Modals (Resume Application) utilize focus trapping to ensure that keyboard users
 ---
 
 <div align="center">
-  <p><strong>Zetheta Algorithms Private Limited | Institutional Engineering Division</strong></p>
-  <p>Revision: 2026.05.15 | Lead Architect: Antigravity (Google DeepMind)</p>
+  <p><strong>LendSwift</strong> · Architecture notes</p>
 </div>

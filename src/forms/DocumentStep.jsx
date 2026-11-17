@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -142,6 +142,20 @@ const DocumentStep = ({ onNext }) => {
   const agreementAccepted = useWatch({ control, name: 'agreementAccepted' });
   const primarySignature = useWatch({ control, name: 'primarySignature' });
 
+  // Keep the store in sync so the wizard's "Continue" button reflects the signing state live
+  useEffect(() => {
+    const stored = useLoanStore.getState().formData.documents;
+    if (
+      stored.agreementAccepted !== !!agreementAccepted ||
+      (stored.primarySignature || null) !== (primarySignature || null)
+    ) {
+      updateFormData('documents', {
+        agreementAccepted: !!agreementAccepted,
+        primarySignature: primarySignature || null,
+      });
+    }
+  }, [agreementAccepted, primarySignature, updateFormData]);
+
   // Dynamic Requirements Calculation
   const requiredDocs = useMemo(() => {
     const list = ['panCard', 'aadhaarCard', 'bankStatements', 'addressProof'];
@@ -237,7 +251,7 @@ const DocumentStep = ({ onNext }) => {
 
   const saveSignature = () => {
     if (!sigCanvas.current.isEmpty()) {
-      setValue('primarySignature', sigCanvas.current.getTrimmedCanvas().toDataURL('image/png'));
+      setValue('primarySignature', sigCanvas.current.getCanvas().toDataURL('image/png'));
     }
   };
 
@@ -246,7 +260,13 @@ const DocumentStep = ({ onNext }) => {
     onNext();
   };
 
-  const isAllDocsVerified = requiredDocs.every((id) => processingDocs[id] === 'verified');
+  // A document counts as verified once it is present and no scan is running. Documents uploaded
+  // in earlier steps (KYC / Address) are already on file and were verified there.
+  const getDocStatus = (id) => {
+    if (processingDocs[id]) return processingDocs[id];
+    return formData.documents[id] ? 'verified' : undefined;
+  };
+  const isAllDocsVerified = requiredDocs.every((id) => getDocStatus(id) === 'verified');
 
   return (
     <div className="flex flex-col xl:flex-row gap-12 items-start">
@@ -286,7 +306,7 @@ const DocumentStep = ({ onNext }) => {
                     label={DOC_TYPES[id].label}
                     icon={DOC_TYPES[id].icon}
                     value={formData.documents[id]}
-                    status={processingDocs[id]}
+                    status={getDocStatus(id)}
                     onUpload={handleUpload}
                     onRemove={handleRemove}
                   />

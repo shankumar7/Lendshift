@@ -42,21 +42,20 @@ const FileUploadZone = ({ label, value, onChange, onRemove, error }) => {
       alert('File size exceeds 5MB limit');
       return;
     }
+    let current = 0;
     setProgress(0);
     const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          onChange({
-            name: file.name,
-            size: file.size,
-            type: file.type,
-            preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : null,
-          });
-          return 100;
-        }
-        return prev + 10;
-      });
+      current += 10;
+      setProgress(current);
+      if (current >= 100) {
+        clearInterval(interval);
+        onChange({
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : null,
+        });
+      }
     }, 100);
   };
 

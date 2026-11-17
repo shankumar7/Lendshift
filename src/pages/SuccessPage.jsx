@@ -3,8 +3,11 @@ import { CheckCircle2, ArrowRight, Download, ShieldCheck, Globe } from 'lucide-r
 import { Link } from 'react-router-dom';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import useLoanStore from '@/store/useLoanStore';
 
 const SuccessPage = () => {
+  const applicationId = useLoanStore((state) => state.formData.submission.applicationId);
+  const referenceId = applicationId || 'LS-PENDING';
   return (
     <div className="min-h-screen bg-white grain-bg font-sans flex flex-col">
       <Nav />
@@ -31,14 +34,14 @@ const SuccessPage = () => {
                 the way.
               </h1>
               <p className="text-xl text-[#888888] leading-relaxed max-w-md">
-                Your application **#LS-9402** has been successfully transmitted to our institutional
-                underwriting engine.
+                Your application <strong>#{referenceId}</strong> has been successfully transmitted
+                to our institutional underwriting engine.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="p-6 sm:p-8 bg-[#F8F9FA] rounded-[1.5rem] sm:rounded-[2rem] border border-[#EEEEEE] space-y-4">
-                <ShieldCheck size={20} sm:size={24} className="text-[#121212]" />
+                <ShieldCheck size={20} className="text-[#121212]" />
                 <div className="space-y-1">
                   <p className="text-[9px] sm:text-[10px] font-mono text-[#888888] uppercase tracking-widest">
                     Security Layer
@@ -47,7 +50,7 @@ const SuccessPage = () => {
                 </div>
               </div>
               <div className="p-6 sm:p-8 bg-[#F8F9FA] rounded-[1.5rem] sm:rounded-[2rem] border border-[#EEEEEE] space-y-4">
-                <Globe size={20} sm:size={24} className="text-[#121212]" />
+                <Globe size={20} className="text-[#121212]" />
                 <div className="space-y-1">
                   <p className="text-[9px] sm:text-[10px] font-mono text-[#888888] uppercase tracking-widest">
                     Network Status
@@ -93,7 +96,7 @@ const SuccessPage = () => {
                   <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
                     Reference ID
                   </p>
-                  <p className="text-xl font-mono tracking-tighter">LS-9402-8472-X</p>
+                  <p className="text-xl font-mono tracking-tighter">{referenceId}</p>
                 </div>
               </motion.div>
               <div className="absolute top-6 left-6 w-full h-full bg-[#F4F5F7] rounded-[3rem] -z-10 border border-[#EEEEEE]" />
